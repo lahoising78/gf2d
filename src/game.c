@@ -3,6 +3,8 @@
 #include "gf2d_sprite.h"
 #include "simple_logger.h"
 
+#include "gf2d_timer.h"
+
 int main(int argc, char * argv[])
 {
     /*variable declarations*/
@@ -14,6 +16,8 @@ int main(int argc, char * argv[])
     float mf = 0;
     Sprite *mouse;
     Vector4D mouseColor = {255,100,255,200};
+
+    Timer perSecond = gf2d_timer_new();
     
     /*program initializtion*/
     init_logger("gf2d.log");
@@ -33,6 +37,7 @@ int main(int argc, char * argv[])
     /*demo setup*/
     sprite = gf2d_sprite_load_image("images/backgrounds/bg_flat.png");
     mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16);
+    gf2d_timer_start(&perSecond);
     /*main game loop*/
     while(!done)
     {
@@ -62,7 +67,16 @@ int main(int argc, char * argv[])
         gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
         
         if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition
-        slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());
+        if( gf2d_timer_get_ticks(&perSecond) >= 0.1f )
+        {
+            slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());
+            gf2d_timer_start(&perSecond);
+        }
+        else
+        {
+            // slog("ticks: %f", gf2d_timer_get_ticks(&perSecond));
+        }
+        
     }
     slog("---==== END ====---");
     return 0;
