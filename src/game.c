@@ -5,6 +5,7 @@
 
 #include "gf2d_timer.h"
 #include "gf2d_render_ent.h"
+#include "gf2d_camera.h"
 
 float frameTime = 0.0f;
 int main(int argc, char * argv[])
@@ -55,7 +56,6 @@ int main(int argc, char * argv[])
         SDL_GetMouseState(&mx,&my);
         mf+=0.1;
         if (mf >= 16.0)mf = 0;
-        
         
         gf2d_graphics_clear_screen();// clears drawing buffers
         // all drawing should happen betweem clear_screen and next_frame

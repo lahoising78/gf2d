@@ -16,8 +16,17 @@ typedef struct
     float               sec;
 } RenderEntity;
 
+/** 
+ * @brief allocate a new RenderEntity
+ * @param sprite the sprite the render entity will have
+ * @return a pointer to the RenderEntity
+ */
 RenderEntity *gf2d_render_ent_new( Sprite *sprite );
 
+/** 
+ * @brief draw the render entity
+ * @param ent the ent to be drawn
+ */
 void gf2d_render_ent_draw(RenderEntity *ent);
 
 #endif

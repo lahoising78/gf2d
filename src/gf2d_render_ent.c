@@ -1,4 +1,7 @@
 #include "gf2d_render_ent.h"
+#include "gf2d_camera.h"
+
+#define SECS_PER_FRAME 0.1f/32.0f
 
 extern float frameTime;
 
@@ -19,7 +22,7 @@ void gf2d_render_ent_draw(RenderEntity *ent)
     if(!ent) return;
 
     ent->sec += frameTime;
-    if( ent->sec >= 0.00625f ) /* 16 frames per second */
+    if( ent->sec >= SECS_PER_FRAME )
     {
         ent->frame++;
         ent->sec = 0.0f;
@@ -32,7 +35,7 @@ void gf2d_render_ent_draw(RenderEntity *ent)
 
     gf2d_sprite_draw(
         ent->sprite,
-        ent->position,
+        gf2d_camera_get_displaced_position(ent->position),
         ent->scale,
         ent->scaleCenter,
         ent->rotation,
