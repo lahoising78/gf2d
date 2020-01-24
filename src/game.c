@@ -22,8 +22,6 @@ int main(int argc, char * argv[])
 
     Timer perSecond = gf2d_timer_new();
     Timer fTimer = gf2d_timer_new();
-
-    RenderEntity *ent = NULL;
     
     /*program initializtion*/
     init_logger("gf2d.log");
@@ -43,7 +41,6 @@ int main(int argc, char * argv[])
     /*demo setup*/
     sprite = gf2d_sprite_load_image("images/backgrounds/bg_flat.png");
     mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16);
-    ent = gf2d_render_ent_new( gf2d_sprite_load_all("images/space_bug.png", 128, 128, 16) );
     gf2d_timer_start(&perSecond);
     /*main game loop*/
     while(!done)
@@ -72,8 +69,6 @@ int main(int argc, char * argv[])
                 NULL,
                 &mouseColor,
                 (int)mf);
-
-            gf2d_render_ent_draw(ent);
         gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
         
         if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition
