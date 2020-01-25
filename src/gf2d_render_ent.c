@@ -17,6 +17,20 @@ RenderEntity *gf2d_render_ent_new( Sprite *sprite )
     return ent;
 }
 
+void gf2d_render_ent_free( RenderEntity *ent )
+{
+    if(!ent) return;
+
+    gf2d_sprite_free(ent->sprite);
+    if(ent->scale) free(ent->scale);
+    if(ent->scaleCenter) free(ent->scaleCenter);
+    if(ent->rotation) free(ent->rotation);
+    if(ent->flip) free(ent->flip);
+    if(ent->colorShift) free(ent->colorShift);
+
+    memset(ent, 0, sizeof(RenderEntity));
+}
+
 void gf2d_render_ent_draw(RenderEntity *ent)
 {
     if(!ent) return;

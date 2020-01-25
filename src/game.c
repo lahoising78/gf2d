@@ -7,11 +7,16 @@
 #include "gf2d_render_ent.h"
 #include "gf2d_camera.h"
 
+#include "gf2d_entity.h"
+
+#define ENTITY_COUNT 1024
+
 float frameTime = 0.0f;
 int main(int argc, char * argv[])
 {
     /*variable declarations*/
     int done = 0;
+    int i;
     const Uint8 * keys;
     Sprite *sprite;
     
@@ -36,12 +41,14 @@ int main(int argc, char * argv[])
         0);
     gf2d_graphics_set_frame_delay(16);
     gf2d_sprite_init(1024);
+    gf2d_entity_manager_init(ENTITY_COUNT);
     SDL_ShowCursor(SDL_DISABLE);
     
     /*demo setup*/
     sprite = gf2d_sprite_load_image("images/backgrounds/bg_flat.png");
     mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16);
     gf2d_timer_start(&perSecond);
+
     /*main game loop*/
     while(!done)
     {

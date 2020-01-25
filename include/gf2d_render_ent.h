@@ -23,6 +23,8 @@ typedef struct
  */
 RenderEntity *gf2d_render_ent_new( Sprite *sprite );
 
+void gf2d_render_ent_free( RenderEntity *ent );
+
 /** 
  * @brief draw the render entity
  * @param ent the ent to be drawn
