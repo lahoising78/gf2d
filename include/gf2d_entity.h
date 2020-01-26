@@ -25,6 +25,9 @@ typedef struct entity_s
  */
 void gf2d_entity_manager_init(uint32_t count);
 
+void gf2d_entity_manager_update();
+void gf2d_entity_manager_draw();
+
 /** 
  * @brief get new entity
  * @return an entity pointer

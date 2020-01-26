@@ -14,6 +14,12 @@
 #define PHYSICS_ENTITY_COUNT        256
 
 float frameTime = 0.0f;
+
+void dime_hola(Entity *ent)
+{
+    slog("hola");
+}
+
 int main(int argc, char * argv[])
 {
     /*variable declarations*/
@@ -30,6 +36,8 @@ int main(int argc, char * argv[])
     Timer perSecond = gf2d_timer_new();
     Timer fTimer = gf2d_timer_new();
     
+    PhysicsEntity *pe = NULL;
+
     /*program initializtion*/
     init_logger("gf2d.log");
     slog("---==== BEGIN ====---");
@@ -52,6 +60,12 @@ int main(int argc, char * argv[])
     mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16);
     gf2d_timer_start(&perSecond);
 
+    pe = gf2d_physics_entity_new();
+    pe->entity->update = dime_hola;
+    pe->entity->render_ent = gf2d_render_ent_new( 
+        gf2d_sprite_load_all("images/space_bug.png", 128, 128, 16)
+    );
+
     /*main game loop*/
     while(!done)
     {
@@ -63,11 +77,16 @@ int main(int argc, char * argv[])
         SDL_GetMouseState(&mx,&my);
         mf+=0.1;
         if (mf >= 16.0)mf = 0;
+
+        gf2d_entity_manager_update();
         
         gf2d_graphics_clear_screen();// clears drawing buffers
         // all drawing should happen betweem clear_screen and next_frame
             //backgrounds drawn first
             gf2d_sprite_draw_image(sprite,vector2d(0,0));
+
+            //entities and game objects
+            gf2d_entity_manager_draw();
             
             //UI elements last
             gf2d_sprite_draw(

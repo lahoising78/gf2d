@@ -34,6 +34,7 @@ void gf2d_render_ent_free( RenderEntity *ent )
 void gf2d_render_ent_draw(RenderEntity *ent)
 {
     if(!ent) return;
+    if(!ent->sprite) return;
 
     ent->sec += frameTime;
     if( ent->sec >= SECS_PER_FRAME )

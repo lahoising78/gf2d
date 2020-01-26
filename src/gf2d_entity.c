@@ -66,6 +66,37 @@ void gf2d_entity_manager_close()
     free(gf2d_entity_manager.entity_list);
 }
 
+void gf2d_entity_manager_update()
+{
+    int i;
+    Entity *ent = NULL;
+
+    for(i = 0; i < gf2d_entity_manager.count; i++)
+    {
+        ent = &gf2d_entity_manager.entity_list[i];
+        if(!ent->_inuse) continue;
+
+        if(ent->think) ent->think(ent);
+        if(ent->update) ent->update(ent);
+    }
+}
+
+void gf2d_entity_manager_draw()
+{
+    int i;
+    Entity *ent = NULL;
+
+    for(i = 0; i < gf2d_entity_manager.count; i++)
+    {
+        ent = &gf2d_entity_manager.entity_list[i];
+        if(!ent->_inuse || !ent->render_ent) continue;
+
+        vector2d_add(ent->render_ent->position, ent->render_ent->position, ent->position);
+            gf2d_render_ent_draw(ent->render_ent);
+        vector2d_sub(ent->render_ent->position, ent->render_ent->position, ent->position);
+    }
+}
+
 Entity *gf2d_entity_new()
 {
     int i;
