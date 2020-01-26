@@ -61,6 +61,20 @@ void gf2d_physics_entity_manager_close()
     free(gf2d_physics_entity_manager.entity_list);
 }
 
+void gf2d_physics_entity_manager_update()
+{
+    int i;
+    PhysicsEntity *ent = NULL;
+
+    for(i = 0; i < gf2d_physics_entity_manager.count; i++)
+    {
+        ent = &gf2d_physics_entity_manager.entity_list[i];
+        if(!ent->_inuse) continue;
+        gf2d_physics_entity_think(ent);
+        gf2d_physics_entity_update(ent);
+    }
+}
+
 PhysicsEntity *gf2d_physics_entity_new()
 {
     int i;
@@ -92,19 +106,19 @@ void gf2d_physics_entity_think( struct physics_entity_s *ent )
 {
     if(!ent) return;
 
-    slog("entity is thinking");
+
 }
 
 void gf2d_physics_entity_update( struct physics_entity_s *ent )
 {
     if(!ent) return;
 
-    slog("entity is updating");
+    
 }
 
 void gf2d_physics_entity_touch( struct physics_entity_s *ent, struct physics_entity_s *other )
 {
     if(!ent || !other) return;
 
-    slog("entity has collided");
+    
 }

@@ -25,11 +25,26 @@ typedef struct physics_entity_s
 } PhysicsEntity;
 
 /** 
+ * @brief initialize physics entity manager. This is where physics entities are allocated and initialized
  * @note count must be less or equal to the amount of entities allocated in entity manager
+ * @param count how many physics entities to allocate
  */
 void gf2d_physics_entity_manager_init(uint32_t count);
 
+/** 
+ * @brief update all entities
+ */
+void gf2d_physics_entity_manager_update();
+
+/** 
+ * @brief get a physics entity that is not being used
+ * @return a pointer to a physics entity
+ */
 PhysicsEntity *gf2d_physics_entity_new();
+
+/** 
+ * @brief free the physics entity and clear values
+ */
 void gf2d_physics_entity_free( PhysicsEntity *ent );
 
 #endif

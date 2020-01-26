@@ -25,7 +25,14 @@ typedef struct entity_s
  */
 void gf2d_entity_manager_init(uint32_t count);
 
+/** 
+ * @brief update all entities
+ */
 void gf2d_entity_manager_update();
+
+/** 
+ * @brief draw all entities
+ */
 void gf2d_entity_manager_draw();
 
 /** 
