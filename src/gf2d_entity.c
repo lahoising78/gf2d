@@ -54,12 +54,16 @@ void gf2d_entity_manager_close()
     int i;
     Entity *ent = NULL;
 
+    slog("close entity manager");
+
     for(i = 0; i < gf2d_entity_manager.count; i++)
     {
         ent = &gf2d_entity_manager.entity_list[i];
         gf2d_entity_free(ent);
         if(ent->render_ent) free(ent->render_ent);
     }
+
+    free(gf2d_entity_manager.entity_list);
 }
 
 Entity *gf2d_entity_new()
@@ -67,7 +71,7 @@ Entity *gf2d_entity_new()
     int i;
     Entity *ent = NULL;
 
-    slog("get new entity");
+    // slog("get new entity");
 
     for(i = 0; i < gf2d_entity_manager.count; i++)
     {

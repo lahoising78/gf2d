@@ -31,6 +31,10 @@ void gf2d_entity_manager_init(uint32_t count);
  */
 Entity *gf2d_entity_new();
 
+/** 
+ * @brief clear data from entity
+ * @param ent the entity to free
+ */
 void gf2d_entity_free(Entity *ent);
 
 #endif

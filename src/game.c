@@ -8,8 +8,10 @@
 #include "gf2d_camera.h"
 
 #include "gf2d_entity.h"
+#include "gf2d_physics_entity.h"
 
-#define ENTITY_COUNT 1024
+#define ENTITY_COUNT                1024
+#define PHYSICS_ENTITY_COUNT        256
 
 float frameTime = 0.0f;
 int main(int argc, char * argv[])
@@ -42,6 +44,7 @@ int main(int argc, char * argv[])
     gf2d_graphics_set_frame_delay(16);
     gf2d_sprite_init(1024);
     gf2d_entity_manager_init(ENTITY_COUNT);
+    gf2d_physics_entity_manager_init(PHYSICS_ENTITY_COUNT);
     SDL_ShowCursor(SDL_DISABLE);
     
     /*demo setup*/
