@@ -59,7 +59,7 @@ int main(int argc, char * argv[])
     gf2d_sprite_init(1024);
     gf2d_entity_manager_init(ENTITY_COUNT);
     gf2d_physics_entity_manager_init(PHYSICS_ENTITY_COUNT);
-    gf2d_input_init(1024);
+    gf2d_input_init(SDL_NUM_SCANCODES);
     SDL_ShowCursor(SDL_DISABLE);
     
     /*demo setup*/
@@ -67,12 +67,6 @@ int main(int argc, char * argv[])
     sprite = gf2d_sprite_load_image("images/backgrounds/bg_flat.png");
     mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16);
     gf2d_timer_start(&perSecond);
-
-    pe = gf2d_physics_entity_new();
-    pe->entity->render_ent = gf2d_render_ent_new( 
-        gf2d_sprite_load_all("images/space_bug.png", 128, 128, 16)
-    );
-    pe->useGravity = 1;
 
     /*main game loop*/
     while(!done)
