@@ -47,13 +47,14 @@ int main(int argc, char * argv[])
     gf2d_config();
 
     gf2d_graphics_initialize(
-        "gf2d",
-        1200,
-        720,
-        1200,
-        720,
-        vector4d(0,0,0,255),
-        0);
+        gf2d_main_get_window_name(),
+        gf2d_main_get_render_width(),
+        gf2d_main_get_render_height(),
+        gf2d_main_get_render_width(),
+        gf2d_main_get_render_height(),
+        gf2d_main_get_bgcolor(),
+        gf2d_main_get_fullscreen()
+    );
     gf2d_graphics_set_frame_delay(16);
     gf2d_sprite_init(1024);
     gf2d_entity_manager_init(ENTITY_COUNT);
