@@ -16,10 +16,10 @@ CC      = gcc
 LIB_LIST = ../gfc/libs/libgfc.a ../gfc/simple_json/libs/libsj.a ../gfc/simple_logger/libs/libsl.a 
 OBJECTS = $(patsubst %.c,%.o,$(wildcard *.c))
 
-INC_PATHS = ../include ../gfc/include ../gfc/simple_logger/include ../gfc/simple_json/include
+INC_PATHS = ../include ../include/application ../gfc/include ../gfc/simple_logger/include ../gfc/simple_json/include
 INC_PARAMS =$(foreach d, $(INC_PATHS), -I$d)
 
-OBJECTS = $(patsubst %.c,%.o,$(wildcard *.c))
+OBJECTS = $(patsubst %.c,%.o,$(wildcard *.c)) $(patsubst %.c, %.o,$(wildcard application/*.c))
 
 SDL_CFLAGS = `sdl2-config --cflags` $(INC_PARAMS)
 SDL_LDFLAGS = `sdl2-config --libs` -lSDL2_image -lpng -ljpeg -lz -lm
@@ -53,6 +53,7 @@ depend:
 
 clean:
 	rm *.o
+	rm application/*.o
 
 count:
 	wc -l *.c $(foreach d, $(INC_PATHS), $d/*.h) makefile
@@ -68,6 +69,4 @@ include makefile.dep
 #
 
 .c.o:
-	$(CC) $(CFLAGS) $(SDL_CFLAGS) -c $<
-
-
+	$(CC) $(CFLAGS) $(SDL_CFLAGS) -c $< -o $@

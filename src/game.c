@@ -2,6 +2,7 @@
 #include "gf2d_graphics.h"
 #include "gf2d_sprite.h"
 #include "simple_logger.h"
+#include "gf2d_main.h"
 
 #include "gf2d_timer.h"
 #include "gf2d_render_ent.h"
@@ -42,6 +43,9 @@ int main(int argc, char * argv[])
     /*program initializtion*/
     init_logger("gf2d.log");
     slog("---==== BEGIN ====---");
+
+    gf2d_config();
+
     gf2d_graphics_initialize(
         "gf2d",
         1200,
@@ -58,6 +62,7 @@ int main(int argc, char * argv[])
     SDL_ShowCursor(SDL_DISABLE);
     
     /*demo setup*/
+    gf2d_main();
     sprite = gf2d_sprite_load_image("images/backgrounds/bg_flat.png");
     mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16);
     gf2d_timer_start(&perSecond);
