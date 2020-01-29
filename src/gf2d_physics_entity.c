@@ -1,6 +1,11 @@
 #include "gf2d_physics_entity.h"
 #include "simple_logger.h"
 
+#define GRAVITY                     120.0f
+
+#define TIME_MULTIPLIER             72.0f
+extern float frameTime;
+
 typedef struct
 {
     PhysicsEntity           *entity_list;
@@ -109,11 +114,36 @@ void gf2d_physics_entity_think( struct physics_entity_s *ent )
 
 }
 
+/** @note we multiply time by TIME_MULTIPLIER to make numbers work better */
 void gf2d_physics_entity_update( struct physics_entity_s *ent )
 {
-    if(!ent) return;
+    Vector2D buf = {0};
 
+    if(!ent) return;
     
+    if( ent->useGravity )
+    {
+        ent->entity->acceleration.y += GRAVITY;
+    }
+
+    //vf = vi + at^2
+    vector2d_scale( buf, ent->entity->acceleration, frameTime * frameTime * TIME_MULTIPLIER * TIME_MULTIPLIER );    // at^2
+    vector2d_add( ent->entity->velocity, ent->entity->velocity, buf );                                              // vf = vi + at^2
+
+    //df = di + vt + (at^2)/2
+    vector2d_scale( buf, buf, 0.5f );                                                                               // (at^2)/2
+    vector2d_add( ent->entity->position, ent->entity->position, buf );                                              // di + (at^2)/2
+    vector2d_scale( buf, ent->entity->velocity, frameTime * TIME_MULTIPLIER );                                      // vt
+    vector2d_add( ent->entity->position, ent->entity->position, buf );                                              // df = di + vt + (at^2)/2
+
+    if( ent->useGravity )
+    {
+        ent->entity->acceleration.y -= GRAVITY;
+    }
+
+    // slog( "position: %.2f, %.2f", ent->entity->position.x, ent->entity->position.y );
+    // slog( "velocity: %.2f, %.2f", ent->entity->velocity.x, ent->entity->velocity.y );
+    // slog( "acceleration: %.2f, %.2f", ent->entity->acceleration.x, ent->entity->acceleration.y );
 }
 
 void gf2d_physics_entity_touch( struct physics_entity_s *ent, struct physics_entity_s *other )

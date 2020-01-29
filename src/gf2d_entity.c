@@ -46,6 +46,7 @@ void gf2d_entity_manager_initialize_all_entities()
     {
         ent = &gf2d_entity_manager.entity_list[i];
         ent->render_ent = gf2d_render_ent_new(NULL);
+        // ent->acceleration = vector2d( 10, 10 );
     }
 }
 

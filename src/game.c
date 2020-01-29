@@ -33,6 +33,12 @@ int main(int argc, char * argv[])
     
     PhysicsEntity *pe = NULL;
 
+    /* reading arguments */
+    for(i = 1; i < argc; i++)
+    {
+        printf( "argument %d: %s\n", i - 1, argv[i] );
+    }
+
     /*program initializtion*/
     init_logger("gf2d.log");
     slog("---==== BEGIN ====---");
@@ -59,6 +65,7 @@ int main(int argc, char * argv[])
     pe->entity->render_ent = gf2d_render_ent_new( 
         gf2d_sprite_load_all("images/space_bug.png", 128, 128, 16)
     );
+    pe->useGravity = 1;
 
     /*main game loop*/
     while(!done)
@@ -67,6 +74,7 @@ int main(int argc, char * argv[])
 
         SDL_PumpEvents();   // update SDL's internal event structures
         keys = SDL_GetKeyboardState(NULL); // get the keyboard state for this frame
+
         /*update things here*/
         SDL_GetMouseState(&mx,&my);
         mf+=0.1;
