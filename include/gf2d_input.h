@@ -22,6 +22,18 @@ void gf2d_input_update();
  */
 uint8_t gf2d_input_is_key_pressed( SDL_Scancode scancode );
 
+/** 
+ * @brief check if a certain key has just been pressed
+ * @param scancode Scancode of the key to check
+ * @return 1 if the key was just pressed and 0 otherwise
+ */
 uint8_t gf2d_input_key_just_pressed( SDL_Scancode scancode );
+
+/** 
+ * @brief check if a certain key has just been released
+ * @param scancode Scancode of the key to check
+ * @return 1 if key was just released and 0 otherwise
+ */
+uint8_t gf2d_input_key_released( SDL_Scancode scancode );
 
 #endif

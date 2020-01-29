@@ -57,3 +57,8 @@ uint8_t gf2d_input_key_just_pressed( SDL_Scancode scancode )
 {
     return gf2d_input_is_key_pressed(scancode) && !gf2d_input_manager.currentKeys[scancode].key.repeat;
 }
+
+uint8_t gf2d_input_key_released( SDL_Scancode scancode )
+{
+    return (scancode < gf2d_input_manager.maxKeys)? gf2d_input_manager.currentKeys[ scancode ].type == SDL_KEYUP : 0;
+}
