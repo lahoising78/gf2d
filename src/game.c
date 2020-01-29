@@ -6,6 +6,7 @@
 #include "gf2d_timer.h"
 #include "gf2d_render_ent.h"
 #include "gf2d_camera.h"
+#include "gf2d_input.h"
 
 #include "gf2d_entity.h"
 #include "gf2d_physics_entity.h"
@@ -20,7 +21,6 @@ int main(int argc, char * argv[])
     /*variable declarations*/
     int done = 0;
     int i;
-    const Uint8 * keys;
     Sprite *sprite;
     
     int mx,my;
@@ -54,6 +54,7 @@ int main(int argc, char * argv[])
     gf2d_sprite_init(1024);
     gf2d_entity_manager_init(ENTITY_COUNT);
     gf2d_physics_entity_manager_init(PHYSICS_ENTITY_COUNT);
+    gf2d_input_init(1024);
     SDL_ShowCursor(SDL_DISABLE);
     
     /*demo setup*/
@@ -72,8 +73,8 @@ int main(int argc, char * argv[])
     {
         gf2d_timer_start(&fTimer);
 
-        SDL_PumpEvents();   // update SDL's internal event structures
-        keys = SDL_GetKeyboardState(NULL); // get the keyboard state for this frame
+        /* update input states */
+        gf2d_input_update();
 
         /*update things here*/
         SDL_GetMouseState(&mx,&my);
@@ -102,8 +103,8 @@ int main(int argc, char * argv[])
                 &mouseColor,
                 (int)mf);
         gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
-        
-        if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition
+
+        if ( gf2d_input_is_key_pressed(SDL_SCANCODE_ESCAPE) )done = 1; // exit condition
         if( gf2d_timer_get_ticks(&perSecond) >= 0.1f )
         {
             slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());
