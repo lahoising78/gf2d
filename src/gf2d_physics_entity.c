@@ -1,7 +1,7 @@
 #include "gf2d_physics_entity.h"
 #include "simple_logger.h"
 
-#define GRAVITY                     120.0f
+#define GRAVITY                     98.0f
 
 #define TIME_MULTIPLIER             1000.0f
 extern float frameTime;
@@ -21,7 +21,7 @@ void gf2d_physics_entity_think( struct physics_entity_s *ent );
 void gf2d_physics_entity_update( struct physics_entity_s *ent );
 void gf2d_physics_entity_touch( struct physics_entity_s *ent, struct physics_entity_s *other );
 
-uint8_t gf2d_physics_entity_check_collision( PhysicsEntity *e );
+PhysicsEntity *gf2d_physics_entity_check_collision( PhysicsEntity *e );
 void gf2d_physics_entity_handle_collision( PhysicsEntity *e, PhysicsEntity *o );
 
 void gf2d_physics_entity_manager_init(uint32_t count)
@@ -121,29 +121,26 @@ void gf2d_physics_entity_think( struct physics_entity_s *ent )
 void gf2d_physics_entity_update( struct physics_entity_s *ent )
 {
     Vector2D buf = {0};
+    PhysicsEntity *o = NULL;
 
     if(!ent) return;
     
-    if( ent->useGravity )
-    {
-        ent->entity->acceleration.y += GRAVITY;
-    }
-
     if( ent->type == PET_KINETIC )
     {
         
         if( ent->useGravity )
         {
-            ent->entity->velocity.y -= GRAVITY * TIME_MULTIPLIER * frameTime;
+            ent->entity->velocity.y += GRAVITY * frameTime;
         }
 
         /* df = di + vt */
         vector2d_scale( buf, ent->entity->velocity, frameTime * TIME_MULTIPLIER );                                      // vt
         vector2d_add( ent->entity->position, ent->entity->position, buf );                                              // df = di + vt
         
-        if( gf2d_physics_entity_check_collision(ent) )
+        if( (o = gf2d_physics_entity_check_collision(ent)) )
         {
-            slog("ME PIDE LECHE");
+            vector2d_sub(ent->entity->position, ent->entity->position, buf);
+            // gf2d_physics_entity_handle_collision(ent, o);
         }
     }
     else
@@ -164,12 +161,12 @@ void gf2d_physics_entity_touch( struct physics_entity_s *ent, struct physics_ent
     
 }
 
-uint8_t gf2d_physics_entity_check_collision( PhysicsEntity *e )
+PhysicsEntity *gf2d_physics_entity_check_collision( PhysicsEntity *e )
 {
     int i;
     PhysicsEntity *o = NULL;
 
-    if(!e) return 0;
+    if(!e) return NULL;
 
     vector2d_add(e->modelBox.position, e->modelBox.position, e->entity->position);
     for( i = 0; i < gf2d_physics_entity_manager.count; i++)
@@ -182,18 +179,18 @@ uint8_t gf2d_physics_entity_check_collision( PhysicsEntity *e )
         {   
             vector2d_sub(e->modelBox.position, e->modelBox.position, e->entity->position);
             vector2d_sub(o->modelBox.position, o->modelBox.position, o->entity->position);
-            return 1;
+            return o;
         }
         vector2d_sub(o->modelBox.position, o->modelBox.position, o->entity->position);
     }
     vector2d_sub(e->modelBox.position, e->modelBox.position, e->entity->position);
 
-    return 0;
+    return NULL;
 }
 
 void gf2d_physics_entity_handle_collision( PhysicsEntity *e, PhysicsEntity *o )
 {
-    float ve, vo; /* velocity e, velocity other */
+    float ve, vo, vmax; /* velocity e, velocity other */
     Vector2D buf;
 
     if(!e || !o) return;
@@ -201,6 +198,7 @@ void gf2d_physics_entity_handle_collision( PhysicsEntity *e, PhysicsEntity *o )
 
     ve = vector2d_magnitude(e->entity->velocity);
     vo = vector2d_magnitude(o->entity->velocity);
+    vmax = (ve > vo)? ve : vo;
 
     switch( e->type )
     {
@@ -225,9 +223,10 @@ void gf2d_physics_entity_handle_collision( PhysicsEntity *e, PhysicsEntity *o )
             else
             {
                 vector2d_sub( buf, e->entity->position, o->entity->position );
-                vector2d_normalize(&buf);
-                vector2d_scale(e->entity->velocity, buf, vo);
-                vector2d_scale(o->entity->velocity, buf, -ve);
+                vector2d_set_magnitude(&buf, vmax);
+                if( vo < ve ) vector2d_scale(buf, buf, -1);
+                vector2d_copy( e->entity->velocity, buf );
+                vector2d_copy( o->entity->velocity, buf );
             }
         }
         else /* static */
