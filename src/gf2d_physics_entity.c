@@ -139,8 +139,14 @@ void gf2d_physics_entity_update( struct physics_entity_s *ent )
         
         if( (o = gf2d_physics_entity_check_collision(ent)) )
         {
-            vector2d_sub(ent->entity->position, ent->entity->position, buf);
-            // gf2d_physics_entity_handle_collision(ent, o);
+            if( ent->canCollide && o->canCollide )
+            {
+                vector2d_sub(ent->entity->position, ent->entity->position, buf);
+                gf2d_physics_entity_handle_collision(ent, o);
+            }
+
+            if( ent->entity->touch )    ent->entity->touch( ent->entity, o->entity );
+            if( o->entity->touch )      o->entity->touch( o->entity, ent->entity );
         }
     }
     else
