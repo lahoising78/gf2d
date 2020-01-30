@@ -3,7 +3,7 @@
 
 #define GRAVITY                     120.0f
 
-#define TIME_MULTIPLIER             72.0f
+#define TIME_MULTIPLIER             1000.0f
 extern float frameTime;
 
 typedef struct
@@ -20,6 +20,9 @@ void gf2d_physics_entity_manager_close();
 void gf2d_physics_entity_think( struct physics_entity_s *ent );
 void gf2d_physics_entity_update( struct physics_entity_s *ent );
 void gf2d_physics_entity_touch( struct physics_entity_s *ent, struct physics_entity_s *other );
+
+uint8_t gf2d_physics_entity_check_collision( PhysicsEntity *e );
+void gf2d_physics_entity_handle_collision( PhysicsEntity *e, PhysicsEntity *o );
 
 void gf2d_physics_entity_manager_init(uint32_t count)
 {
@@ -126,19 +129,27 @@ void gf2d_physics_entity_update( struct physics_entity_s *ent )
         ent->entity->acceleration.y += GRAVITY;
     }
 
-    //vf = vi + at^2
-    vector2d_scale( buf, ent->entity->acceleration, frameTime * frameTime * TIME_MULTIPLIER * TIME_MULTIPLIER );    // at^2
-    vector2d_add( ent->entity->velocity, ent->entity->velocity, buf );                                              // vf = vi + at^2
-
-    //df = di + vt + (at^2)/2
-    vector2d_scale( buf, buf, 0.5f );                                                                               // (at^2)/2
-    vector2d_add( ent->entity->position, ent->entity->position, buf );                                              // di + (at^2)/2
-    vector2d_scale( buf, ent->entity->velocity, frameTime * TIME_MULTIPLIER );                                      // vt
-    vector2d_add( ent->entity->position, ent->entity->position, buf );                                              // df = di + vt + (at^2)/2
-
-    if( ent->useGravity )
+    if( ent->type == PET_KINETIC )
     {
-        ent->entity->acceleration.y -= GRAVITY;
+        
+        if( ent->useGravity )
+        {
+            ent->entity->velocity.y -= GRAVITY * TIME_MULTIPLIER * frameTime;
+        }
+
+        /* df = di + vt */
+        vector2d_scale( buf, ent->entity->velocity, frameTime * TIME_MULTIPLIER );                                      // vt
+        vector2d_add( ent->entity->position, ent->entity->position, buf );                                              // df = di + vt
+        
+        if( gf2d_physics_entity_check_collision(ent) )
+        {
+            slog("ME PIDE LECHE");
+        }
+    }
+    else
+    {
+        vector2d_clear(ent->entity->acceleration);
+        vector2d_clear(ent->entity->velocity);
     }
 
     // slog( "position: %.2f, %.2f", ent->entity->position.x, ent->entity->position.y );
@@ -151,4 +162,83 @@ void gf2d_physics_entity_touch( struct physics_entity_s *ent, struct physics_ent
     if(!ent || !other) return;
 
     
+}
+
+uint8_t gf2d_physics_entity_check_collision( PhysicsEntity *e )
+{
+    int i;
+    PhysicsEntity *o = NULL;
+
+    if(!e) return 0;
+
+    vector2d_add(e->modelBox.position, e->modelBox.position, e->entity->position);
+    for( i = 0; i < gf2d_physics_entity_manager.count; i++)
+    {
+        o = &gf2d_physics_entity_manager.entity_list[i];
+        if(!o->_inuse || o == e) continue;
+
+        vector2d_add(o->modelBox.position, o->modelBox.position, o->entity->position);
+        if( gf2d_collision_check(&e->modelBox, &o->modelBox ) )
+        {   
+            vector2d_sub(e->modelBox.position, e->modelBox.position, e->entity->position);
+            vector2d_sub(o->modelBox.position, o->modelBox.position, o->entity->position);
+            return 1;
+        }
+        vector2d_sub(o->modelBox.position, o->modelBox.position, o->entity->position);
+    }
+    vector2d_sub(e->modelBox.position, e->modelBox.position, e->entity->position);
+
+    return 0;
+}
+
+void gf2d_physics_entity_handle_collision( PhysicsEntity *e, PhysicsEntity *o )
+{
+    float ve, vo; /* velocity e, velocity other */
+    Vector2D buf;
+
+    if(!e || !o) return;
+    if(!e->canCollide || !o->canCollide) return;
+
+    ve = vector2d_magnitude(e->entity->velocity);
+    vo = vector2d_magnitude(o->entity->velocity);
+
+    switch( e->type )
+    {
+    case PET_STATIC:
+        
+        if( o->type == PET_KINETIC )
+        {
+            
+        }
+
+        break;
+    
+    case PET_KINETIC:
+
+        if( o->type == PET_KINETIC )
+        {
+            if( ve == vo )
+            {
+                vector2d_clear(e->entity->velocity);
+                vector2d_clear(o->entity->velocity);
+            }
+            else
+            {
+                vector2d_sub( buf, e->entity->position, o->entity->position );
+                vector2d_normalize(&buf);
+                vector2d_scale(e->entity->velocity, buf, vo);
+                vector2d_scale(o->entity->velocity, buf, -ve);
+            }
+        }
+        else /* static */
+        {
+
+        }
+
+        break;
+
+    default:
+        break;
+    }
+
 }

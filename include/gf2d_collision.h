@@ -5,8 +5,9 @@
 
 typedef enum
 {
-    CST_BOX = 0,
-    CST_CIRCLE = 1
+    CST_NONE = 0,
+    CST_BOX = 1,
+    CST_CIRCLE = 2
 } CollisionShapeType;
 
 typedef struct

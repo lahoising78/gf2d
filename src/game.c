@@ -31,8 +31,6 @@ int main(int argc, char * argv[])
 
     Timer perSecond = gf2d_timer_new();
     Timer fTimer = gf2d_timer_new();
-    
-    PhysicsEntity *pe = NULL;
 
     /* reading arguments */
     for(i = 1; i < argc; i++)

@@ -2,6 +2,9 @@
 #define _GF2D_ACTOR_H_
 
 #include "gf2d_entity.h"
+#include "gf2d_collision.h"
+
+// #define PE_MAX_MODEL_BOXES 3
 
 typedef enum
 {
@@ -16,10 +19,8 @@ typedef struct physics_entity_s
     PhysicsEntityType       type;
     uint8_t                 useGravity;
 
-    /** 
-     * TODO: 
-     * Add shapes for collision and triggers
-     */
+    CollisionShape          modelBox;
+    uint8_t                 canCollide;                             /* 1 if we want to use modelBoxes to collide, 0 if modelBoxes should only be triggers */
 
     uint8_t                 _inuse;
 } PhysicsEntity;
