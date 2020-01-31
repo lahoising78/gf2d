@@ -21,5 +21,6 @@ void gf2d_scene_close();
 void gf2d_scene_render();
 
 int gf2d_scene_add_entity( Entity *ent );
+void gf2d_scene_remove_entity( Entity *e );
 
 #endif

@@ -3,6 +3,8 @@
 
 static Scene gf2d_scene = {0};
 
+void gf2d_scene_swap_in_render_list( uint32_t a, uint32_t b );
+
 void gf2d_scene_load( uint32_t physics_entities_count, uint32_t entities, void (*scene_awake)() )
 {
     slog("--== Loading new scene ==--");
@@ -66,4 +68,48 @@ int gf2d_scene_add_entity( Entity *ent )
     }
 
     return -1;
+}
+
+void gf2d_scene_remove_entity( Entity *e )
+{
+    int i;
+    Entity *ent = NULL;
+
+    if(!e) return;
+
+    for( i = 0; i < gf2d_scene.entities_count; i++ )
+    {
+        ent = gf2d_scene.entities[i];
+        if(!ent) continue;
+        if(ent == e) 
+        {
+            gf2d_entity_free(e);
+            gf2d_scene.entities[i] = NULL;
+            break;
+        }
+    }
+
+    if( gfc_list_delete_data(gf2d_scene.render_list, e) )
+    {
+        slog("me pide leche");
+    }
+
+    // for( i = 0; i < gfc_list_get_count(gf2d_scene.render_list); i++ )
+    // {
+    //     if( !gfc_list_get_nth(gf2d_scene.render_list, i) )
+    //     {
+    //         for( ; !(ent = gfc_list_get_nth(gf2d_scene.render_list, i+1)); i++ )
+    //         {
+    //             gf2d_scene_swap_in_render_list(i, i+1);
+    //         }
+    //     }
+    // }
+}
+
+void gf2d_scene_swap_in_render_list( uint32_t a, uint32_t b )
+{
+    void *data;
+    data = gf2d_scene.render_list->elements[a].data;
+    gf2d_scene.render_list->elements[a].data = gf2d_scene.render_list->elements[b].data;
+    gf2d_scene.render_list->elements[b].data = data;
 }

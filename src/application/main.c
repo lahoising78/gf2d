@@ -31,6 +31,7 @@ void un_awake_ahi()
     e->render_ent->sprite = gf2d_sprite_load_all("images/space_bug.png", 128, 128, 16);
     e->update = update_that_thing;
     gf2d_scene_add_entity(e);
+    gf2d_scene_remove_entity(e);
 }
 
 void gf2d_main()
