@@ -53,19 +53,23 @@ void gf2d_physics_entity_manager_initialize_entities()
     }
 }
 
-void gf2d_physics_entity_manager_close()
+void gf2d_physics_entity_manager_clean( uint32_t freeEntity )
 {
     int i;
     PhysicsEntity *ent = NULL;
-
-    slog("close physics entity manager");
 
     for(i = 0; i < gf2d_physics_entity_manager.count; i++)
     {
         ent = &gf2d_physics_entity_manager.entity_list[i];
         gf2d_physics_entity_free(ent);
     }
+}
 
+void gf2d_physics_entity_manager_close()
+{
+    slog("close physics entity manager");
+
+    gf2d_physics_entity_manager_clean(1);
     free(gf2d_physics_entity_manager.entity_list);
 }
 

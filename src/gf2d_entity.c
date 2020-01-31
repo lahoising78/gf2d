@@ -37,6 +37,21 @@ void gf2d_entity_manager_init(uint32_t count)
     atexit(gf2d_entity_manager_close);
 }
 
+void gf2d_entity_manager_clean( uint8_t freeRenderEnt )
+{
+    int i;
+    Entity *ent = NULL;
+
+    slog("clean all entities");
+
+    for(i = 0; i < gf2d_entity_manager.count; i++)
+    {
+        ent = &gf2d_entity_manager.entity_list[i];
+        gf2d_entity_free(ent);
+        if(freeRenderEnt && ent->render_ent) free(ent->render_ent);
+    }
+}
+
 void gf2d_entity_manager_initialize_all_entities()
 {
     int i;
@@ -52,18 +67,9 @@ void gf2d_entity_manager_initialize_all_entities()
 
 void gf2d_entity_manager_close()
 {
-    int i;
-    Entity *ent = NULL;
-
     slog("close entity manager");
 
-    for(i = 0; i < gf2d_entity_manager.count; i++)
-    {
-        ent = &gf2d_entity_manager.entity_list[i];
-        gf2d_entity_free(ent);
-        if(ent->render_ent) free(ent->render_ent);
-    }
-
+    gf2d_entity_manager_clean(1);
     free(gf2d_entity_manager.entity_list);
 }
 

@@ -22,12 +22,6 @@ int main(int argc, char * argv[])
     /*variable declarations*/
     int done = 0;
     int i;
-    Sprite *sprite;
-    
-    int mx,my;
-    float mf = 0;
-    Sprite *mouse;
-    Vector4D mouseColor = {255,100,255,200};
 
     Timer perSecond = gf2d_timer_new();
     Timer fTimer = gf2d_timer_new();
@@ -62,8 +56,6 @@ int main(int argc, char * argv[])
     
     /*demo setup*/
     gf2d_main();
-    sprite = gf2d_sprite_load_image("images/backgrounds/bg_flat.png");
-    mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16);
     gf2d_timer_start(&perSecond);
 
     /*main game loop*/
@@ -75,31 +67,19 @@ int main(int argc, char * argv[])
         gf2d_input_update();
 
         /*update things here*/
-        SDL_GetMouseState(&mx,&my);
-        mf+=0.1;
-        if (mf >= 16.0)mf = 0;
-
         gf2d_entity_manager_update();
         gf2d_physics_entity_manager_update();
         
         gf2d_graphics_clear_screen();// clears drawing buffers
         // all drawing should happen betweem clear_screen and next_frame
-            //backgrounds drawn first
-            gf2d_sprite_draw_image(sprite,vector2d(0,0));
+            
+            //branckground draw
 
             //entities and game objects
             gf2d_entity_manager_draw();
             
             //UI elements last
-            gf2d_sprite_draw(
-                mouse,
-                vector2d(mx,my),
-                NULL,
-                NULL,
-                NULL,
-                NULL,
-                &mouseColor,
-                (int)mf);
+
         gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
 
         if ( gf2d_input_is_key_pressed(SDL_SCANCODE_ESCAPE) )done = 1; // exit condition
