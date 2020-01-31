@@ -99,6 +99,7 @@ void gf2d_entity_manager_draw()
         if(!ent->_inuse || !ent->render_ent) continue;
 
         vector2d_add(ent->render_ent->position, ent->render_ent->position, ent->position);
+        // slog("pos %.2f %.2f", ent->render_ent->position.x, ent->render_ent->position.y);
             gf2d_render_ent_draw(ent->render_ent);
         vector2d_sub(ent->render_ent->position, ent->render_ent->position, ent->position);
     }

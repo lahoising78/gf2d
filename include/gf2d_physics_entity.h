@@ -33,6 +33,7 @@ typedef struct physics_entity_s
 void gf2d_physics_entity_manager_init(uint32_t count);
 
 void gf2d_physics_entity_manager_clean( uint32_t freeEntity );
+void gf2d_physics_entity_manager_initialize_entities();
 
 /** 
  * @brief update all entities

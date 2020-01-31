@@ -10,7 +10,7 @@
 #
 
 # Linux
-PROJECT = application
+PROJECT = app
 CC      = gcc
 
 LIB_LIST = ../gfc/libs/libgfc.a ../gfc/simple_json/libs/libsj.a ../gfc/simple_logger/libs/libsl.a 

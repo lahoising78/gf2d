@@ -54,7 +54,7 @@ dkms.conf
 #this program's executable
 gf2d
 punti_jordan
-application
+app
 
 #logs
 *.log

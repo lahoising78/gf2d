@@ -8,6 +8,7 @@
 #include "gf2d_render_ent.h"
 #include "gf2d_camera.h"
 #include "gf2d_input.h"
+#include "gf2d_scene.h"
 
 #include "gf2d_entity.h"
 #include "gf2d_physics_entity.h"
@@ -52,7 +53,6 @@ int main(int argc, char * argv[])
     gf2d_entity_manager_init(ENTITY_COUNT);
     gf2d_physics_entity_manager_init(PHYSICS_ENTITY_COUNT);
     gf2d_input_init(SDL_NUM_SCANCODES);
-    SDL_ShowCursor(SDL_DISABLE);
     
     /*demo setup*/
     gf2d_main();
@@ -76,13 +76,17 @@ int main(int argc, char * argv[])
             //branckground draw
 
             //entities and game objects
-            gf2d_entity_manager_draw();
+            gf2d_scene_render();
             
             //UI elements last
 
         gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
 
-        if ( gf2d_input_is_key_pressed(SDL_SCANCODE_ESCAPE) )done = 1; // exit condition
+        if ( gf2d_input_is_key_pressed(SDL_SCANCODE_ESCAPE) )
+        {
+            gf2d_scene_close();
+            done = 1; // exit condition
+        }
         if( gf2d_timer_get_ticks(&perSecond) >= 0.1f )
         {
             slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());

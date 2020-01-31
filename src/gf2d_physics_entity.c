@@ -14,7 +14,7 @@ typedef struct
 
 static PhysicsEntityManager gf2d_physics_entity_manager = {0};
 
-void gf2d_physics_entity_manager_initialize_entities();
+// void gf2d_physics_entity_manager_initialize_entities();
 void gf2d_physics_entity_manager_close();
 
 void gf2d_physics_entity_think( struct physics_entity_s *ent );
