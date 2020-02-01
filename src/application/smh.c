@@ -12,19 +12,16 @@ void do_the_thing( Entity *self )
 
 void smh_awake()
 {
-    Entity *ent = NULL;
-    PhysicsEntity *pe = NULL;
+    Animation *anim = NULL;
+    // Entity *ent = NULL;
 
-    ent = gf2d_entity_new();
-    ent->render_ent->sprite = gf2d_sprite_load_image("images/backgrounds/bg_flat.png");
-    gf2d_scene_add_entity(ent);
+    // ent = gf2d_entity_new();
+    // ent->render_ent->sprite = gf2d_sprite_load_image("images/backgrounds/bg_flat.png");
+    // // ent->update = do_the_thing;
+    // gf2d_scene_add_entity(ent);
 
-    pe = gf2d_physics_entity_new();
-    pe->entity->render_ent->sprite = gf2d_sprite_load_all("images/space_bug.png", 128, 128, 16);
-    pe->entity->position = vector2d(0.0f, 350.0f);
-    pe->entity->velocity.x = 3.0f;
-    pe->type = PET_KINETIC;
-    pe->entity->update = do_the_thing;
-    if(gf2d_scene_add_entity(pe->entity) < 0)
-        slog("no le pudimo da na");
+    anim = gf2d_animation_new();
+    anim->rend->sprite = gf2d_sprite_load_all("images/pointer.png", 32, 32, 16);
+    gf2d_animation_play(anim, 0, 16);
+    gf2d_scene_add_animation(anim);
 }

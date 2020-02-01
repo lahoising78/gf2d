@@ -36,18 +36,6 @@ void gf2d_render_ent_draw(RenderEntity *ent)
     if(!ent) return;
     if(!ent->sprite) return;
 
-    ent->sec += frameTime;
-    if( ent->sec >= SECS_PER_FRAME )
-    {
-        ent->frame++;
-        ent->sec = 0.0f;
-    }
-
-    if( ent->frame >= ent->sprite->frames_per_line )
-    {
-        ent->frame = 0;
-    }
-
     gf2d_sprite_draw(
         ent->sprite,
         gf2d_camera_get_displaced_position(ent->position),
@@ -56,6 +44,6 @@ void gf2d_render_ent_draw(RenderEntity *ent)
         ent->rotation,
         ent->flip,
         ent->colorShift, 
-        ent->frame
+        (uint32_t)ent->frame
     );
 }

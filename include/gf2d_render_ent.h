@@ -12,8 +12,7 @@ typedef struct
     Vector3D            *rotation;
     Vector2D            *flip;
     Vector4D            *colorShift;
-    Uint32              frame;
-    float               sec;
+    float               frame;
 } RenderEntity;
 
 /** 
