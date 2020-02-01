@@ -150,6 +150,7 @@ void gf2d_scene_add_to_drawables( void *de, DrawableEntityType type )
 
     case DET_PHYS:
         drawable->drawable.phys = (PhysicsEntity*)de;
+        break;
     
     default:
         break;
@@ -196,12 +197,19 @@ void gf2d_scene_remove_entity( Entity *e )
     }
 
     /** TODO: delete the entity from drawables */
-    for(i = 0; i < gf2d_scene.drawable_entities_size; i++)
+    for(i = 0; i < gf2d_scene.drawable_entities_count; i++)
     {
         d = &gf2d_scene.drawable_entities[i];
-        if(d->drawable.ent && (d->drawable.ent == e))
+        if(d->drawable.ent == e)
         {
-            memmove( &gf2d_scene.drawable_entities[i], &gf2d_scene.drawable_entities[i+1], sizeof(DrawableEntityType)*(gf2d_scene.drawable_entities_size - i) );
+            gf2d_scene.drawable_entities_count--;
+            if( i == (int)gf2d_scene.drawable_entities_count-1 || i == 0 )
+            {
+                memset( d, 0, sizeof(DrawableEntity) );
+                return;
+            }
+
+            memmove( d, d+1, sizeof(DrawableEntityType)*(gf2d_scene.drawable_entities_count - i) );
             return;
         }
     }
