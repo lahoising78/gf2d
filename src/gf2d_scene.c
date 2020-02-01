@@ -106,11 +106,11 @@ void gf2d_scene_render()
         {
         case DET_ENT:
             
-            if( !ent->drawable.ent->render_ent ) continue;
+            if( !ent->drawable.ent->anim ) continue;
 
-            vector2d_add(ent->drawable.ent->render_ent->position, ent->drawable.ent->render_ent->position, ent->drawable.ent->position);
-                gf2d_render_ent_draw(ent->drawable.ent->render_ent);
-            vector2d_sub(ent->drawable.ent->render_ent->position, ent->drawable.ent->render_ent->position, ent->drawable.ent->position);    
+            vector2d_add(ent->drawable.ent->anim->rend->position, ent->drawable.ent->anim->rend->position, ent->drawable.ent->position);
+                gf2d_animation_render(ent->drawable.ent->anim);
+            vector2d_sub(ent->drawable.ent->anim->rend->position, ent->drawable.ent->anim->rend->position, ent->drawable.ent->position);
 
             break;
 

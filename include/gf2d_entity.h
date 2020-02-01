@@ -1,12 +1,12 @@
 #ifndef _GF2D_ENTITY_H_
 #define _GF2D_ENTITY_H_
 
-#include "gf2d_render_ent.h"
+#include "gf2d_animation.h"
 #include "gfc_vector.h"
 
 typedef struct entity_s
 {
-    RenderEntity        *render_ent;
+    Animation           *anim;
     Vector2D            position;
     Vector2D            velocity;
     Vector2D            acceleration;
@@ -25,7 +25,7 @@ typedef struct entity_s
  */
 void gf2d_entity_manager_init(uint32_t count);
 
-void gf2d_entity_manager_clean( uint8_t freeRenderEnt );
+void gf2d_entity_manager_clean( uint8_t del );
 
 /** 
  * @brief update all entities

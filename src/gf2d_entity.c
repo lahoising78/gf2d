@@ -37,7 +37,7 @@ void gf2d_entity_manager_init(uint32_t count)
     atexit(gf2d_entity_manager_close);
 }
 
-void gf2d_entity_manager_clean( uint8_t freeRenderEnt )
+void gf2d_entity_manager_clean( uint8_t del )
 {
     int i;
     Entity *ent = NULL;
@@ -48,7 +48,6 @@ void gf2d_entity_manager_clean( uint8_t freeRenderEnt )
     {
         ent = &gf2d_entity_manager.entity_list[i];
         gf2d_entity_free(ent);
-        if(freeRenderEnt && ent->render_ent) free(ent->render_ent);
     }
 }
 
@@ -60,7 +59,7 @@ void gf2d_entity_manager_initialize_all_entities()
     for(i = 0; i < gf2d_entity_manager.count; i++)
     {
         ent = &gf2d_entity_manager.entity_list[i];
-        ent->render_ent = gf2d_render_ent_new(NULL);
+        ent->anim = gf2d_animation_new();
         // ent->acceleration = vector2d( 10, 10 );
     }
 }
@@ -96,12 +95,12 @@ void gf2d_entity_manager_draw()
     for(i = 0; i < gf2d_entity_manager.count; i++)
     {
         ent = &gf2d_entity_manager.entity_list[i];
-        if(!ent->_inuse || !ent->render_ent) continue;
+        if(!ent->_inuse || !ent->anim) continue;
 
-        vector2d_add(ent->render_ent->position, ent->render_ent->position, ent->position);
+        vector2d_add(ent->anim->rend->position, ent->anim->rend->position, ent->position);
         // slog("pos %.2f %.2f", ent->render_ent->position.x, ent->render_ent->position.y);
-            gf2d_render_ent_draw(ent->render_ent);
-        vector2d_sub(ent->render_ent->position, ent->render_ent->position, ent->position);
+            gf2d_animation_render(ent->anim);
+        vector2d_sub(ent->anim->rend->position, ent->anim->rend->position, ent->position);
     }
 }
 
@@ -128,16 +127,16 @@ Entity *gf2d_entity_new()
 
 void gf2d_entity_free(Entity *ent)
 {
-    RenderEntity *rend_ent = NULL;
+    Animation *anim = NULL;
 
     // slog("free entity");
-    rend_ent = ent->render_ent;
-    if(rend_ent)
+    anim = ent->anim;
+    if(anim)
     {
-        gf2d_render_ent_free(rend_ent);
+        gf2d_animation_free(anim, 0);
     }
 
     memset(ent, 0, sizeof(Entity));
 
-    ent->render_ent = rend_ent;
+    ent->anim = anim;
 }
