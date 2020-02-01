@@ -179,6 +179,7 @@ void gf2d_scene_remove_entity( Entity *e )
 {
     int i;
     Entity *ent = NULL;
+    DrawableEntity *d = NULL;
 
     if(!e) return;
 
@@ -195,6 +196,15 @@ void gf2d_scene_remove_entity( Entity *e )
     }
 
     /** TODO: delete the entity from drawables */
+    for(i = 0; i < gf2d_scene.drawable_entities_size; i++)
+    {
+        d = &gf2d_scene.drawable_entities[i];
+        if(d->drawable.ent && (d->drawable.ent == e))
+        {
+            memmove( &gf2d_scene.drawable_entities[i], &gf2d_scene.drawable_entities[i+1], sizeof(DrawableEntityType)*(gf2d_scene.drawable_entities_size - i) );
+            return;
+        }
+    }
 
     // for( i = 0; i < gfc_list_get_count(gf2d_scene.render_list); i++ )
     // {

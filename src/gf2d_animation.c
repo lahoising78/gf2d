@@ -101,6 +101,7 @@ void gf2d_animation_play( Animation *anim, uint32_t animation, uint32_t maxFrame
     anim->maxFrame = maxFrame;
     anim->animation = animation;
     anim->playing = 1;
+    if(anim->playbackSpeed == 0.0f) anim->playbackSpeed = 1.0f;
 }
 
 void gf2d_animation_pause( Animation *anim )
@@ -117,7 +118,7 @@ void gf2d_animation_render( Animation *anim )
     
     if(anim->playing)
     {
-        anim->rend->frame += frameTime * anim->playbackSpeed * 250;
+        anim->rend->frame += frameTime * anim->playbackSpeed * 250.0f;
         if( anim->rend->frame >= (float)(anim->maxFrame + anim->rend->sprite->frames_per_line * anim->animation))
         {
             anim->rend->frame -= (float)anim->maxFrame;

@@ -26,9 +26,11 @@ void smh_awake()
     e->position = vector2d(300.0f, 300.0f);
     gf2d_animation_play(e->anim, 1, 16);
     gf2d_scene_add_entity(e);
+    gf2d_scene_remove_entity(ent);
 
     anim = gf2d_animation_new();
     anim->rend->sprite = gf2d_sprite_load_all("images/pointer.png", 32, 32, 16);
     gf2d_animation_play(anim, 0, 16);
     gf2d_scene_add_animation(anim);
+
 }
