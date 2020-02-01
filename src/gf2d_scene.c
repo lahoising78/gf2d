@@ -41,9 +41,9 @@ typedef struct
 static Scene gf2d_scene = {0};
 
 void gf2d_scene_add_to_drawables( void *de, DrawableEntityType type );
+void gf2d_scene_remove_from_drawables( void *e );
 
 void gf2d_scene_init_anims();
-void gf2d_scene_swap_in_render_list( uint32_t a, uint32_t b );
 
 void gf2d_scene_load( uint32_t physics_entities_count, uint32_t entities, uint32_t animCount, void (*scene_awake)() )
 {
@@ -157,6 +157,31 @@ void gf2d_scene_add_to_drawables( void *de, DrawableEntityType type )
     }
 }
 
+void gf2d_scene_remove_from_drawables( void *e )
+{
+    int i;
+    DrawableEntity *d = NULL;
+    /** TODO: delete the entity from drawables */
+    for(i = 0; i < gf2d_scene.drawable_entities_count; i++)
+    {
+        d = &gf2d_scene.drawable_entities[i];
+        if(d->drawable.ent == e)
+        {
+            gf2d_scene.drawable_entities_count--;
+            if( i == (int)gf2d_scene.drawable_entities_count-1 || i == 0 )
+            {
+                memset( d, 0, sizeof(DrawableEntity) );
+                // return;
+            }
+
+            memmove( d, d+1, sizeof(DrawableEntityType)*(gf2d_scene.drawable_entities_count - i) );
+            // return;
+        }
+        slog("%d", d);
+    }
+    slog("--== ==--");
+}
+
 int gf2d_scene_add_entity( Entity *ent )
 {
     int i;
@@ -180,7 +205,6 @@ void gf2d_scene_remove_entity( Entity *e )
 {
     int i;
     Entity *ent = NULL;
-    DrawableEntity *d = NULL;
 
     if(!e) return;
 
@@ -196,42 +220,7 @@ void gf2d_scene_remove_entity( Entity *e )
         }
     }
 
-    /** TODO: delete the entity from drawables */
-    for(i = 0; i < gf2d_scene.drawable_entities_count; i++)
-    {
-        d = &gf2d_scene.drawable_entities[i];
-        if(d->drawable.ent == e)
-        {
-            gf2d_scene.drawable_entities_count--;
-            if( i == (int)gf2d_scene.drawable_entities_count-1 || i == 0 )
-            {
-                memset( d, 0, sizeof(DrawableEntity) );
-                return;
-            }
-
-            memmove( d, d+1, sizeof(DrawableEntityType)*(gf2d_scene.drawable_entities_count - i) );
-            return;
-        }
-    }
-
-    // for( i = 0; i < gfc_list_get_count(gf2d_scene.render_list); i++ )
-    // {
-    //     if( !gfc_list_get_nth(gf2d_scene.render_list, i) )
-    //     {
-    //         for( ; !(ent = gfc_list_get_nth(gf2d_scene.render_list, i+1)); i++ )
-    //         {
-    //             gf2d_scene_swap_in_render_list(i, i+1);
-    //         }
-    //     }
-    // }
-}
-
-void gf2d_scene_swap_in_render_list( uint32_t a, uint32_t b )
-{
-    // void *data;
-    // data = gf2d_scene.render_list->elements[a].data;
-    // gf2d_scene.render_list->elements[a].data = gf2d_scene.render_list->elements[b].data;
-    // gf2d_scene.render_list->elements[b].data = data;
+    gf2d_scene_remove_from_drawables(e);
 }
 
 int gf2d_scene_add_animation(Animation *anim)
