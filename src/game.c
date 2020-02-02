@@ -49,8 +49,8 @@ int main(int argc, char * argv[])
         gf2d_main_get_fullscreen()
     );
     gf2d_graphics_set_frame_delay(16);
-    gf2d_sprite_init(1024);
-    gf2d_animation_manager_init(1024);
+    gf2d_sprite_init(4096);
+    gf2d_animation_manager_init(2048);
     gf2d_entity_manager_init(ENTITY_COUNT);
     gf2d_physics_entity_manager_init(PHYSICS_ENTITY_COUNT);
     gf2d_input_init(SDL_NUM_SCANCODES);

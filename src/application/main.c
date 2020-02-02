@@ -15,5 +15,5 @@ void gf2d_config()
 void gf2d_main()
 {
     slog("MAIN");
-    gf2d_scene_load(8, 8, 8, smh_awake );
+    gf2d_scene_load(16, smh_awake );
 }

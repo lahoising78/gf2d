@@ -110,8 +110,10 @@ void gf2d_physics_entity_free( PhysicsEntity *ent )
     if(!ent) return;
 
     e = ent->entity;
+    gf2d_entity_free(e);
     memset(ent, 0, sizeof(PhysicsEntity));
     ent->entity = e;    
+    gf2d_entity_init(e);
 }
 
 void gf2d_physics_entity_think( struct physics_entity_s *ent )

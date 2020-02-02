@@ -57,6 +57,14 @@ void gf2d_animation_manager_clean( uint8_t del )
     }
 }
 
+void gf2d_animation_init(Animation *anim)
+{
+    if(!anim) return;
+    anim->_inuse = 1;
+    anim->playing = 1;
+    anim->playbackSpeed = 1.0f;
+}
+
 Animation *gf2d_animation_new()
 {
     int i;
@@ -67,9 +75,7 @@ Animation *gf2d_animation_new()
         anim = &gf2d_animation_manager.animations[i];
         if(anim->_inuse) continue;
 
-        anim->_inuse = 1;
-        anim->playing = 1;
-        anim->playbackSpeed = 1.0f;
+        gf2d_animation_init(anim);
 
         return anim;
     }

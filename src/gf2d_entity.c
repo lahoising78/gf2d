@@ -104,6 +104,13 @@ void gf2d_entity_manager_draw()
     }
 }
 
+void gf2d_entity_init(Entity *ent)
+{
+    if(!ent) return;
+
+    ent->_inuse = 1;
+}
+
 Entity *gf2d_entity_new()
 {
     int i;
@@ -116,7 +123,7 @@ Entity *gf2d_entity_new()
         ent = &gf2d_entity_manager.entity_list[i];
         if(ent->_inuse) continue;
 
-        ent->_inuse = 1;
+        gf2d_entity_init(ent);
 
         return ent;
     }
@@ -139,4 +146,5 @@ void gf2d_entity_free(Entity *ent)
     memset(ent, 0, sizeof(Entity));
 
     ent->anim = anim;
+    gf2d_animation_init(anim);
 }

@@ -37,6 +37,8 @@ void gf2d_entity_manager_update();
  */
 void gf2d_entity_manager_draw();
 
+void gf2d_entity_init(Entity *ent);
+
 /** 
  * @brief get new entity
  * @return an entity pointer

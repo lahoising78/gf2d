@@ -60,7 +60,7 @@ void gf2d_sprite_delete(Sprite *sprite)
 void gf2d_sprite_free(Sprite *sprite)
 {
     if (!sprite) return;
-    sprite->ref_count--;
+    if(sprite->ref_count > 0)sprite->ref_count--;
 }
 
 void gf2d_sprite_clear_all()
