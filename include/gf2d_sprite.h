@@ -21,6 +21,8 @@ typedef struct Sprite_S
  */
 void gf2d_sprite_init(Uint32 max);
 
+Sprite *gf2d_sprite_new();
+
 /**
  * @brief loads a simple image using the sprite system
  * @param filename the image file to load

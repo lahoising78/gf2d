@@ -1,5 +1,6 @@
 #include "gf2d_scene.h"
 #include "simple_logger.h"
+#include "gf2d_tilemap.h"
 
 typedef struct
 {
@@ -9,6 +10,7 @@ typedef struct
         Animation       *anim;
         Entity          *ent;
         PhysicsEntity   *phys;
+        Tilemap         *tmap;
     } drawable;
     DrawableEntityType  _type;
     uint8_t             _inuse;
@@ -92,7 +94,7 @@ void gf2d_scene_render()
                 if( !ent->drawable.ent->anim || !ent->drawable.ent->anim->rend ) continue;
 
                 vector2d_add(ent->drawable.ent->anim->rend->position, ent->drawable.ent->anim->rend->position, ent->drawable.ent->position);
-                // slog("%.2f %.2f", ent->drawable.ent->anim->rend->position.x, ent->drawable.ent->anim->rend->position.y);
+                slog("%.2f %.2f", ent->drawable.ent->anim->rend->position.x, ent->drawable.ent->anim->rend->position.y);
                     gf2d_animation_render(ent->drawable.ent->anim);
                 vector2d_sub(ent->drawable.ent->anim->rend->position, ent->drawable.ent->anim->rend->position, ent->drawable.ent->position);
 
@@ -107,6 +109,11 @@ void gf2d_scene_render()
                     gf2d_animation_render(ent->drawable.phys->entity->anim);
                 vector2d_sub(ent->drawable.phys->entity->anim->rend->position, ent->drawable.phys->entity->anim->rend->position, ent->drawable.phys->entity->position);
 
+                break;
+
+            case DET_TMAP:
+                if( !ent->drawable.tmap->rend ) continue;
+                gf2d_tilemap_render(ent->drawable.tmap);
                 break;
         
         default:
@@ -141,6 +148,10 @@ int gf2d_scene_add_to_drawables( void *de, DrawableEntityType type )
 
     case DET_PHYS:
         drawable->drawable.phys = (PhysicsEntity*)de;
+        break;
+
+    case DET_TMAP:
+        drawable->drawable.tmap = (Tilemap*)de;
         break;
     
     default:

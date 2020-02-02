@@ -1,5 +1,6 @@
 #include "gf2d_render_ent.h"
 #include "gf2d_camera.h"
+#include "simple_logger.h"
 
 #define SECS_PER_FRAME 0.1f/32.0f
 
@@ -35,7 +36,7 @@ void gf2d_render_ent_draw(RenderEntity *ent)
 {
     if(!ent) return;
     if(!ent->sprite) return;
-
+    // slog("render ent draw");
     gf2d_sprite_draw(
         ent->sprite,
         gf2d_camera_get_displaced_position(ent->position),

@@ -11,7 +11,8 @@ typedef enum
     DET_REND = 1,
     DET_ANIM = 2,
     DET_ENT  = 3,
-    DET_PHYS = 4
+    DET_PHYS = 4,
+    DET_TMAP = 5
 } DrawableEntityType;
 
 void gf2d_scene_load( uint32_t drawablesCount, void (*scene_awake)() );
