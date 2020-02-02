@@ -43,6 +43,11 @@ void gf2d_entity_manager_clean( uint8_t del )
     Entity *ent = NULL;
 
     slog("clean all entities");
+    if(del) 
+    {
+        memset(gf2d_entity_manager.entity_list, 0, sizeof(Entity)*gf2d_entity_manager.count);
+        return;
+    }
 
     for(i = 0; i < gf2d_entity_manager.count; i++)
     {

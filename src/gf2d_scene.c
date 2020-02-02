@@ -32,10 +32,12 @@ void gf2d_scene_load( uint32_t drawablesCount, void (*scene_awake)() )
 
     gf2d_scene_close();
 
-    gf2d_animation_manager_clean(0);
-    gf2d_entity_manager_clean(0);
-    gf2d_physics_entity_manager_clean(0);
-    // gf2d_physics_entity_manager_initialize_entities();
+    gf2d_physics_entity_manager_clean(1);
+    gf2d_entity_manager_clean(1);
+    gf2d_animation_manager_clean(1);
+    gf2d_animation_manager_init_all_animations();
+    gf2d_entity_manager_initialize_all_entities();
+    gf2d_physics_entity_manager_initialize_entities();
 
     gf2d_scene.drawable_entities = (DrawableEntity*)gfc_allocate_array(sizeof(DrawableEntity), drawablesCount);
     if( gf2d_scene.drawable_entities ) 

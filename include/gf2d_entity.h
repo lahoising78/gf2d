@@ -25,6 +25,8 @@ typedef struct entity_s
  */
 void gf2d_entity_manager_init(uint32_t count);
 
+void gf2d_entity_manager_initialize_all_entities();
+
 void gf2d_entity_manager_clean( uint8_t del );
 
 /** 

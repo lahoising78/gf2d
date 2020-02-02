@@ -14,7 +14,9 @@ typedef struct
 } Animation;
 
 void gf2d_animation_manager_init( uint32_t count );
+void gf2d_animation_manager_init_all_animations();
 void gf2d_animation_manager_clean( uint8_t del );
+void gf2d_animation_manager_wipe();
 
 void gf2d_animation_init(Animation *anim);
 Animation *gf2d_animation_new();

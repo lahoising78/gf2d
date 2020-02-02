@@ -57,6 +57,10 @@ void gf2d_animation_manager_clean( uint8_t del )
     }
 }
 
+void gf2d_animation_manager_wipe()
+{
+}
+
 void gf2d_animation_init(Animation *anim)
 {
     if(!anim) return;

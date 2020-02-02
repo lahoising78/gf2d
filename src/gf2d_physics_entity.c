@@ -58,6 +58,12 @@ void gf2d_physics_entity_manager_clean( uint32_t freeEntity )
     int i;
     PhysicsEntity *ent = NULL;
 
+    if(freeEntity)
+    {
+        memset(gf2d_physics_entity_manager.entity_list, 0, gf2d_physics_entity_manager.count*sizeof(PhysicsEntity));
+        return;
+    }
+
     for(i = 0; i < gf2d_physics_entity_manager.count; i++)
     {
         ent = &gf2d_physics_entity_manager.entity_list[i];
