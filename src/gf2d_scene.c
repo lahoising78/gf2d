@@ -112,7 +112,7 @@ void gf2d_scene_render()
                 break;
 
             case DET_TMAP:
-                if( !ent->drawable.tmap->rend ) continue;
+                // if( !ent->drawable.tmap->rend ) continue;
                 gf2d_tilemap_render(ent->drawable.tmap);
                 break;
         

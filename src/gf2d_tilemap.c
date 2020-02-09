@@ -47,13 +47,10 @@ void gf2d_tilemap_init(Tilemap *tilemap)
     tilemap->_inuse = 1;
 }
 
-Tilemap *gf2d_tilemap_load(Sprite *sprite, uint32_t *map[], uint32_t w, uint32_t h)
+Tilemap *gf2d_tilemap_load(Sprite *sprite, uint32_t *map, uint32_t w, uint32_t h)
 {
     Tilemap *tilemap = NULL;
-    SDL_Surface *surface = NULL;
-    SDL_Renderer *renderer = NULL;
-    SDL_Rect src = {0};
-    SDL_Rect dst = {0};
+    Tile *tile = NULL;
     int i, j;
 
     if(!map) return NULL;
@@ -66,100 +63,24 @@ Tilemap *gf2d_tilemap_load(Sprite *sprite, uint32_t *map[], uint32_t w, uint32_t
         return NULL;
     }
 
-    tilemap->rend = gf2d_render_ent_new(NULL);
-    if(!tilemap->rend)
+    tilemap->spriteSheet = sprite;
+    tilemap->tiles = (Tile*) gfc_allocate_array(sizeof(Tile), (size_t)(w * h));
+    if(tilemap->tiles) 
     {
-        slog("not enough memory to allocate render entity for tilemap");
-        gf2d_tilemap_free(tilemap);
-        return NULL;
-    }
-
-    tilemap->rend->sprite = gf2d_sprite_new();
-    if(!tilemap->rend->sprite)
-    {
-        slog("no sprite available for tilemap");
-        gf2d_tilemap_free(tilemap);
-        return NULL;
-    }
-    if(sprite->texture)
-        slog("there is a texture");
-
-    surface = gf2d_graphics_create_surface(w * sprite->frame_w, h * sprite->frame_h);
-    if(!surface)
-    {
-        slog("could not create surface for tilemap");
-        gf2d_tilemap_free(tilemap);
-        return NULL;
-    }
-    
-    // renderer = gf2d_graphics_get_renderer();
-    renderer = SDL_CreateSoftwareRenderer(surface);
-    if(!renderer)
-    {
-        slog("could not create renderer for tilemap");
-        SDL_FreeSurface(surface);
-        gf2d_tilemap_free(tilemap);
-        return NULL;
-    }
-
-    for(i = 0; i < h; i++)
-    {
-        for(j = 0; j < w; j++)
+        memset(tilemap->tiles, 0, sizeof(Tile) * w * h);
+        for(i = 0; i < h; i++)
         {
-            src.x = 0;
-            src.y = 0;
-            src.w = sprite->frame_w;
-            src.h = sprite->frame_h;
-
-            dst.x = sprite->frame_w * j;
-            dst.y = sprite->frame_h * i;
-            dst.w = sprite->frame_w;
-            dst.h = sprite->frame_h;
-
-            // slog("src: %d %d %d %d", src.x, src.y, src.w, src.h);
-            // slog("dst: %d %d %d %d", dst.x, dst.y, dst.w, dst.h);
-
-            SDL_RenderCopy(renderer, sprite->texture, &src, &dst);
+            for(j = 0; j < w; j++)
+            {
+                tile = &tilemap->tiles[i*w + j];
+                tile->_pos = vector2d((float)(j*sprite->frame_w), (float)(i * sprite->frame_h));
+                tile->id = map[ i*w + j ];
+            }
         }
     }
+    tilemap->w = w;
+    tilemap->h = h;
 
-
-    surface = gf2d_graphics_screen_convert(&surface);
-    if (!surface)
-    {
-        slog("failed to create surface for tilemap");
-        SDL_DestroyRenderer(renderer);
-        gf2d_sprite_free(sprite);
-        gf2d_tilemap_free(tilemap);
-        return NULL;
-    }
-
-    tilemap->rend->sprite->texture = SDL_CreateTextureFromSurface(renderer, surface);
-    if(!tilemap->rend->sprite->texture)
-    {
-        slog("unable to create texture from surface");
-        SDL_DestroyRenderer(renderer);
-        SDL_FreeSurface(surface);
-        gf2d_tilemap_free(tilemap);
-        return NULL;
-    }
-
-    SDL_SetTextureBlendMode(tilemap->rend->sprite->texture,SDL_BLENDMODE_BLEND);        
-    SDL_UpdateTexture(tilemap->rend->sprite->texture,
-                    NULL,
-        surface->pixels,
-        surface->pitch
-    );
-
-    tilemap->rend->sprite->frame_w = surface->w;
-    tilemap->rend->sprite->frame_h = surface->h;
-    sprite->frames_per_line = 1;
-    gfc_line_cpy(sprite->filepath,"tilemap");
-    tilemap->rend->frame = 0;
-
-    gf2d_sprite_free(sprite);
-    SDL_DestroyRenderer(renderer);
-    SDL_FreeSurface(surface);
     return tilemap;
 }
 
@@ -167,18 +88,29 @@ void gf2d_tilemap_free(Tilemap *tilemap)
 {
     if(!tilemap) return;
 
-    if(tilemap->rend)
-    {
-        gf2d_render_ent_free(tilemap->rend);
-        free(tilemap->rend);
-    }
+    
 
     memset(tilemap, 0, sizeof(Tilemap));
 }
 
 void gf2d_tilemap_render(Tilemap *tilemap)
 {
+    int i, j;
+    Tile *tile = NULL;
     if(!tilemap) return;
-    // slog("rendering the tilemap");
-    gf2d_render_ent_draw(tilemap->rend);
+
+    for(i = 0; i < tilemap->h; i++)
+    {
+        for(j = 0; j < tilemap->w; j++)
+        {
+            tile = &tilemap->tiles[i * tilemap->w + j];
+            if(tile->id == 0) continue;
+            gf2d_sprite_draw(
+                tilemap->spriteSheet,
+                tile->_pos,
+                NULL, NULL, NULL, NULL, NULL,
+                tile->id-1
+            );
+        }
+    }
 }
