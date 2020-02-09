@@ -21,6 +21,7 @@ void smh_awake()
     };
 
     tm = gf2d_tilemap_load( gf2d_sprite_load_all("images/pointer.png", 32, 32, 16), map, w, h );
-    // gf2d_tilemap_free(tm);
     gf2d_scene_add_to_drawables(tm, DET_TMAP);
+    gf2d_scene_remove_from_drawables(tm);
+    gf2d_tilemap_free(tm);
 }

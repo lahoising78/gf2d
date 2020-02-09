@@ -88,7 +88,8 @@ void gf2d_tilemap_free(Tilemap *tilemap)
 {
     if(!tilemap) return;
 
-    
+    if( tilemap->tiles ) free(tilemap->tiles);
+    gf2d_sprite_free(tilemap->spriteSheet);
 
     memset(tilemap, 0, sizeof(Tilemap));
 }
