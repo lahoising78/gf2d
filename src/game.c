@@ -55,7 +55,7 @@ int main(int argc, char * argv[])
     gf2d_entity_manager_init(ENTITY_COUNT);
     gf2d_physics_entity_manager_init(PHYSICS_ENTITY_COUNT);
     gf2d_tilemap_manager_init(4);
-    gf2d_input_init(SDL_NUM_SCANCODES);
+    gf2d_input_init(SDL_NUM_SCANCODES, 8);
     
     /*demo setup*/
     gf2d_main();

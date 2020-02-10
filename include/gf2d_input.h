@@ -8,7 +8,7 @@
  * @param maxKeys the max amount of keys to retrieve
  * @note maxKeys goes according to sdl scancode values
  */
-void gf2d_input_init(int maxKeys);
+void gf2d_input_init(int maxKeys, uint32_t maxJoysticks);
 
 /** 
  * @brief update the state of inputs

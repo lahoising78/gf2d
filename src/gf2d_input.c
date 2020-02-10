@@ -3,21 +3,40 @@
 
 typedef struct
 {
-    SDL_Event *currentKeys;
-    int maxKeys;
-    size_t keysArraySize;
+    SDL_Event           *currentKeys;
+    int                 maxKeys;
+    SDL_Joystick        **joysticks;
+    uint32_t            maxJoysticks;
+    size_t              keysArraySize;
 } InputManager;
 
 static InputManager gf2d_input_manager = {0};
+
+void gf2d_input_manager_open_joysticks();
+void gf2d_input_manager_close_joysticks();
 
 void gf2d_input_close()
 {
     slog("closing input manager");
 
     free( gf2d_input_manager.currentKeys );
+    gf2d_input_manager_close_joysticks();
+    if(gf2d_input_manager.joysticks) free( gf2d_input_manager.joysticks );
 }
 
-void gf2d_input_init( int maxKeys )
+void gf2d_input_manager_close_joysticks()
+{
+    int i;
+
+    for(i = 0; i < gf2d_input_manager.maxJoysticks; i++)
+    {
+        if(!gf2d_input_manager.joysticks[i]) continue;
+        SDL_JoystickClose( gf2d_input_manager.joysticks[i] );
+        gf2d_input_manager.joysticks[i] = NULL;
+    }
+}
+
+void gf2d_input_init( int maxKeys, uint32_t maxJoysticks )
 {
     slog("initilizing input manager");
 
@@ -28,6 +47,25 @@ void gf2d_input_init( int maxKeys )
     gf2d_input_manager.keysArraySize = maxKeys * sizeof(SDL_Event);
     gf2d_input_manager.currentKeys = (SDL_Event*)malloc( gf2d_input_manager.keysArraySize );
     atexit( gf2d_input_close );
+
+    gf2d_input_manager.joysticks = (SDL_Joystick**)malloc( sizeof(SDL_Joystick*) * maxJoysticks );
+    if( gf2d_input_manager.joysticks ) 
+    {
+        memset(gf2d_input_manager.joysticks, 0, sizeof(SDL_Joystick*) * maxJoysticks);
+        gf2d_input_manager.maxJoysticks = maxJoysticks;
+    }
+    slog("There are %d joysticks connected", SDL_NumJoysticks());
+    gf2d_input_manager_open_joysticks();
+}
+
+void gf2d_input_manager_open_joysticks()
+{
+    int i;
+
+    for(i = 0; i < SDL_NumJoysticks() && i < gf2d_input_manager.maxJoysticks; i++)
+    {
+        gf2d_input_manager.joysticks[i] = SDL_JoystickOpen(i);
+    }
 }
 
 void gf2d_input_update()
