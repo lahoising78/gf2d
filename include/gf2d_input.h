@@ -2,6 +2,7 @@
 #define _GF2D_INPUT_H_
 
 #include <SDL.h>
+#include "gfc_vector.h"
 
 /** 
  * @brief initialize the input manager
@@ -35,5 +36,7 @@ uint8_t gf2d_input_key_just_pressed( SDL_Scancode scancode );
  * @return 1 if key was just released and 0 otherwise
  */
 uint8_t gf2d_input_key_released( SDL_Scancode scancode );
+
+float gf2d_input_joystick_get_axis(uint32_t joystickId, int axis);
 
 #endif

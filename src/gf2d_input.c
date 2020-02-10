@@ -1,13 +1,18 @@
 #include "gf2d_input.h"
 #include "simple_logger.h"
 
+#define JOYSTICK_DEFAULT_DEAD_ZONE 8000
+#define JOYSTICK_GET_AXIS_MAX 32767.0f
+
 typedef struct
 {
     SDL_Event           *currentKeys;
     int                 maxKeys;
+    size_t              keysArraySize;
+
     SDL_Joystick        **joysticks;
     uint32_t            maxJoysticks;
-    size_t              keysArraySize;
+    uint16_t            joystickDeadZone;
 } InputManager;
 
 static InputManager gf2d_input_manager = {0};
@@ -48,6 +53,7 @@ void gf2d_input_init( int maxKeys, uint32_t maxJoysticks )
     gf2d_input_manager.currentKeys = (SDL_Event*)malloc( gf2d_input_manager.keysArraySize );
     atexit( gf2d_input_close );
 
+    gf2d_input_manager.joystickDeadZone = JOYSTICK_DEFAULT_DEAD_ZONE;
     gf2d_input_manager.joysticks = (SDL_Joystick**)malloc( sizeof(SDL_Joystick*) * maxJoysticks );
     if( gf2d_input_manager.joysticks ) 
     {
@@ -99,4 +105,14 @@ uint8_t gf2d_input_key_just_pressed( SDL_Scancode scancode )
 uint8_t gf2d_input_key_released( SDL_Scancode scancode )
 {
     return (scancode < gf2d_input_manager.maxKeys)? gf2d_input_manager.currentKeys[ scancode ].type == SDL_KEYUP : 0;
+}
+
+float gf2d_input_joystick_get_axis(uint32_t joystickId, int axis)
+{
+    Sint16 state = 0.0f;
+    if(joystickId >= gf2d_input_manager.maxJoysticks) return 0.0f;
+
+    state = SDL_JoystickGetAxis( gf2d_input_manager.joysticks[joystickId], axis );
+    if( state > -gf2d_input_manager.joystickDeadZone && state < gf2d_input_manager.joystickDeadZone ) state = 0;
+    return (float)state/JOYSTICK_GET_AXIS_MAX;
 }
