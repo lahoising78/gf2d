@@ -150,6 +150,21 @@ Vector2D gf2d_tilemap_world_to_map(const Tilemap *tilemap, Vector2D position)
     return ret;
 }
 
+Vector2D gf2d_tilemap_map_to_world(const Tilemap *tilemap, Vector2D position)
+{
+    Vector2D ret = {0};
+    if(!tilemap || !tilemap->spriteSheet) return vector2d(-1.0f, -1.0f);
+
+    if( position.x < 0.0f || position.x >= (float)tilemap->spriteSheet->frame_w ||
+        position.y < 0.0f || position.y >= (float)tilemap->spriteSheet->frame_h )
+        return vector2d(-2.0f, -2.0f);
+
+    ret.x = position.x * (float)tilemap->spriteSheet->frame_w;
+    ret.y = position.y * (float)tilemap->spriteSheet->frame_h;
+
+    return ret;
+}
+
 const Tilemap *gf2d_tilemap_get_all()
 {
     return gf2d_tilemap_manager.tilemaps;

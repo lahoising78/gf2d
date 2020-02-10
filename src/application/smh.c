@@ -14,6 +14,13 @@ void somethink(Entity *self)
         self->velocity.x = -3;
     else
         self->velocity.x = 0;
+
+    if( gf2d_input_is_key_pressed(SDL_SCANCODE_S) )
+        self->velocity.y = 3;
+    else if( gf2d_input_is_key_pressed(SDL_SCANCODE_W) )
+        self->velocity.y = -3;
+    else
+        self->velocity.y = 0;
 }
 
 void smh_awake()

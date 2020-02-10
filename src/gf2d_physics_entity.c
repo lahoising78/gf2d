@@ -241,12 +241,18 @@ uint8_t gf2d_physics_entity_check_tilemap_collision(PhysicsEntity *e)
         shape.dimensions.wh.x = tilemaps[i].spriteSheet->frame_w;
         shape.dimensions.wh.y = tilemaps[i].spriteSheet->frame_h;
 
+        if( entMax.x < 0 ) entMax.x = (float)tilemaps[i].w - 1.0f;
+        if( entMax.y < 0 ) entMax.y = (float)tilemaps[i].h - 1.0f;
+
         for(y = (int)worldToMap.y; y <= entMax.y; y++)
         {
             for(x = (int)worldToMap.x; x <= entMax.x; x++)
             {
+                if( !tilemaps[i].tiles[y * tilemaps[i].w + x].solid ) continue;
+
                 shape.position.x = x;
                 shape.position.y = y;
+                shape.position = gf2d_tilemap_map_to_world(&tilemaps[i], shape.position);
 
                 if(gf2d_collision_check(&shape, &e->modelBox)) 
                 {
