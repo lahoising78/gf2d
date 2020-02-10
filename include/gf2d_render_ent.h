@@ -24,6 +24,7 @@ RenderEntity *gf2d_render_ent_new( Sprite *sprite );
 
 /** 
  * @brief clear data from render entity
+ * @note this does not remove the render entity from heap
  * @param ent render ent to free
  */
 void gf2d_render_ent_free( RenderEntity *ent );

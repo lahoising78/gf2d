@@ -32,7 +32,15 @@ typedef struct physics_entity_s
  */
 void gf2d_physics_entity_manager_init(uint32_t count);
 
+/** 
+ * @brief reset all data for all animations
+ * @param freeEntity 1 to free entities and 0 to keep it
+ */
 void gf2d_physics_entity_manager_clean( uint32_t freeEntity );
+
+/** 
+ * @brief set initial data for all entities
+ */
 void gf2d_physics_entity_manager_initialize_entities();
 
 /** 

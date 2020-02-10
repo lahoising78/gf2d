@@ -1,5 +1,6 @@
 #include "gf2d_scene.h"
 #include "simple_logger.h"
+#include "gf2d_tilemap.h"
 
 typedef struct
 {
@@ -9,6 +10,7 @@ typedef struct
         Animation       *anim;
         Entity          *ent;
         PhysicsEntity   *phys;
+        Tilemap         *tmap;
     } drawable;
     DrawableEntityType  _type;
     uint8_t             _inuse;
@@ -23,8 +25,6 @@ typedef struct
 } Scene;
 
 static Scene gf2d_scene = {0};
-
-void gf2d_scene_init_anims();
 
 void gf2d_scene_load( uint32_t drawablesCount, void (*scene_awake)() )
 {
@@ -92,7 +92,7 @@ void gf2d_scene_render()
                 if( !ent->drawable.ent->anim || !ent->drawable.ent->anim->rend ) continue;
 
                 vector2d_add(ent->drawable.ent->anim->rend->position, ent->drawable.ent->anim->rend->position, ent->drawable.ent->position);
-                // slog("%.2f %.2f", ent->drawable.ent->anim->rend->position.x, ent->drawable.ent->anim->rend->position.y);
+                slog("%.2f %.2f", ent->drawable.ent->anim->rend->position.x, ent->drawable.ent->anim->rend->position.y);
                     gf2d_animation_render(ent->drawable.ent->anim);
                 vector2d_sub(ent->drawable.ent->anim->rend->position, ent->drawable.ent->anim->rend->position, ent->drawable.ent->position);
 
@@ -107,6 +107,11 @@ void gf2d_scene_render()
                     gf2d_animation_render(ent->drawable.phys->entity->anim);
                 vector2d_sub(ent->drawable.phys->entity->anim->rend->position, ent->drawable.phys->entity->anim->rend->position, ent->drawable.phys->entity->position);
 
+                break;
+
+            case DET_TMAP:
+                // if( !ent->drawable.tmap->rend ) continue;
+                gf2d_tilemap_render(ent->drawable.tmap);
                 break;
         
         default:
@@ -142,6 +147,10 @@ int gf2d_scene_add_to_drawables( void *de, DrawableEntityType type )
     case DET_PHYS:
         drawable->drawable.phys = (PhysicsEntity*)de;
         break;
+
+    case DET_TMAP:
+        drawable->drawable.tmap = (Tilemap*)de;
+        break;
     
     default:
         break;
@@ -172,66 +181,3 @@ void gf2d_scene_remove_from_drawables( void *e )
         }
     }
 }
-
-// int gf2d_scene_add_entity( Entity *ent )
-// {
-//     int i;
-//     Entity *e = NULL;
-
-//     for( i = 0; i < gf2d_scene.entities_count; i++ )
-//     {
-//         e = gf2d_scene.entities[i];
-//         if(!e) 
-//         {
-//             gf2d_scene.entities[i] = ent;
-//             gf2d_scene_add_to_drawables(ent, DET_ENT);
-//             return i;
-//         }
-//     }
-
-//     return -1;
-// }
-
-// void gf2d_scene_remove_entity( Entity *e )
-// {
-//     int i;
-//     Entity *ent = NULL;
-
-//     if(!e) return;
-
-//     for( i = 0; i < gf2d_scene.entities_count; i++ )
-//     {
-//         ent = gf2d_scene.entities[i];
-//         if(!ent) continue;
-//         if(ent == e) 
-//         {
-//             gf2d_entity_free(e);
-//             gf2d_scene.entities[i] = NULL;
-//             break;
-//         }
-//     }
-
-//     gf2d_scene_remove_from_drawables(e);
-// }
-
-// int gf2d_scene_add_animation(Animation *anim)
-// {
-//     int i;
-
-//     for(i = 0; i < gf2d_scene.animCount; i++)
-//     {
-//         if(gf2d_scene.animations[i]) continue;
-
-//         gf2d_scene.animations[i] = anim;
-//         gf2d_scene_add_to_drawables(anim, DET_ANIM);
-
-//         return i;
-//     }
-
-//     return -1;
-// }
-
-// void gf2d_scene_remove_animation(Animation *anim)
-// {
-    
-// }

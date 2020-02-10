@@ -215,8 +215,11 @@ void gf2d_sprite_draw(
     int fpl;
     Vector2D scaleFactor = {1,1};
     Vector2D scaleOffset = {0,0};
+    void *pixels;
+    int pitch;
     if (!sprite)
     {
+        slog("cannot render null sprite");
         return;
     }
     
@@ -282,6 +285,10 @@ void gf2d_sprite_draw(
             sprite->texture,
             255);
     }
+
+    // SDL_LockTexture( sprite->texture, NULL, &pixels, &pitch );
+    // slog("%c", ((char*)pixels)[(int)(gfc_random() * 10000)]);
+    // SDL_UnlockTexture(sprite->texture);
 }
 
 /*eol@eof*/

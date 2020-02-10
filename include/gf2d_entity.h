@@ -25,8 +25,16 @@ typedef struct entity_s
  */
 void gf2d_entity_manager_init(uint32_t count);
 
+/** 
+ * @brief initialize each entity in entity manager
+ * @note this is where each entity is assigned an animation
+ */
 void gf2d_entity_manager_initialize_all_entities();
 
+/** 
+ * @brief reset all data from all animations
+ * @param del 1 to also forget the animation. 0 to keep it
+ */
 void gf2d_entity_manager_clean( uint8_t del );
 
 /** 
@@ -39,6 +47,11 @@ void gf2d_entity_manager_update();
  */
 void gf2d_entity_manager_draw();
 
+/** 
+ * @brief set entity initial values
+ * @note it assumes all data is set to 0
+ * @param ent the entity to init
+ */
 void gf2d_entity_init(Entity *ent);
 
 /** 

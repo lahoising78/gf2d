@@ -12,6 +12,7 @@
 
 #include "gf2d_entity.h"
 #include "gf2d_physics_entity.h"
+#include "gf2d_tilemap.h"
 
 #define ENTITY_COUNT                1024
 #define PHYSICS_ENTITY_COUNT        256
@@ -53,6 +54,7 @@ int main(int argc, char * argv[])
     gf2d_animation_manager_init(2048);
     gf2d_entity_manager_init(ENTITY_COUNT);
     gf2d_physics_entity_manager_init(PHYSICS_ENTITY_COUNT);
+    gf2d_tilemap_manager_init(4);
     gf2d_input_init(SDL_NUM_SCANCODES);
     
     /*demo setup*/
