@@ -26,8 +26,6 @@ typedef struct
 
 static Scene gf2d_scene = {0};
 
-void gf2d_scene_init_anims();
-
 void gf2d_scene_load( uint32_t drawablesCount, void (*scene_awake)() )
 {
     slog("--== Loading new scene ==--");
@@ -183,66 +181,3 @@ void gf2d_scene_remove_from_drawables( void *e )
         }
     }
 }
-
-// int gf2d_scene_add_entity( Entity *ent )
-// {
-//     int i;
-//     Entity *e = NULL;
-
-//     for( i = 0; i < gf2d_scene.entities_count; i++ )
-//     {
-//         e = gf2d_scene.entities[i];
-//         if(!e) 
-//         {
-//             gf2d_scene.entities[i] = ent;
-//             gf2d_scene_add_to_drawables(ent, DET_ENT);
-//             return i;
-//         }
-//     }
-
-//     return -1;
-// }
-
-// void gf2d_scene_remove_entity( Entity *e )
-// {
-//     int i;
-//     Entity *ent = NULL;
-
-//     if(!e) return;
-
-//     for( i = 0; i < gf2d_scene.entities_count; i++ )
-//     {
-//         ent = gf2d_scene.entities[i];
-//         if(!ent) continue;
-//         if(ent == e) 
-//         {
-//             gf2d_entity_free(e);
-//             gf2d_scene.entities[i] = NULL;
-//             break;
-//         }
-//     }
-
-//     gf2d_scene_remove_from_drawables(e);
-// }
-
-// int gf2d_scene_add_animation(Animation *anim)
-// {
-//     int i;
-
-//     for(i = 0; i < gf2d_scene.animCount; i++)
-//     {
-//         if(gf2d_scene.animations[i]) continue;
-
-//         gf2d_scene.animations[i] = anim;
-//         gf2d_scene_add_to_drawables(anim, DET_ANIM);
-
-//         return i;
-//     }
-
-//     return -1;
-// }
-
-// void gf2d_scene_remove_animation(Animation *anim)
-// {
-    
-// }

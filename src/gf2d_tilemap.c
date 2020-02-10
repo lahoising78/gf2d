@@ -12,6 +12,7 @@ static TilemapManager gf2d_tilemap_manager = {0};
 
 Tilemap *gf2d_tilemap_new();
 void gf2d_tilemap_init(Tilemap *tilemap);
+void gf2d_tilemap_manager_close();
 
 void gf2d_tilemap_manager_init( uint32_t count )
 {
@@ -23,6 +24,23 @@ void gf2d_tilemap_manager_init( uint32_t count )
     }
     memset(gf2d_tilemap_manager.tilemaps, 0, sizeof(Tilemap)*count);
     gf2d_tilemap_manager.count = count;
+
+    atexit(gf2d_tilemap_manager_close);
+}
+
+void gf2d_tilemap_manager_close()
+{
+    int i;
+    Tilemap *tilemap = NULL;
+
+    for(i = 0; i < gf2d_tilemap_manager.count; i++)
+    {
+        tilemap = &gf2d_tilemap_manager.tilemaps[i];
+        gf2d_tilemap_free(tilemap);
+    }
+
+    free(gf2d_tilemap_manager.tilemaps);
+    memset(&gf2d_tilemap_manager, 0, sizeof(TilemapManager));
 }
 
 Tilemap *gf2d_tilemap_new()
@@ -75,6 +93,7 @@ Tilemap *gf2d_tilemap_load(Sprite *sprite, uint32_t *map, uint32_t w, uint32_t h
                 tile = &tilemap->tiles[i*w + j];
                 tile->_pos = vector2d((float)(j*sprite->frame_w), (float)(i * sprite->frame_h));
                 tile->id = map[ i*w + j ];
+                tile->solid = tile->id ? 1: 0;
             }
         }
     }
@@ -114,4 +133,29 @@ void gf2d_tilemap_render(Tilemap *tilemap)
             );
         }
     }
+}
+
+Vector2D gf2d_tilemap_world_to_map(const Tilemap *tilemap, Vector2D position)
+{
+    Vector2D ret = {0};
+    if(!tilemap || !tilemap->spriteSheet) return vector2d(-1.0f, -1.0f);
+
+    ret.x = floorf( position.x/tilemap->spriteSheet->frame_w );
+    ret.y = floorf( position.y/tilemap->spriteSheet->frame_h );
+
+    if( ret.x < 0.0f || ret.x >= (float)tilemap->w ||
+        ret.y < 0.0f || ret.y >= (float)tilemap->h )
+        return vector2d(-2.0f, -2.0f);
+
+    return ret;
+}
+
+const Tilemap *gf2d_tilemap_get_all()
+{
+    return gf2d_tilemap_manager.tilemaps;
+}
+
+const uint32_t gf2d_tilemap_get_count()
+{
+    return gf2d_tilemap_manager.count;
 }
