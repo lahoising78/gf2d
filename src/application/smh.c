@@ -29,17 +29,24 @@ void smh_awake()
     PhysicsEntity *pe = NULL;
     uint32_t w = 8, h = 8;
     uint32_t map[8 * 8] = {
-         0, 0, 0, 0, 0, 0, 0, 0,
-         0, 0, 0, 0, 0, 0, 0, 0,
-         0, 0, 0, 1, 1, 0, 0, 0,
-         0, 0, 1, 1, 1, 1, 0, 0,
-         0, 0, 1, 1, 1, 1, 0, 0,
-         0, 0, 0, 1, 1, 0, 0, 0,
-         0, 0, 0, 0, 0, 0, 0, 0,
-         0, 0, 0, 0, 0, 0, 0, 0,
+         0, 0, 0,  0,  0,  0, 0, 0,
+         0, 0, 0,  0,  0,  0, 0, 0,
+         0, 0, 0,  1,  2,  0, 0, 0,
+         0, 0, 3,  4,  5,  6, 0, 0,
+         0, 0, 7,  8,  9, 10, 0, 0,
+         0, 0, 0, 11, 12,  0, 0, 0,
+         0, 0, 0,  0,  0,  0, 0, 0,
+         0, 0, 0,  0,  0,  0, 0, 0,
+    };
+    uint8_t solidMap[16] = 
+    {
+        0, 1, 0, 1,
+        1, 0, 0, 1, 
+        1, 0, 0, 1,
+        0, 1, 1, 1
     };
 
-    tm = gf2d_tilemap_load( gf2d_sprite_load_all("images/pointer.png", 32, 32, 16), map, w, h );
+    tm = gf2d_tilemap_load( gf2d_sprite_load_all("images/pointer.png", 32, 32, 16), map, solidMap, w, h );
     gf2d_scene_add_to_drawables(tm, DET_TMAP);
 
     pe = gf2d_physics_entity_new();

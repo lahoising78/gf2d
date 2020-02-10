@@ -65,7 +65,7 @@ void gf2d_tilemap_init(Tilemap *tilemap)
     tilemap->_inuse = 1;
 }
 
-Tilemap *gf2d_tilemap_load(Sprite *sprite, uint32_t *map, uint32_t w, uint32_t h)
+Tilemap *gf2d_tilemap_load(Sprite *sprite, uint32_t *map, uint8_t *solidMap, uint32_t w, uint32_t h)
 {
     Tilemap *tilemap = NULL;
     Tile *tile = NULL;
@@ -93,7 +93,7 @@ Tilemap *gf2d_tilemap_load(Sprite *sprite, uint32_t *map, uint32_t w, uint32_t h
                 tile = &tilemap->tiles[i*w + j];
                 tile->_pos = vector2d((float)(j*sprite->frame_w), (float)(i * sprite->frame_h));
                 tile->id = map[ i*w + j ];
-                tile->solid = tile->id ? 1: 0;
+                tile->solid = solidMap[ tile->id ];
             }
         }
     }
