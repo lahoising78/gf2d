@@ -74,7 +74,7 @@ void gf2d_input_init( int maxKeys, uint32_t maxJoysticks )
 void gf2d_input_manager_open_joysticks()
 {
     int i;
-    int numButtons, numHats;
+    int numButtons;
     gf2d_input_manager.joystickMaxButtons = 0;
     for(i = 0; i < SDL_NumJoysticks() && i < gf2d_input_manager.maxJoysticks; i++)
     {
@@ -167,6 +167,7 @@ uint8_t gf2d_input_joystick_button_released(uint32_t joystickId, int button)
 uint8_t gf2d_input_joystick_get_hat(uint32_t joystickId, int hat, uint8_t hatDir)
 {
     uint8_t result = SDL_JoystickGetHat(gf2d_input_manager.joysticks[joystickId], hat);
+    if( joystickId >= SDL_NumJoysticks() || joystickId >= gf2d_input_manager.maxJoysticks ) return 0;
     if( hatDir == 255 ) return result;
     if( hatDir == SDL_HAT_CENTERED ) return result == SDL_HAT_CENTERED;
     return result & hatDir;
