@@ -65,6 +65,9 @@ void gf2d_main_set_fullscreen( uint8_t fullscreen );
  */
 uint8_t gf2d_main_get_fullscreen();
 
+void gf2d_main_set_draw_collisions(uint8_t draw);
+uint8_t gf2d_main_get_draw_collisions();
+
 /* TO BE OVERRIDEN */
 
 /** 

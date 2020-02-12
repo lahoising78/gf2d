@@ -23,4 +23,6 @@ typedef struct
 
 uint8_t gf2d_collision_check( CollisionShape *a, CollisionShape *b );
 
+void gf2d_collision_draw( CollisionShape *shape );
+
 #endif

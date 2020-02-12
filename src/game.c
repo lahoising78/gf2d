@@ -90,6 +90,11 @@ int main(int argc, char * argv[])
             gf2d_scene_close();
             done = 1; // exit condition
         }
+        if( gf2d_input_key_just_pressed(SDL_SCANCODE_TAB) )
+        {
+            gf2d_main_set_draw_collisions( !gf2d_main_get_draw_collisions() );
+            slog("pressing tab");
+        }
         if( gf2d_timer_get_ticks(&perSecond) >= 0.1f )
         {
             slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());

@@ -1,6 +1,7 @@
 #include "gf2d_scene.h"
 #include "simple_logger.h"
 #include "gf2d_tilemap.h"
+#include "gf2d_main.h"
 
 typedef struct
 {
@@ -105,6 +106,12 @@ void gf2d_scene_render()
                 vector2d_add(ent->drawable.phys->entity->anim->rend->position, ent->drawable.phys->entity->anim->rend->position, ent->drawable.phys->entity->position);
                 // slog("%.2f %.2f", ent->drawable.phys->entity->anim->rend->position.x, ent->drawable.phys->entity->anim->rend->position.y);
                     gf2d_animation_render(ent->drawable.phys->entity->anim);
+                    if( gf2d_main_get_draw_collisions() )
+                    {
+                        vector2d_add( ent->drawable.phys->modelBox.position, ent->drawable.phys->modelBox.position, ent->drawable.phys->entity->position );
+                        gf2d_collision_draw( &ent->drawable.phys->modelBox );
+                        vector2d_sub( ent->drawable.phys->modelBox.position, ent->drawable.phys->modelBox.position, ent->drawable.phys->entity->position );
+                    }
                 vector2d_sub(ent->drawable.phys->entity->anim->rend->position, ent->drawable.phys->entity->anim->rend->position, ent->drawable.phys->entity->position);
 
                 break;
