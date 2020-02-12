@@ -37,6 +37,30 @@ uint8_t gf2d_input_key_just_pressed( SDL_Scancode scancode );
  */
 uint8_t gf2d_input_key_released( SDL_Scancode scancode );
 
+/** 
+ * @brief get the numeric value of an axis of the specified joystick
+ * @param joystickId the id of the joystick to check
+ * @param axis the axis to be checked
+ * @return a float between -1.0f (inclusive) and 1.0f (inclusive)
+ */
 float gf2d_input_joystick_get_axis(uint32_t joystickId, int axis);
+
+/** 
+ * @brief check if button in joystick is being pressed
+ * @param joystickId the id of the joystick to check
+ * @param button which button the check for
+ * @return 1 if button is being pressed, 0 otherwise
+ */
+uint8_t gf2d_input_joystick_button_pressed(uint32_t joystickId, int button);
+
+/** 
+ * @brief check if button in joystick has been released
+ * @param joystickId the id of the joystick to check
+ * @param button which button to check for
+ * @return 1 if button was released, 0 otherwise
+ */
+uint8_t gf2d_input_joystick_button_released(uint32_t joystickId, int button);
+
+uint8_t gf2d_input_joystick_get_hat(uint32_t joystickId, int hat, uint8_t hatDir);
 
 #endif

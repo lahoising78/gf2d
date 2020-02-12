@@ -11,6 +11,18 @@ void somethink(Entity *self)
     float state = gf2d_input_joystick_get_axis(0, 0);
     self->velocity.x = state * 3;
     self->velocity.y = gf2d_input_joystick_get_axis(0, 1) * 3;
+
+    if( gf2d_input_joystick_button_pressed(0, 0) )
+        slog("pressing button 0");
+
+    if( gf2d_input_joystick_button_released(0, 1) )
+        slog("released button 1");
+
+    if( gf2d_input_is_key_pressed(SDL_SCANCODE_A) )
+        slog("pressing A");
+
+    if( gf2d_input_joystick_get_hat(0, 0, SDL_HAT_CENTERED) )
+        slog("got a hat");
 }
 
 void smh_awake()
