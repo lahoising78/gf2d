@@ -2,19 +2,47 @@
 #include "simple_logger.h"
 #include "gf2d_draw.h"
 
-uint8_t gf2d_collision_check( CollisionShape *a, CollisionShape *b )
+uint8_t gf2d_collision_check( CollisionShape *a, CollisionShape *b, Vector2D *poc, Vector2D *normal )
 {
     if(!a || !b) return 0;
     if( a->shapeType == CST_NONE || b->shapeType == CST_NONE ) return 0;
 
     if( a->shapeType == CST_BOX && b->shapeType == CST_BOX )
     {
-        return (a->position.x <= b->position.x + b->dimensions.wh.x &&
-                a->position.x + a->dimensions.wh.x >= b->position.x &&
-                a->position.y <= b->position.y + b->dimensions.wh.y &&
-                a->position.y + a->dimensions.wh.y >= b->position.y);
-    }
+        if ( a->position.x <= b->position.x + b->dimensions.wh.x &&  
+            a->position.x + a->dimensions.wh.x >= b->position.x &&
+            a->position.y <= b->position.y + b->dimensions.wh.y &&
+            a->position.y + a->dimensions.wh.y >= b->position.y ) 
+        {
+            if (poc)
+            {
+                poc->y = poc->x = 0;
+                if (normal)normal->x = normal->y = 0;
+                if (a->position.x + 1 >= b->position.x + b->dimensions.wh.x)
+                {
+                    poc->x = a->position.x;
+                    if (normal)normal->x = -1;
+                }
+                else if (b->position.x + 1 >= a->position.x + a->dimensions.wh.x)
+                {
+                    poc->x = b->position.x;
+                    if (normal)normal->x = 1;
+                }
+                if (a->position.y + 1 >= b->position.y + b->dimensions.wh.y)
+                {
+                    poc->y = a->position.y;
+                    if (normal)normal->y = -1;
+                }
+                if (b->position.y + 1 >= a->position.y + a->dimensions.wh.y)
+                {
+                    if (normal)normal->y = 1;
+                    poc->y = b->position.y;
+                }
+            }
 
+            return 1;
+        }
+    }
     return 0;
 }
 
