@@ -145,10 +145,12 @@ void gf2d_physics_entity_update( struct physics_entity_s *ent )
     if( ent->type == PET_KINETIC )
     {
         
-        if( ent->useGravity )
+        if( ent->useGravity && !ent->_onFloor )
         {
             ent->entity->velocity.y += GRAVITY * frameTime;
         }
+
+        if( ent->entity->velocity.y < 0.0f ) ent->_onFloor = 0;
 
         /* df = di + vt */
         vector2d_scale( buf, ent->entity->velocity, frameTime * TIME_MULTIPLIER );                                      // vt
@@ -283,6 +285,9 @@ void gf2d_physics_entity_collision_resolution(PhysicsEntity *e, CollisionInfo in
         vector2d_sub(info.a.position, info.a.position, normalizedVel);
     }
     vector2d_add(e->entity->position, e->entity->position, buf);
+
+    if( info.normal.y > 0 )
+        e->_onFloor = 1;
 
     speed = vector2d_magnitude(e->entity->velocity);
     if( speed != 0.0f )

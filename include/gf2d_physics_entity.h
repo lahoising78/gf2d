@@ -22,6 +22,7 @@ typedef struct physics_entity_s
     CollisionShape          modelBox;
     uint8_t                 canCollide;                             /* 1 if we want to use modelBoxes to collide, 0 if modelBoxes should only be triggers */
 
+    uint8_t                 _onFloor;
     uint8_t                 _inuse;
 } PhysicsEntity;
 
