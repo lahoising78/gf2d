@@ -42,7 +42,7 @@ void smh_awake()
     p->entity->position.y = 10;
     p->entity->update = somethink;
     p->entity->touch = touching;
-    // p->useGravity = 1;
+    p->useGravity = 1;
     p->type = PET_KINETIC;
     p->canCollide = 1;
 

@@ -5,15 +5,6 @@
 
 typedef enum
 {
-    CDIR_NONE =         0x0000,
-    CDIR_UP =           0x0001,
-    CDIR_RIGHT =        0x0002,
-    CDIR_DOWN =         0x0004,
-    CDIR_LEFT =         0x0008
-} CollisionDirection;
-
-typedef enum
-{
     CST_NONE = 0,
     CST_BOX = 1,
     CST_CIRCLE = 2
@@ -30,7 +21,16 @@ typedef struct
     CollisionShapeType shapeType;
 } CollisionShape;
 
-uint8_t gf2d_collision_check( CollisionShape *a, CollisionShape *b, Vector2D *poc, Vector2D *normal );
+typedef struct
+{
+    uint8_t collided;
+    CollisionShape a;
+    CollisionShape b;
+    Vector2D poc;
+    Vector2D normal;
+} CollisionInfo;
+
+uint8_t gf2d_collision_check( CollisionShape *a, CollisionShape *b, CollisionInfo *info );
 
 void gf2d_collision_draw( CollisionShape *shape );
 
