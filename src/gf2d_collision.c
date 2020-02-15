@@ -3,6 +3,26 @@
 #include "gf2d_draw.h"
 #include "gf2d_camera.h"
 
+CollisionShape gf2d_collision_shape(Vector2D position, Vector2D dimensions, CollisionShapeType type)
+{
+    CollisionShape shape = {0};
+
+    shape.position = position;
+    shape.shapeType = type;
+
+    switch (type)
+    {
+    case CST_BOX:
+        shape.dimensions.wh = dimensions;
+        break;
+    
+    default:
+        break;
+    }
+
+    return shape;
+}
+
 uint8_t gf2d_collision_check( CollisionShape *a, CollisionShape *b, CollisionInfo *info )
 {
     int i;

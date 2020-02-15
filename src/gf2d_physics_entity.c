@@ -166,10 +166,6 @@ void gf2d_physics_entity_update( struct physics_entity_s *ent )
             if( ent->entity->touch )    ent->entity->touch( ent->entity, o->entity );
             if( o->entity->touch )      o->entity->touch( o->entity, ent->entity );
         }
-        // else 
-        // {
-        //     ent->_onFloor = 0;
-        // }
 
         if( gf2d_physics_entity_check_tilemap_collision(ent, &info) )
         {
@@ -179,10 +175,6 @@ void gf2d_physics_entity_update( struct physics_entity_s *ent )
                 gf2d_physics_entity_collision_resolution(ent, info);
             }
         }
-        // else
-        // {
-        //     ent->_onFloor = 0;
-        // }
     }
     else
     {
@@ -233,10 +225,9 @@ uint8_t gf2d_physics_entity_check_tilemap_collision(PhysicsEntity *e, CollisionI
     int i, x, y;
     const uint32_t count = gf2d_tilemap_get_count();
     const Tilemap *tilemaps = gf2d_tilemap_get_all();
-    CollisionShape shape = {0};
+    Tile *tile = NULL;
     Vector2D worldToMap = {0};
     Vector2D entMax = {0};
-    shape.shapeType = CST_BOX;
 
     if(!e || !tilemaps) return 0;
 
@@ -248,9 +239,6 @@ uint8_t gf2d_physics_entity_check_tilemap_collision(PhysicsEntity *e, CollisionI
         worldToMap = gf2d_tilemap_world_to_map(&tilemaps[i], e->modelBox.position);
         if(worldToMap.x < 0) continue;
         
-        shape.dimensions.wh.x = tilemaps[i].spriteSheet->frame_w;
-        shape.dimensions.wh.y = tilemaps[i].spriteSheet->frame_h;
-
         if( entMax.x < 0 ) entMax.x = (float)tilemaps[i].w - 1.0f;
         if( entMax.y < 0 ) entMax.y = (float)tilemaps[i].h - 1.0f;
 
@@ -258,17 +246,15 @@ uint8_t gf2d_physics_entity_check_tilemap_collision(PhysicsEntity *e, CollisionI
         {
             for(x = (int)worldToMap.x; x <= entMax.x; x++)
             {
-                if( !tilemaps[i].tiles[y * tilemaps[i].w + x].solid ) continue;
-
-                shape.position.x = x;
-                shape.position.y = y;
-                shape.position = gf2d_tilemap_map_to_world(&tilemaps[i], shape.position);
-
-                if( gf2d_collision_check(&shape, &e->modelBox, info) ) 
+                tile = &tilemaps->tiles[y * tilemaps->w + x];
+                vector2d_add(tile->body.position, tile->body.position, tile->_pos);
+                if( gf2d_collision_check(&e->modelBox, &tile->body, info) ) 
                 {
                     vector2d_sub(e->modelBox.position, e->modelBox.position, e->entity->position);
+                    vector2d_sub(tile->body.position, tile->body.position, tile->_pos);
                     return 1;
                 }
+                vector2d_sub(tile->body.position, tile->body.position, tile->_pos);
             }
         }
     }

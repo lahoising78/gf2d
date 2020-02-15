@@ -1,6 +1,8 @@
 #include "gf2d_tilemap.h"
 #include "gf2d_graphics.h"
 #include "simple_logger.h"
+#include "gf2d_camera.h"
+#include "gf2d_main.h"
 
 typedef struct
 {
@@ -65,7 +67,7 @@ void gf2d_tilemap_init(Tilemap *tilemap)
     tilemap->_inuse = 1;
 }
 
-Tilemap *gf2d_tilemap_load(Sprite *sprite, uint32_t *map, uint8_t *solidMap, uint32_t w, uint32_t h)
+Tilemap *gf2d_tilemap_load(Sprite *sprite, uint32_t *map, CollisionShape *solidMap, uint32_t w, uint32_t h)
 {
     Tilemap *tilemap = NULL;
     Tile *tile = NULL;
@@ -93,7 +95,7 @@ Tilemap *gf2d_tilemap_load(Sprite *sprite, uint32_t *map, uint8_t *solidMap, uin
                 tile = &tilemap->tiles[i*w + j];
                 tile->_pos = vector2d((float)(j*sprite->frame_w), (float)(i * sprite->frame_h));
                 tile->id = map[ i*w + j ];
-                tile->solid = solidMap[ tile->id ];
+                tile->body = solidMap[ tile->id ];
             }
         }
     }
@@ -125,12 +127,21 @@ void gf2d_tilemap_render(Tilemap *tilemap)
         {
             tile = &tilemap->tiles[i * tilemap->w + j];
             if(tile->id == 0) continue;
+
             gf2d_sprite_draw(
                 tilemap->spriteSheet,
-                tile->_pos,
+                gf2d_camera_get_displaced_position(tile->_pos),
                 NULL, NULL, NULL, NULL, NULL,
                 tile->id-1
             );
+
+            if( gf2d_main_get_draw_collisions() )
+            {
+                vector2d_add(tile->body.position, tile->body.position, tile->_pos);
+                gf2d_collision_draw(&tile->body);
+                vector2d_sub(tile->body.position, tile->body.position, tile->_pos);
+            }
+                
         }
     }
 }

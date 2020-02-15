@@ -30,6 +30,8 @@ typedef struct
     Vector2D normal;
 } CollisionInfo;
 
+CollisionShape gf2d_collision_shape(Vector2D position, Vector2D dimensions, CollisionShapeType type);
+
 /** 
  * @brief check if two bodies have collided and, if so, get information about the collision
  * @param a the first body to check
