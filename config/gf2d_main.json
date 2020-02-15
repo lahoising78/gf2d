@@ -1,0 +1,15 @@
+{           
+    "windowName":                   "Punti Jordan - El Sayayin de la Patria",
+    "renderWidth":                  1200,
+    "renderHeight":                 720,
+    "bgcolor":                      [0.0, 0.0, 0.0, 255.0],
+    "fullscreen":                   0,
+    "frameDelay":                   16,
+    "spriteCount":                  4096,
+    "animationCount":               2048,
+    "entityCount":                  1024,
+    "physicsEntityCount":           512,
+    "tilemapCount":                 8,
+    "inputMaxKeys":                 512,
+    "inputMaxjoysticks":            8
+}

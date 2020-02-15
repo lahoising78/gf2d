@@ -68,13 +68,23 @@ uint8_t gf2d_main_get_fullscreen();
 void gf2d_main_set_draw_collisions(uint8_t draw);
 uint8_t gf2d_main_get_draw_collisions();
 
-/* TO BE OVERRIDEN */
+/* ====================Engine Config================ */
+uint32_t gf2d_engine_config_get_frame_delay();
+uint32_t gf2d_engine_config_get_sprite_count();
+uint32_t gf2d_engine_config_get_animation_count();
+uint32_t gf2d_engine_config_get_entity_count();
+uint32_t gf2d_engine_config_get_physics_entity_count();
+uint32_t gf2d_engine_config_get_tilemap_count();
+uint32_t gf2d_engine_config_get_input_max_keys();
+uint32_t gf2d_engine_config_get_input_max_joysticks();
 
 /** 
  * @brief configure the game's window
  * @note needs to be overriden by the user in a file in application/ folder
  */
 void gf2d_config();
+
+/* TO BE OVERRIDEN */
 
 /** 
  * @brief the entry point of the game for the user

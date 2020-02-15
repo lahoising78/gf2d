@@ -14,9 +14,6 @@
 #include "gf2d_physics_entity.h"
 #include "gf2d_tilemap.h"
 
-#define ENTITY_COUNT                1024
-#define PHYSICS_ENTITY_COUNT        256
-
 float frameTime = 0.0f;
 
 int main(int argc, char * argv[])
@@ -49,13 +46,13 @@ int main(int argc, char * argv[])
         gf2d_main_get_bgcolor(),
         gf2d_main_get_fullscreen()
     );
-    gf2d_graphics_set_frame_delay(16);
-    gf2d_sprite_init(4096);
-    gf2d_animation_manager_init(2048);
-    gf2d_entity_manager_init(ENTITY_COUNT);
-    gf2d_physics_entity_manager_init(PHYSICS_ENTITY_COUNT);
-    gf2d_tilemap_manager_init(4);
-    gf2d_input_init(SDL_NUM_SCANCODES, 8);
+    gf2d_graphics_set_frame_delay( gf2d_engine_config_get_frame_delay() );
+    gf2d_sprite_init( gf2d_engine_config_get_sprite_count() );
+    gf2d_animation_manager_init( gf2d_engine_config_get_animation_count() );
+    gf2d_entity_manager_init( gf2d_engine_config_get_entity_count() );
+    gf2d_physics_entity_manager_init( gf2d_engine_config_get_physics_entity_count() );
+    gf2d_tilemap_manager_init( gf2d_engine_config_get_tilemap_count() );
+    gf2d_input_init( gf2d_engine_config_get_input_max_keys() , gf2d_engine_config_get_input_max_joysticks() );
     gf2d_camera_set_view( vector2d((float)gf2d_main_get_render_width(), (float)gf2d_main_get_render_height()) );
     
     /*demo setup*/
