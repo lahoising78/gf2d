@@ -9,16 +9,16 @@
 void somethink(Entity *self)
 {
     if(!self) return;
-    if( gf2d_input_key_just_pressed(SDL_SCANCODE_RIGHT) )
+    if( gf2d_input_is_key_pressed(SDL_SCANCODE_RIGHT) )
         self->velocity.x = 3.0f;
-    else if( gf2d_input_key_just_pressed(SDL_SCANCODE_LEFT) )
+    else if( gf2d_input_is_key_pressed(SDL_SCANCODE_LEFT) )
         self->velocity.x = -3.0f;
     else if( gf2d_input_key_released(SDL_SCANCODE_RIGHT) || gf2d_input_key_released(SDL_SCANCODE_LEFT) )
         self->velocity.x = 0.0f;
     
-    if( gf2d_input_key_just_pressed(SDL_SCANCODE_DOWN) )
+    if( gf2d_input_is_key_pressed(SDL_SCANCODE_DOWN) )
         self->velocity.y = 3.0f;
-    else if( gf2d_input_key_just_pressed(SDL_SCANCODE_UP) )
+    else if( gf2d_input_is_key_pressed(SDL_SCANCODE_UP) )
         self->velocity.y = -3.0f;
     else if( gf2d_input_key_released(SDL_SCANCODE_DOWN) || gf2d_input_key_released(SDL_SCANCODE_UP) )
         self->velocity.y = 0.0f;
@@ -55,7 +55,8 @@ void smh_awake()
 
     other = gf2d_physics_entity_new();
     other->canCollide = 1;
-    // other->type = PET_KINETIC;
+    other->useGravity = 1;
+    other->type = PET_KINETIC;
     other->entity->anim->rend->sprite = gf2d_sprite_load_all("images/space_bug.png", 128, 128, 16);
     gf2d_animation_play(other->entity->anim, 0, 1);
 

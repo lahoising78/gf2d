@@ -4,6 +4,8 @@
 
 uint8_t gf2d_collision_check( CollisionShape *a, CollisionShape *b, CollisionInfo *info )
 {
+    int i;
+
     if(!a || !b) return 0;
     if( a->shapeType == CST_NONE || b->shapeType == CST_NONE ) return 0;
 
@@ -16,27 +18,30 @@ uint8_t gf2d_collision_check( CollisionShape *a, CollisionShape *b, CollisionInf
         {
             if (info)
             {
-                info->poc.y = info->poc.x = 0;
-                info->normal.x = info->normal.y = 0;
-                if (a->position.x + 1 >= b->position.x + b->dimensions.wh.x)
+                for(i = 0; info->poc.x == 0.0f && info->poc.y == 0.0f && info->normal.x == 0.0f && info->normal.y == 0.0f; i++)
                 {
-                    info->poc.x = a->position.x;
-                    info->normal.x = -1;
-                }
-                else if (b->position.x + 1 >= a->position.x + a->dimensions.wh.x)
-                {
-                    info->poc.x = b->position.x;
-                    info->normal.x = 1;
-                }
-                if (a->position.y + 1 >= b->position.y + b->dimensions.wh.y)
-                {
-                    info->poc.y = a->position.y;
-                    info->normal.y = -1;
-                }
-                if (b->position.y + 1 >= a->position.y + a->dimensions.wh.y)
-                {
-                    info->normal.y = 1;
-                    info->poc.y = b->position.y;
+                    info->poc.y = info->poc.x = 0;
+                    info->normal.x = info->normal.y = 0;
+                    if (a->position.x + i >= b->position.x + b->dimensions.wh.x)
+                    {
+                        info->poc.x = a->position.x;
+                        info->normal.x = 1;
+                    }
+                    else if (b->position.x + i >= a->position.x + a->dimensions.wh.x)
+                    {
+                        info->poc.x = b->position.x;
+                        info->normal.x = -1;
+                    }
+                    if (a->position.y + i >= b->position.y + b->dimensions.wh.y)
+                    {
+                        info->poc.y = a->position.y;
+                        info->normal.y = -1;
+                    }
+                    if (b->position.y + i >= a->position.y + a->dimensions.wh.y)
+                    {
+                        info->normal.y = 1;
+                        info->poc.y = b->position.y;
+                    }
                 }
                 info->a = *a;
                 info->b = *b;
