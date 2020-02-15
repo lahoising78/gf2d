@@ -154,9 +154,15 @@ Vector2D gf2d_tilemap_world_to_map(const Tilemap *tilemap, Vector2D position)
     ret.x = floorf( position.x/tilemap->spriteSheet->frame_w );
     ret.y = floorf( position.y/tilemap->spriteSheet->frame_h );
 
-    if( ret.x < 0.0f || ret.x >= (float)tilemap->w ||
-        ret.y < 0.0f || ret.y >= (float)tilemap->h )
-        return vector2d(-2.0f, -2.0f);
+    if( ret.x < 0.0f )
+        ret.x = -3.0f;
+    else if( ret.x >= (float)tilemap->w )
+        ret.x = -2.0f;
+
+    if( ret.y < 0.0f )
+        ret.y = -3.0f;
+    else if( ret.y >= (float)tilemap->h )
+        ret.y = -2.0f;
 
     return ret;
 }

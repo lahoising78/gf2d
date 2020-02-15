@@ -171,7 +171,6 @@ void gf2d_physics_entity_update( struct physics_entity_s *ent )
         {
             if( ent->canCollide )
             {
-                slog("colliding with tile");
                 gf2d_physics_entity_collision_resolution(ent, info);
             }
         }
@@ -236,15 +235,36 @@ uint8_t gf2d_physics_entity_check_tilemap_collision(PhysicsEntity *e, CollisionI
     {
         vector2d_add(entMax, e->modelBox.position, e->modelBox.dimensions.wh);
         entMax = gf2d_tilemap_world_to_map(&tilemaps[i], entMax);
-        worldToMap = gf2d_tilemap_world_to_map(&tilemaps[i], e->modelBox.position);
-        if(worldToMap.x < 0) continue;
         
-        if( entMax.x < 0 ) entMax.x = (float)tilemaps[i].w - 1.0f;
-        if( entMax.y < 0 ) entMax.y = (float)tilemaps[i].h - 1.0f;
+        if(entMax.x > 0.0f)
+            entMax.x += 1.0f; 
+        if(entMax.y > 0.0f) 
+            entMax.y += 1.0f;
+        
+        if( entMax.x == -1.0f ) continue;
+        
+        worldToMap = gf2d_tilemap_world_to_map(&tilemaps[i], e->modelBox.position);
+        
+        if( worldToMap.x > 0.0f )
+            worldToMap.x -= 1.0f; 
+        if( worldToMap.y > 0.0f) 
+            worldToMap.y -= 1.0f;
 
-        for(y = (int)worldToMap.y; y <= entMax.y; y++)
+        if(worldToMap.x == -1.0f ) continue;
+
+        if( worldToMap.x == -3.0f ) worldToMap.x = 0.0f;
+        else if ( worldToMap.x == -2.0f ) worldToMap.x = (float)tilemaps[i].w - 1.0f;
+        if( worldToMap.y == -3.0f ) worldToMap.y = 0.0f;
+        else if ( worldToMap.y == -2.0f ) worldToMap.y = (float)tilemaps[i].h - 1.0f;
+        
+        if( entMax.x == -3.0f ) entMax.x = 0.0f;
+        else if ( entMax.x == -2.0f ) entMax.x = (float)tilemaps[i].w - 1.0f;
+        if( entMax.y == -3.0f ) entMax.y = 0.0f;
+        else if ( entMax.y == -2.0f ) entMax.y = (float)tilemaps[i].h - 1.0f;
+
+        for(y = (int)worldToMap.y; y <= entMax.y + 1; y++)
         {
-            for(x = (int)worldToMap.x; x <= entMax.x; x++)
+            for(x = (int)worldToMap.x; x <= entMax.x + 1; x++)
             {
                 tile = &tilemaps->tiles[y * tilemaps->w + x];
                 vector2d_add(tile->body.position, tile->body.position, tile->_pos);
@@ -275,10 +295,12 @@ void gf2d_physics_entity_collision_resolution(PhysicsEntity *e, CollisionInfo in
         if( info.normal.x > 0.0f )
         {
             e->entity->position.x = info.poc.x - 1.0f;
+            e->entity->position.x -= e->modelBox.position.x;
         }
         else if( info.normal.x < 0.0f )
         {
             e->entity->position.x = info.poc.x - info.a.dimensions.wh.x - 1.0f;
+            e->entity->position.x -= e->modelBox.position.x;
         }
     }
     if( info.poc.y != 0.0f )
@@ -287,11 +309,13 @@ void gf2d_physics_entity_collision_resolution(PhysicsEntity *e, CollisionInfo in
         if( info.normal.y > 0.0f )
         {
             e->entity->position.y = info.poc.y - e->modelBox.dimensions.wh.y;
+            e->entity->position.y -= e->modelBox.position.y;
             // slog("y %.2f", e->entity->position.y);
         }
         else if ( info.normal.y < 0.0f )
         {
             e->entity->position.y = info.poc.y;
+            e->entity->position.y -= e->modelBox.position.y;
         }
     }
 
