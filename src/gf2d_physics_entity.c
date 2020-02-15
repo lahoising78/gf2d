@@ -281,32 +281,18 @@ void gf2d_physics_entity_collision_resolution(PhysicsEntity *e, CollisionInfo in
 {
     float theta = 0.0f;
     float speed = 0.0f;
-    Vector2D buf = {0};
-    Vector2D normalizedVel = {0};
     if(!e) return;
 
     /* go back to where we were not colliding */
-    // vector2d_copy(normalizedVel, e->entity->velocity);
-    // vector2d_normalize(&normalizedVel);
-    // while( gf2d_collision_check(&info.a, &info.b, &info) && info.poc.x == 0.0f && info.poc.y == 0.0f )
-    // {
-    //     vector2d_sub(buf, buf, normalizedVel);
-    //     vector2d_sub(info.a.position, info.a.position, normalizedVel);
-    // }
-    // vector2d_add(e->entity->position, e->entity->position, buf);
-    // slog("normal %.2f %.2f", info.normal.x, info.normal.y);
-    // slog("poc %.2f %.2f", info.poc.x, info.poc.y);
     if( info.poc.x != 0.0f )
     {
         if( info.normal.x > 0.0f )
         {
             e->entity->position.x = info.poc.x - 1.0f;
-            // slog("y %.2f", e->entity->position.x);
         }
         else if( info.normal.x < 0.0f )
         {
             e->entity->position.x = info.poc.x - info.a.dimensions.wh.x - 1.0f;
-            // slog("y %.2f", e->entity->position.x);
         }
     }
     if( info.poc.y != 0.0f )
@@ -316,6 +302,10 @@ void gf2d_physics_entity_collision_resolution(PhysicsEntity *e, CollisionInfo in
         {
             e->entity->position.y = info.poc.y - e->modelBox.dimensions.wh.y;
             // slog("y %.2f", e->entity->position.y);
+        }
+        else if ( info.normal.y < 0.0f )
+        {
+            e->entity->position.y = info.poc.y;
         }
     }
 
@@ -344,15 +334,15 @@ void gf2d_physics_entity_collision_resolution(PhysicsEntity *e, CollisionInfo in
 
 void gf2d_physics_entity_handle_collision( PhysicsEntity *e, PhysicsEntity *o, CollisionInfo info )
 {
-    float ve, vo, vmax; /* velocity e, velocity other */
-    Vector2D buf;
+    // float ve, vo, vmax; /* velocity e, velocity other */
+    // Vector2D buf;
 
     if(!e || !o) return;
     if(!e->canCollide || !o->canCollide) return;
 
-    ve = vector2d_magnitude(e->entity->velocity);
-    vo = vector2d_magnitude(o->entity->velocity);
-    vmax = (ve > vo)? ve : vo;
+    // ve = vector2d_magnitude(e->entity->velocity);
+    // vo = vector2d_magnitude(o->entity->velocity);
+    // vmax = (ve > vo)? ve : vo;
 
     switch( e->type )
     {
@@ -360,8 +350,8 @@ void gf2d_physics_entity_handle_collision( PhysicsEntity *e, PhysicsEntity *o, C
         
         if( o->type == PET_KINETIC )
         {
-            gf2d_collision_check(&o->modelBox, &e->modelBox, &info);
-            e = o;
+            // gf2d_collision_check(&o->modelBox, &e->modelBox, &info);
+            // e = o;
         }
 
         break;
