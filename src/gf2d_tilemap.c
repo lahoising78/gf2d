@@ -151,7 +151,7 @@ Tilemap *gf2d_tilemap_load(SJson *json)
         for(i = 0; i < sj_array_get_count(obj); i++)
         {
             map[i] = gf2d_json_uint32(sj_array_get_nth(obj, i));
-            if(map[i] > maxTileId) maxTileId = map[i];
+            if(map[i]+1 > maxTileId) maxTileId = map[i]+1;
         }
     }
 
