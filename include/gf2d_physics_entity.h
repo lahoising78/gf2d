@@ -55,6 +55,9 @@ void gf2d_physics_entity_manager_update();
  */
 PhysicsEntity *gf2d_physics_entity_new();
 
+PhysicsEntity *gf2d_physics_entity_load(SJson *json);
+void gf2d_physics_entity_load_to_entity(PhysicsEntity *phys, SJson *json);
+
 /** 
  * @brief free the physics entity and clear values
  */

@@ -26,7 +26,6 @@ void somethink(Entity *self)
     else if( gf2d_input_key_released(SDL_SCANCODE_DOWN) || gf2d_input_key_released(SDL_SCANCODE_UP) )
         self->velocity.y = 0.0f;
 
-    vector2d_add(self->position, self->position, self->velocity);
     vector2d_set(camera, ((float)self->anim->rend->sprite->frame_w) * 0.5f, (float)(self->anim->rend->sprite->frame_h) * 0.5f);
     vector2d_add(camera, self->position, camera);
     gf2d_camera_set_position( camera );
@@ -43,6 +42,7 @@ void smh_awake()
     RenderEntity *rend = NULL;
     Animation *anim = NULL;
     Entity *ent = NULL;
+    PhysicsEntity *phys = NULL;
 
     json = sj_load("application/drawables.json");
     
@@ -53,8 +53,11 @@ void smh_awake()
     gf2d_scene_add_to_drawables(anim, DET_ANIM);
 
     ent = gf2d_entity_load( sj_object_get_value(json, "ent") );
-    ent->update = somethink;
     gf2d_scene_add_to_drawables(ent, DET_ENT);
+
+    phys = gf2d_physics_entity_load( sj_object_get_value(json, "phys") );
+    phys->entity->update = somethink;
+    gf2d_scene_add_to_drawables(phys, DET_PHYS);
 
     sj_free(json);
 }

@@ -28,6 +28,8 @@ uint8_t gf2d_physics_entity_check_tilemap_collision(PhysicsEntity *e, CollisionI
 void gf2d_physics_entity_handle_collision( PhysicsEntity *e, PhysicsEntity *o, CollisionInfo info );
 void gf2d_physics_entity_collision_resolution(PhysicsEntity *e, CollisionInfo info);
 
+PhysicsEntityType gf2d_physics_entity_type_from_string(const char *str);
+
 void gf2d_physics_entity_manager_init(uint32_t count)
 {
     slog("initializing physics entity manager with %d entities", (int)count);
@@ -111,6 +113,33 @@ PhysicsEntity *gf2d_physics_entity_new()
     }
 
     return NULL;
+}
+
+PhysicsEntityType gf2d_physics_entity_type_from_string(const char *str)
+{
+    if(strcmp(str, "PET_KINETIC") == 0) return PET_KINETIC;
+    return PET_STATIC;
+}
+
+PhysicsEntity *gf2d_physics_entity_load(SJson *json)
+{
+    PhysicsEntity *phys = NULL;
+
+    phys = gf2d_physics_entity_new();
+    gf2d_physics_entity_load_to_entity(phys, json);
+
+    return phys;
+}
+
+void gf2d_physics_entity_load_to_entity(PhysicsEntity *phys, SJson *json)
+{
+    if(!phys || !json) return;
+
+    gf2d_entity_load_to_entity(phys->entity, sj_object_get_value(json, "entity"));
+    phys->modelBox = gf2d_collision_shape_load( sj_object_get_value(json, "modelBox") );
+    phys->useGravity = gf2d_json_uint8( sj_object_get_value(json, "useGravity") );
+    phys->canCollide = gf2d_json_uint8( sj_object_get_value(json, "canCollide") );
+    phys->type = gf2d_physics_entity_type_from_string( sj_get_string_value( sj_object_get_value(json, "type") ) );
 }
 
 void gf2d_physics_entity_free( PhysicsEntity *ent )
