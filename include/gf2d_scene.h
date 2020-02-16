@@ -15,15 +15,15 @@ typedef enum
     DET_TMAP = 5
 } DrawableEntityType;
 
+typedef void (*AwakeFunction)();
+
+void gf2d_scene_load_from_file(const char *filename);
 void gf2d_scene_load( uint32_t drawablesCount, void (*scene_awake)() );
 void gf2d_scene_close();
 void gf2d_scene_render();
 
-// int gf2d_scene_add_entity( Entity *ent );
-// void gf2d_scene_remove_entity( Entity *e );
-
-// int gf2d_scene_add_animation(Animation *anim);
-// void gf2d_scene_remove_animation(Animation *anim);
+void gf2d_scene_awake_list_start(uint32_t count);
+void gf2d_scene_submit_awake( void (*scene_awake)() );
 
 int gf2d_scene_add_to_drawables( void *de, DrawableEntityType type );
 void gf2d_scene_remove_from_drawables( void *e );

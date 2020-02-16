@@ -54,6 +54,7 @@ int main(int argc, char * argv[])
     gf2d_tilemap_manager_init( gf2d_engine_config_get_tilemap_count() );
     gf2d_input_init( gf2d_engine_config_get_input_max_keys() , gf2d_engine_config_get_input_max_joysticks() );
     gf2d_camera_set_view( vector2d((float)gf2d_main_get_render_width(), (float)gf2d_main_get_render_height()) );
+    gf2d_scene_awake_list_start(16);
     
     /*demo setup*/
     gf2d_main();

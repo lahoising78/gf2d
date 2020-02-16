@@ -31,33 +31,7 @@ void somethink(Entity *self)
     gf2d_camera_set_position( camera );
 }
 
-void touching(Entity *self, Entity *other)
-{
-    // slog("touching");
-}
-
 void smh_awake()
 {
-    SJson *json = NULL;
-    RenderEntity *rend = NULL;
-    Animation *anim = NULL;
-    Entity *ent = NULL;
-    PhysicsEntity *phys = NULL;
-
-    json = sj_load("application/drawables.json");
-    
-    rend = gf2d_render_ent_load( sj_object_get_value(json, "renderEnt") );
-    gf2d_scene_add_to_drawables(rend, DET_REND);
-
-    anim = gf2d_animation_load( sj_object_get_value(json, "animation") );
-    gf2d_scene_add_to_drawables(anim, DET_ANIM);
-
-    ent = gf2d_entity_load( sj_object_get_value(json, "ent") );
-    gf2d_scene_add_to_drawables(ent, DET_ENT);
-
-    phys = gf2d_physics_entity_load( sj_object_get_value(json, "phys") );
-    phys->entity->update = somethink;
-    gf2d_scene_add_to_drawables(phys, DET_PHYS);
-
-    sj_free(json);
+    slog("hello from smh");
 }

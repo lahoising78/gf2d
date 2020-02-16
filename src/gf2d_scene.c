@@ -25,9 +25,54 @@ typedef struct
     uint32_t            drawable_entities_size;
 } Scene;
 
-static Scene gf2d_scene = {0};
+typedef struct
+{
+    AwakeFunction       *gf2d_scene_awake_list;
+    uint32_t            count;
+    uint32_t            current;
+} AwakeFunctionManager;
 
-void gf2d_scene_load( uint32_t drawablesCount, void (*scene_awake)() )
+static Scene gf2d_scene = {0};
+static AwakeFunctionManager gf2d_scene_awake_manager = {0};
+
+void gf2d_scene_free_awake_list()
+{
+    if(gf2d_scene_awake_manager.gf2d_scene_awake_list) free(gf2d_scene_awake_manager.gf2d_scene_awake_list);
+}
+
+void gf2d_scene_awake_list_start(uint32_t count)
+{
+    gf2d_scene_awake_manager.gf2d_scene_awake_list = (AwakeFunction*)gfc_allocate_array(sizeof(AwakeFunction), count);
+    if(gf2d_scene_awake_manager.gf2d_scene_awake_list)
+    {
+        gf2d_scene_awake_manager.count = count;
+        gf2d_scene_awake_manager.current = 0;
+    }
+    atexit(gf2d_scene_free_awake_list);
+}
+
+void gf2d_scene_submit_awake( AwakeFunction scene_awake )
+{
+    gf2d_scene_awake_manager.gf2d_scene_awake_list[ gf2d_scene_awake_manager.current++ ] = scene_awake;
+}
+
+void gf2d_scene_load_from_file(const char *filename)
+{
+    SJson *json = NULL;
+    uint32_t drawablesCount = 0;
+    uint32_t awakeIndex = 0;
+
+    json = sj_load(filename);
+
+    drawablesCount = gf2d_json_uint32( sj_object_get_value(json, "drawablesCount") );
+    awakeIndex = gf2d_json_uint32( sj_object_get_value(json, "awakeIndex") );
+
+    gf2d_scene_load(drawablesCount, gf2d_scene_awake_manager.gf2d_scene_awake_list[awakeIndex]);
+
+    sj_free(json);
+}
+
+void gf2d_scene_load( uint32_t drawablesCount, AwakeFunction scene_awake )
 {
     slog("--== Loading new scene ==--");
 
