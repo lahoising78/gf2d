@@ -267,6 +267,7 @@ uint8_t gf2d_physics_entity_check_tilemap_collision(PhysicsEntity *e, CollisionI
             for(x = (int)worldToMap.x; x <= entMax.x + 1; x++)
             {
                 tile = &tilemaps->tiles[y * tilemaps->w + x];
+                if( tile->body.dimensions.wh.x <= 0.0f && tile->body.dimensions.wh.y <= 0.0f ) continue;
                 vector2d_add(tile->body.position, tile->body.position, tile->_pos);
                 if( gf2d_collision_check(&e->modelBox, &tile->body, info) ) 
                 {
@@ -289,13 +290,13 @@ void gf2d_physics_entity_collision_resolution(PhysicsEntity *e, CollisionInfo in
     float speed = 0.0f;
     if(!e) return;
 
-    /* go back to where we were not colliding */
     if( info.poc.x != 0.0f )
     {
         if( info.normal.x > 0.0f )
         {
-            e->entity->position.x = info.poc.x - 1.0f;
+            e->entity->position.x = info.poc.x + 1.0f;
             e->entity->position.x -= e->modelBox.position.x;
+            e->entity->velocity.x = 0.0f;
         }
         else if( info.normal.x < 0.0f )
         {
@@ -308,13 +309,12 @@ void gf2d_physics_entity_collision_resolution(PhysicsEntity *e, CollisionInfo in
         /* the thing you collided with is below you */
         if( info.normal.y > 0.0f )
         {
-            e->entity->position.y = info.poc.y - e->modelBox.dimensions.wh.y;
+            e->entity->position.y = info.poc.y - e->modelBox.dimensions.wh.y + 1.0f;
             e->entity->position.y -= e->modelBox.position.y;
-            // slog("y %.2f", e->entity->position.y);
         }
         else if ( info.normal.y < 0.0f )
         {
-            e->entity->position.y = info.poc.y;
+            e->entity->position.y = info.poc.y + 1.0f;
             e->entity->position.y -= e->modelBox.position.y;
         }
     }
@@ -337,7 +337,6 @@ void gf2d_physics_entity_collision_resolution(PhysicsEntity *e, CollisionInfo in
         /* do this to deal with floating point precision */
         if( fabs(e->entity->velocity.y) <= 1.0f ) e->entity->velocity.y = 0.0f;
         if( fabs(e->entity->velocity.x) <= 1.0f ) e->entity->velocity.x = 0.0f;
-        // slog("vel %.2f %.2f", e->entity->velocity.x, e->entity->velocity.y);
     }
 
 }

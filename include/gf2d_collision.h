@@ -30,6 +30,14 @@ typedef struct
     Vector2D normal;
 } CollisionInfo;
 
+/** 
+ * @brief create a collision shape
+ * @param position the position of the collision shape to create
+ * @note entities use position as an offset relative to them
+ * @param dimensions x hold radius if it is for a circle. otherwise it's width and height
+ * @param type the collision shape type (box or circle)
+ * @return a collision shape
+ */
 CollisionShape gf2d_collision_shape(Vector2D position, Vector2D dimensions, CollisionShapeType type);
 
 /** 

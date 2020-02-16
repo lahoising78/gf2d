@@ -124,7 +124,7 @@ void gf2d_animation_pause( Animation *anim )
 extern float frameTime;
 void gf2d_animation_render( Animation *anim )
 {
-    if(!anim || !anim->rend) return;
+    if(!anim || !anim->rend || !anim->rend->sprite) return;
     
     if(anim->playing)
     {
