@@ -98,6 +98,10 @@ void gf2d_scene_load_from_file(const char *filename)
             case DET_REND:
                 gf2d_scene_add_to_drawables( gf2d_render_ent_load( sj_object_get_value(obj, "drawable") ), type );
                 break;
+
+            case DET_ANIM:
+                gf2d_scene_add_to_drawables( gf2d_animation_load( sj_object_get_value(obj, "drawable") ), type );
+                break;
             
             default:
                 break;

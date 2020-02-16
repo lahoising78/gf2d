@@ -26,6 +26,38 @@
                 "position":                     [180.0, 270.0],
                 "frame":                        57.0
             }
+        },
+        {
+            "type":                             "DET_ANIM",
+            "drawable":{
+                "sprite": {
+                    "filename":                 "images/ed210.png",
+                    "frameWidth":               128,
+                    "frameHeight":              128,
+                    "framesPerLine":            16
+                },
+                "position":                     [356.0, 0.0],
+                "playing": {
+                    "animation":                5,
+                    "maxFrame":                 16
+                }
+            }
+        },
+        {
+            "type":                             "DET_ANIM",
+            "drawable":{
+                "sprite": {
+                    "filename":                 "images/ed210.png",
+                    "frameWidth":               128,
+                    "frameHeight":              128,
+                    "framesPerLine":            16
+                },
+                "position":                     [589.0, 0.0],
+                "playing": {
+                    "animation":                7,
+                    "maxFrame":                 16
+                }
+            }
         }
     ]
 }
