@@ -19,6 +19,20 @@ RenderEntity *gf2d_render_ent_new( Sprite *sprite )
     return ent;
 }
 
+RenderEntity *gf2d_render_ent_load( SJson *json )
+{
+    RenderEntity *rend = NULL;
+    if(!json) return NULL;
+
+    rend = gf2d_render_ent_new(NULL);
+    if(!rend) return NULL;
+    
+    rend->sprite = gf2d_json_sprite( sj_object_get_value(json, "sprite") );
+    rend->position = gf2d_json_vector2d( sj_object_get_value(json, "position") );
+
+    return rend;
+}
+
 void gf2d_render_ent_free( RenderEntity *ent )
 {
     if(!ent) return;

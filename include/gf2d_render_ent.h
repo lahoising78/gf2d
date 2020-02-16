@@ -2,6 +2,7 @@
 #define _GF2D_RENDER_ENT_H_
 
 #include "gf2d_sprite.h"
+#include "gf2d_json.h"
 
 typedef struct
 {
@@ -21,6 +22,8 @@ typedef struct
  * @return a pointer to the RenderEntity
  */
 RenderEntity *gf2d_render_ent_new( Sprite *sprite );
+
+RenderEntity *gf2d_render_ent_load( SJson *json );
 
 /** 
  * @brief clear data from render entity

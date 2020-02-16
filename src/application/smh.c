@@ -38,7 +38,13 @@ void touching(Entity *self, Entity *other)
 
 void smh_awake()
 {
-    Tilemap *tilemap = NULL;
-    tilemap = gf2d_tilemap_load_from_file("application/tilemap.json");
-    gf2d_scene_add_to_drawables(tilemap, DET_TMAP);
+    SJson *json = NULL;
+    RenderEntity *rend = NULL;
+
+    json = sj_load("application/drawables.json");
+    
+    rend = gf2d_render_ent_load( sj_object_get_value(json, "renderEnt") );
+    gf2d_scene_add_to_drawables(rend, DET_REND);
+
+    sj_free(json);
 }
