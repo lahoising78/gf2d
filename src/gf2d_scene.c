@@ -92,6 +92,7 @@ void gf2d_scene_load_from_file(const char *filename)
         for(i = 0; i < drawablesCount; i++)
         {
             obj = sj_array_get_nth(arr, i);
+            if( !sj_object_get_value(obj, "type") ) continue;
             type = gf2d_scene_drawable_entity_type_from_string( sj_get_string_value( sj_object_get_value(obj, "type") ) );
             switch (type)
             {
@@ -102,6 +103,13 @@ void gf2d_scene_load_from_file(const char *filename)
             case DET_ANIM:
                 gf2d_scene_add_to_drawables( gf2d_animation_load( sj_object_get_value(obj, "drawable") ), type );
                 break;
+
+            case DET_ENT:
+                gf2d_scene_add_to_drawables( gf2d_entity_load( sj_object_get_value(obj, "drawable") ), type );
+                break;
+
+            case DET_PHYS:
+                gf2d_scene_add_to_drawables( gf2d_physics_entity_load( sj_object_get_value(obj, "drawable") ), type );
             
             default:
                 break;
