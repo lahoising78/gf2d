@@ -66,17 +66,50 @@ DrawableEntityType gf2d_scene_drawable_entity_type_from_string(const char *str)
     return DET_NONE;
 }
 
+void gf2d_scene_load_from_json(SJson *arr)
+{
+    SJson *obj = NULL;
+    uint32_t drawablesCount = 0;
+    DrawableEntityType type = DET_NONE;
+    int i;
+
+    drawablesCount = sj_array_get_count(arr);
+    for(i = 0; i < drawablesCount; i++)
+    {
+        obj = sj_array_get_nth(arr, i);
+        if( !sj_object_get_value(obj, "type") ) continue;
+        type = gf2d_scene_drawable_entity_type_from_string( sj_get_string_value( sj_object_get_value(obj, "type") ) );
+        switch (type)
+        {
+        case DET_REND:
+            gf2d_scene_add_to_drawables( gf2d_render_ent_load( sj_object_get_value(obj, "drawable") ), type );
+            break;
+
+        case DET_ANIM:
+            gf2d_scene_add_to_drawables( gf2d_animation_load( sj_object_get_value(obj, "drawable") ), type );
+            break;
+
+        case DET_ENT:
+            gf2d_scene_add_to_drawables( gf2d_entity_load( sj_object_get_value(obj, "drawable") ), type );
+            break;
+
+        case DET_PHYS:
+            gf2d_scene_add_to_drawables( gf2d_physics_entity_load( sj_object_get_value(obj, "drawable") ), type );
+        
+        default:
+            break;
+        }
+    }
+}
+
 void gf2d_scene_load_from_file(const char *filename)
 {
     SJson *json = NULL;
     SJson *arr = NULL;
     SJson *obj = NULL;
-    int i;
 
     uint32_t drawablesCount = 0;
     uint32_t awakeIndex = 0;
-
-    DrawableEntityType type;
 
     json = sj_load(filename);
 
@@ -86,34 +119,17 @@ void gf2d_scene_load_from_file(const char *filename)
     gf2d_scene_load(drawablesCount, gf2d_scene_awake_manager.gf2d_scene_awake_list[awakeIndex]);
 
     arr = sj_object_get_value(json, "drawables");
-    if( arr && sj_is_array(arr) )
+    if(arr)
     {
-        drawablesCount = sj_array_get_count(arr);
-        for(i = 0; i < drawablesCount; i++)
+        if( sj_is_array(arr) )
         {
-            obj = sj_array_get_nth(arr, i);
-            if( !sj_object_get_value(obj, "type") ) continue;
-            type = gf2d_scene_drawable_entity_type_from_string( sj_get_string_value( sj_object_get_value(obj, "type") ) );
-            switch (type)
-            {
-            case DET_REND:
-                gf2d_scene_add_to_drawables( gf2d_render_ent_load( sj_object_get_value(obj, "drawable") ), type );
-                break;
-
-            case DET_ANIM:
-                gf2d_scene_add_to_drawables( gf2d_animation_load( sj_object_get_value(obj, "drawable") ), type );
-                break;
-
-            case DET_ENT:
-                gf2d_scene_add_to_drawables( gf2d_entity_load( sj_object_get_value(obj, "drawable") ), type );
-                break;
-
-            case DET_PHYS:
-                gf2d_scene_add_to_drawables( gf2d_physics_entity_load( sj_object_get_value(obj, "drawable") ), type );
-            
-            default:
-                break;
-            }
+            gf2d_scene_load_from_json(arr);
+        }
+        else if ( sj_is_object(arr) )
+        {
+            obj = sj_load( sj_get_string_value(sj_object_get_value( arr, "filename" )) );
+                gf2d_scene_load_from_json( sj_object_get_value(obj, "drawables") );
+            sj_free(obj);
         }
     }
 
