@@ -77,6 +77,7 @@ uint32_t gf2d_engine_config_get_physics_entity_count();
 uint32_t gf2d_engine_config_get_tilemap_count();
 uint32_t gf2d_engine_config_get_input_max_keys();
 uint32_t gf2d_engine_config_get_input_max_joysticks();
+uint32_t gf2d_engine_config_get_scene_awake_max();
 
 /** 
  * @brief configure the game's window

@@ -22,6 +22,7 @@ typedef struct
     uint32_t tilemapCount;
     uint32_t inputMaxKeys;
     uint32_t inputMaxjoysticks;
+    uint32_t sceneAwakeMax;
 } EngineConfiguration;
 
 static WindowConfiguration gf2d_window_configuration = {0};
@@ -115,6 +116,10 @@ void gf2d_config()
         gf2d_engine_configuration.inputMaxjoysticks = gf2d_json_uint32(obj);
     else
         gf2d_engine_configuration.inputMaxjoysticks = 8;
+
+    obj = sj_object_get_value(json, "sceneAwakeMax");
+    if(obj) gf2d_engine_configuration.sceneAwakeMax = gf2d_json_uint32(obj);
+    else gf2d_engine_configuration.sceneAwakeMax = 16;
     
     sj_free(json);
 }
@@ -218,4 +223,9 @@ uint32_t gf2d_engine_config_get_input_max_keys()
 uint32_t gf2d_engine_config_get_input_max_joysticks()
 {
     return gf2d_engine_configuration.inputMaxjoysticks;
+}
+
+uint32_t gf2d_engine_config_get_scene_awake_max()
+{
+    return gf2d_engine_configuration.sceneAwakeMax;
 }

@@ -11,5 +11,6 @@
     "physicsEntityCount":           512,
     "tilemapCount":                 8,
     "inputMaxKeys":                 512,
-    "inputMaxjoysticks":            8
+    "inputMaxjoysticks":            8,
+    "sceneAwakeMax":                16
 }
