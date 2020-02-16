@@ -8,7 +8,7 @@
         {
             "type":                             "DET_TMAP",
             "drawable":                         "application/tilemap.json"
-        }
+        },
     
         {
             "type":                             "DET_ANIM",
