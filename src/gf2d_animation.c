@@ -90,13 +90,21 @@ Animation *gf2d_animation_new()
 Animation *gf2d_animation_load( SJson *json )
 {
     Animation *anim = NULL;
+
+    anim = gf2d_animation_new();
+    gf2d_animation_load_to_animation(anim, json);
+
+    return anim;
+}
+
+void gf2d_animation_load_to_animation( Animation *anim, SJson *json )
+{
     uint32_t animation = 0;
     uint32_t maxFrame = 0;
 
     SJson *obj = NULL;
-    if(!json) return NULL;
+    if(!json || !anim) return;
 
-    anim = gf2d_animation_new();
     if( !anim->rend ) 
     {
         anim->rend = gf2d_render_ent_new(NULL);
@@ -117,8 +125,6 @@ Animation *gf2d_animation_load( SJson *json )
         anim->playing = 0;
         anim->maxFrame = 1;
     }
-
-    return anim;
 }
 
 void gf2d_animation_free(Animation *anim, uint8_t del)

@@ -21,5 +21,23 @@
             "animation":                5,
             "maxFrame":                 16
         }
+    },
+
+    "ent": {
+        "animation": {
+            "sprite": {
+                "filename":             "images/space_bug_top.png",
+                "frameWidth":           128,
+                "frameHeight":          128,
+                "framesPerLine":        16
+            },
+            "position":                 [0.0, 0.0],
+            "playing": {
+                "animation":            3,
+                "maxFrame":             16
+            }
+        },
+        "position":                     [256.0, 0.0],
+        "velocity":                     [3.0, 3.0]
     }
 }

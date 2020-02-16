@@ -93,7 +93,7 @@ void gf2d_scene_render()
                 if( !ent->drawable.ent->anim || !ent->drawable.ent->anim->rend ) continue;
 
                 vector2d_add(ent->drawable.ent->anim->rend->position, ent->drawable.ent->anim->rend->position, ent->drawable.ent->position);
-                slog("%.2f %.2f", ent->drawable.ent->anim->rend->position.x, ent->drawable.ent->anim->rend->position.y);
+                // slog("%.2f %.2f", ent->drawable.ent->anim->rend->position.x, ent->drawable.ent->anim->rend->position.y);
                     gf2d_animation_render(ent->drawable.ent->anim);
                 vector2d_sub(ent->drawable.ent->anim->rend->position, ent->drawable.ent->anim->rend->position, ent->drawable.ent->position);
 

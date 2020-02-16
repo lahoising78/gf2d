@@ -55,6 +55,8 @@ Animation *gf2d_animation_new();
  */
 Animation *gf2d_animation_load( SJson *json );
 
+void gf2d_animation_load_to_animation( Animation *anim, SJson *json );
+
 /** 
  * @brief render the animation
  * @param anim the animation to be rendered

@@ -61,6 +61,11 @@ void gf2d_entity_init(Entity *ent);
 Entity *gf2d_entity_new();
 
 /** 
+ * 
+ */
+Entity *gf2d_entity_load(SJson *json);
+
+/** 
  * @brief clear data from entity
  * @param ent the entity to free
  */

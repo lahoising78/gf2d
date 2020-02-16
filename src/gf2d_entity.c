@@ -137,6 +137,30 @@ Entity *gf2d_entity_new()
     return NULL;
 }
 
+Entity *gf2d_entity_load(SJson *json)
+{
+    Entity *ent = NULL;
+
+    SJson *obj = NULL;
+    if(!json) return NULL;
+
+    ent = gf2d_entity_new();
+    if(!ent) return NULL;
+
+    if(!ent->anim)
+        ent->anim = gf2d_animation_load( sj_object_get_value(json, "animation") );
+    else
+        gf2d_animation_load_to_animation(ent->anim, sj_object_get_value(json, "animation"));
+    
+    obj = sj_object_get_value(json, "position");
+    if(obj) ent->position = gf2d_json_vector2d(obj);
+
+    obj = sj_object_get_value(json, "velocity");
+    if(obj) ent->velocity = gf2d_json_vector2d(obj);
+
+    return ent;
+}
+
 void gf2d_entity_free(Entity *ent)
 {
     Animation *anim = NULL;
