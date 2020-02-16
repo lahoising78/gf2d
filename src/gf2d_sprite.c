@@ -98,7 +98,7 @@ Sprite *gf2d_sprite_new()
     return NULL;
 }
 
-Sprite *gf2d_sprite_get_by_filename(char * filename)
+Sprite *gf2d_sprite_get_by_filename(const char * filename)
 {
     int i;
     for (i = 0;i < sprite_manager.max_sprites;i++)
@@ -111,13 +111,13 @@ Sprite *gf2d_sprite_get_by_filename(char * filename)
     return NULL;// not found
 }
 
-Sprite *gf2d_sprite_load_image(char *filename)
+Sprite *gf2d_sprite_load_image(const char *filename)
 {
     return gf2d_sprite_load_all(filename,-1,-1,1);
 }
 
 Sprite *gf2d_sprite_load_all(
-    char *filename,
+    const char *filename,
     Sint32 frameWidth,
     Sint32 frameHeight,
     Sint32 framesPerLine
@@ -215,8 +215,6 @@ void gf2d_sprite_draw(
     int fpl;
     Vector2D scaleFactor = {1,1};
     Vector2D scaleOffset = {0,0};
-    void *pixels;
-    int pitch;
     if (!sprite)
     {
         slog("cannot render null sprite");

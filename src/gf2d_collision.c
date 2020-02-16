@@ -3,6 +3,13 @@
 #include "gf2d_draw.h"
 #include "gf2d_camera.h"
 
+CollisionShapeType gf2d_collision_type_from_string(const char *str)
+{
+    if( strcmp(str, "CST_BOX") == 0 ) return CST_BOX;
+    if( strcmp(str, "CST_CIRCLE") == 0 ) return CST_CIRCLE;
+    return CST_NONE;
+}
+
 CollisionShape gf2d_collision_shape(Vector2D position, Vector2D dimensions, CollisionShapeType type)
 {
     CollisionShape shape = {0};
@@ -21,6 +28,21 @@ CollisionShape gf2d_collision_shape(Vector2D position, Vector2D dimensions, Coll
     }
 
     return shape;
+}
+
+CollisionShape gf2d_collision_shape_load(SJson *json)
+{
+    Vector2D position = {0};
+    Vector2D dimensions = {0};
+    CollisionShapeType shapeType = CST_NONE;
+
+    if(!json) return gf2d_collision_shape(position, dimensions, shapeType);
+
+    position = gf2d_json_vector2d( sj_object_get_value(json, "position") );
+    dimensions = gf2d_json_vector2d( sj_object_get_value(json, "dimensions") );
+    shapeType = gf2d_collision_type_from_string( sj_get_string_value( sj_object_get_value(json, "shapeType") ) );
+
+    return gf2d_collision_shape(position, dimensions, shapeType);
 }
 
 uint8_t gf2d_collision_check( CollisionShape *a, CollisionShape *b, CollisionInfo *info )

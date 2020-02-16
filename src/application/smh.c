@@ -38,53 +38,7 @@ void touching(Entity *self, Entity *other)
 
 void smh_awake()
 {
-    PhysicsEntity *p = NULL;
     Tilemap *tilemap = NULL;
-    PhysicsEntity * other = NULL;
-    uint32_t map[] =
-    {
-        0, 1, 0, 2, 0, 
-        3, 4, 5, 6, 7,
-        8, 9, 0, 9, 10, 
-        0, 0, 0, 0, 0,
-        1, 2, 3, 4, 5
-    };
-    CollisionShape solid[] = {
-        gf2d_collision_shape( vector2d(0.0f, 0.0f), vector2d(0.0f, 0.0f), CST_BOX ),
-        gf2d_collision_shape( vector2d(0.0f, 0.0f), vector2d(0.0f, 0.0f), CST_BOX ),
-        gf2d_collision_shape( vector2d(0.0f, 0.0f), vector2d(128.0f, 128.0f), CST_BOX ),
-        gf2d_collision_shape( vector2d(0.0f, 0.0f), vector2d(128.0f, 128.0f), CST_BOX ),
-        gf2d_collision_shape( vector2d(0.0f, 0.0f), vector2d(128.0f, 128.0f), CST_BOX ),
-        gf2d_collision_shape( vector2d(0.0f, 0.0f), vector2d(128.0f, 128.0f), CST_BOX ),
-        gf2d_collision_shape( vector2d(0.0f, 0.0f), vector2d(128.0f, 128.0f), CST_BOX ),
-        gf2d_collision_shape( vector2d(0.0f, 0.0f), vector2d(128.0f, 128.0f), CST_BOX ),
-        gf2d_collision_shape( vector2d(0.0f, 0.0f), vector2d(128.0f, 128.0f), CST_BOX ),
-        gf2d_collision_shape( vector2d(0.0f, 0.0f), vector2d(128.0f, 128.0f), CST_BOX )
-    };
-
-    tilemap = gf2d_tilemap_load( gf2d_sprite_load_all("images/ed210.png", 128, 128, 16), map, solid, 5, 5 );
+    tilemap = gf2d_tilemap_load_from_file("application/tilemap.json");
     gf2d_scene_add_to_drawables(tilemap, DET_TMAP);
-
-    p = gf2d_physics_entity_new();
-    // slog("--== %.2f %.2f ==--", p->entity->anim->rend->position.x, p->entity->anim->rend->position.y);
-    p->entity->anim->rend->sprite = gf2d_sprite_load_all("images/space_bug.png", 128, 128, 16);
-    p->entity->position.x = 0;
-    p->entity->position.y = 0;
-    p->entity->update = somethink;
-    p->entity->touch = touching;
-    p->useGravity = 1;
-    p->type = PET_KINETIC;
-    p->canCollide = 1;
-
-    p->modelBox = gf2d_collision_shape(vector2d(14.0f, 14.0f), vector2d(100.0f, 100.0f), CST_BOX);
-    
-    gf2d_animation_play(p->entity->anim, 0, 16);
-    if( gf2d_scene_add_to_drawables(p, DET_PHYS) < 0 )
-        slog("no hay espacion para phys");
-
-    other = gf2d_physics_entity_new();
-    other->modelBox = p->modelBox;
-    other->entity->position = vector2d(32.0f, 0.0f);
-    other->canCollide = 1;
-    gf2d_scene_add_to_drawables(other, DET_PHYS);
 }

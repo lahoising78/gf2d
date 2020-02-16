@@ -28,7 +28,7 @@ Sprite *gf2d_sprite_new();
  * @param filename the image file to load
  * @returns NULL on error or the sprite loaded
  */
-Sprite *gf2d_sprite_load_image(char *filename);
+Sprite *gf2d_sprite_load_image(const char *filename);
 
 /**
  * @brief draw a simple image to screen at the position provided
@@ -45,7 +45,7 @@ void gf2d_sprite_draw_image(Sprite *image,Vector2D position);
  * @param framesPerLine how many frames go in a row in the sprite sheet
  */
 Sprite *gf2d_sprite_load_all(
-    char *filename,
+    const char *filename,
     Sint32 frameWidth,
     Sint32 frameHeigh,
     Sint32 framesPerLine

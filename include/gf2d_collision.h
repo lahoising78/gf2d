@@ -2,6 +2,7 @@
 #define _GF2D_COLLISION_H_
 
 #include "gfc_vector.h"
+#include "gf2d_json.h"
 
 typedef enum
 {
@@ -39,6 +40,8 @@ typedef struct
  * @return a collision shape
  */
 CollisionShape gf2d_collision_shape(Vector2D position, Vector2D dimensions, CollisionShapeType type);
+
+CollisionShape gf2d_collision_shape_load(SJson *json);
 
 /** 
  * @brief check if two bodies have collided and, if so, get information about the collision

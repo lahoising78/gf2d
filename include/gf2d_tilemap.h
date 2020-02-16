@@ -3,6 +3,7 @@
 
 #include "gf2d_render_ent.h"
 #include "gf2d_collision.h"
+#include "gf2d_json.h"
 
 typedef struct
 {
@@ -37,7 +38,10 @@ void gf2d_tilemap_manager_init( uint32_t count );
  * @param h how many tiles to have vertically
  * @return a new tilemap with specified properties
  */
-Tilemap *gf2d_tilemap_load(Sprite *sprite, uint32_t *map, CollisionShape *solidMap, uint32_t w, uint32_t h);
+Tilemap *gf2d_tilemap_create(Sprite *sprite, uint32_t *map, CollisionShape *solidMap, uint32_t w, uint32_t h);
+
+Tilemap *gf2d_tilemap_load_from_file(const char *filename);
+Tilemap *gf2d_tilemap_load(SJson *json);
 
 /** 
  * @brief free the tilemap

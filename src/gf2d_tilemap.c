@@ -67,7 +67,7 @@ void gf2d_tilemap_init(Tilemap *tilemap)
     tilemap->_inuse = 1;
 }
 
-Tilemap *gf2d_tilemap_load(Sprite *sprite, uint32_t *map, CollisionShape *solidMap, uint32_t w, uint32_t h)
+Tilemap *gf2d_tilemap_create(Sprite *sprite, uint32_t *map, CollisionShape *solidMap, uint32_t w, uint32_t h)
 {
     Tilemap *tilemap = NULL;
     Tile *tile = NULL;
@@ -101,6 +101,82 @@ Tilemap *gf2d_tilemap_load(Sprite *sprite, uint32_t *map, CollisionShape *solidM
     }
     tilemap->w = w;
     tilemap->h = h;
+
+    return tilemap;
+}
+
+Tilemap *gf2d_tilemap_load_from_file(const char *filename)
+{
+    Tilemap *tilemap = NULL;
+    SJson *json = NULL;
+
+    json = sj_load(filename);
+    tilemap = gf2d_tilemap_load(json);
+    sj_free(json);
+
+    return tilemap;
+}
+
+Tilemap *gf2d_tilemap_load(SJson *json)
+{
+    Tilemap *tilemap = NULL;
+    Sprite *spriteSheet = NULL;
+    uint32_t *map = NULL;
+    CollisionShape *solid = NULL;
+    uint32_t w = 0;
+    uint32_t h = 0;
+    uint32_t maxTileId = 0;
+    int i;
+
+    SJson *obj = NULL;
+    if(!json) return NULL;
+    slog("load tilemap");
+
+    spriteSheet = gf2d_json_sprite( sj_object_get_value(json, "sprite") );
+
+    w = gf2d_json_uint32(sj_object_get_value(json, "width"));
+    h = gf2d_json_uint32(sj_object_get_value(json, "height"));
+
+    map = (uint32_t*)gfc_allocate_array(sizeof(uint32_t), w*h);
+    if(map)
+    {
+        obj = sj_object_get_value(json, "map");
+        if(!obj || !sj_is_array(obj))
+        {
+            free(map);
+            gf2d_sprite_free(spriteSheet);
+            return NULL;
+        }
+
+        for(i = 0; i < sj_array_get_count(obj); i++)
+        {
+            map[i] = gf2d_json_uint32(sj_array_get_nth(obj, i));
+            if(map[i] > maxTileId) maxTileId = map[i];
+        }
+    }
+
+    solid = (CollisionShape*)gfc_allocate_array(sizeof(CollisionShape), maxTileId);
+    if(solid)
+    {
+        obj = sj_object_get_value(json, "solid");
+        if(!obj || !sj_is_array(obj) || maxTileId < sj_array_get_count(obj) )
+        {
+            free(map);
+            free(solid);
+            gf2d_sprite_free(spriteSheet);
+            return NULL;
+        }
+
+        for(i = 0; i < maxTileId; i++)
+        {
+            solid[i] = gf2d_collision_shape_load( sj_array_get_nth(obj, i) );
+        }
+    }
+
+    tilemap = gf2d_tilemap_create(spriteSheet, map, solid, w, h);
+
+    if(map) free(map);
+    if(solid) free(solid);
 
     return tilemap;
 }
