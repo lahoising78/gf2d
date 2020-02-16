@@ -139,7 +139,16 @@ Entity *gf2d_entity_new()
 
 Entity *gf2d_entity_load(SJson *json)
 {
+    SJson *obj = NULL;
     Entity *ent = NULL;
+
+    if( sj_is_string(json) )
+    {
+        obj = sj_load( sj_get_string_value(json) );
+            ent = gf2d_entity_load( obj );
+        sj_free(obj);
+        return ent;
+    }
 
     ent = gf2d_entity_new();
     gf2d_entity_load_to_entity(ent, json);

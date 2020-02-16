@@ -69,7 +69,6 @@ DrawableEntityType gf2d_scene_drawable_entity_type_from_string(const char *str)
 void gf2d_scene_load_from_json(SJson *arr)
 {
     SJson *obj = NULL;
-    SJson *json = NULL;
     uint32_t drawablesCount = 0;
     DrawableEntityType type = DET_NONE;
     int i;
@@ -80,25 +79,6 @@ void gf2d_scene_load_from_json(SJson *arr)
         obj = sj_array_get_nth(arr, i);
         if( !sj_object_get_value(obj, "type") ) continue;
         type = gf2d_scene_drawable_entity_type_from_string( sj_get_string_value( sj_object_get_value(obj, "type") ) );
-
-        json = sj_object_get_value(obj, "filename");
-        if( json )
-        {
-            obj = sj_load( sj_get_string_value(json) );
-
-            switch (type)
-            {
-            case DET_REND:
-                gf2d_scene_add_to_drawables( gf2d_render_ent_load(obj), type );
-                break;
-            
-            default:
-                break;
-            }
-
-            sj_free(obj);
-            continue;
-        }
 
         switch (type)
         {

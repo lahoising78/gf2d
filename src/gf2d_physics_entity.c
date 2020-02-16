@@ -123,7 +123,16 @@ PhysicsEntityType gf2d_physics_entity_type_from_string(const char *str)
 
 PhysicsEntity *gf2d_physics_entity_load(SJson *json)
 {
+    SJson *obj = NULL;
     PhysicsEntity *phys = NULL;
+
+    if( sj_is_string(json) )
+    {
+        obj = sj_load( sj_get_string_value(json) );
+            phys = gf2d_physics_entity_load(obj);
+        sj_free(obj);
+        return phys;
+    }
 
     phys = gf2d_physics_entity_new();
     gf2d_physics_entity_load_to_entity(phys, json);

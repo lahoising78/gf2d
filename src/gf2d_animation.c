@@ -89,7 +89,16 @@ Animation *gf2d_animation_new()
 
 Animation *gf2d_animation_load( SJson *json )
 {
+    SJson *obj = NULL;
     Animation *anim = NULL;
+
+    if( sj_is_string(json) )
+    {
+        obj = sj_load( sj_get_string_value(json) );
+            anim = gf2d_animation_load(obj);
+        sj_free(obj);
+        return anim;
+    }
 
     anim = gf2d_animation_new();
     gf2d_animation_load_to_animation(anim, json);

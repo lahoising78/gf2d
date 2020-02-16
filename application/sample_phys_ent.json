@@ -1,0 +1,27 @@
+{
+    "entity": {
+        "animation": {
+            "sprite": {
+                "filename":         "images/space_bug_top.png",
+                "frameWidth":       128,
+                "frameHeight":      128,
+                "framesPerLine":    16
+            },
+            "position":             [0.0, 0.0],
+            "playing":{
+                "animation":        7,
+                "maxFrame":         16
+            }
+        },
+        "position":                 [512.0, 512.0],
+        "velocity":                 [0.0, -1.0]
+    },
+    
+    "modelBox": {
+        "position":                 [20.0, 40.0],
+        "dimensions":               [88.0, 88.0],
+        "shapeType":                "CST_BOX"
+    },
+
+    "type":                         "PET_KINETIC"
+}

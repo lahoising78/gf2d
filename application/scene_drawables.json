@@ -2,76 +2,22 @@
     "drawables": [
         {
             "type":                             "DET_REND",
-            "filename":                         "application/sample_render_ent.json"
+            "drawable":                         "application/sample_render_ent.json"
         },
     
         {
             "type":                             "DET_ANIM",
-            "drawable":{
-                "sprite": {
-                    "filename":                 "images/ed210.png",
-                    "frameWidth":               128,
-                    "frameHeight":              128,
-                    "framesPerLine":            16
-                },
-                "position":                     [128.0, 0.0],
-                "playing": {
-                    "animation":                5,
-                    "maxFrame":                 16
-                }
-            }
+            "drawable":                         "application/sample_anim.json"
         },
     
         {
             "type":                             "DET_ENT",
-            "drawable":{
-                "animation": {
-                    "sprite": {
-                        "filename":             "images/space_bug_top.png",
-                        "frameWidth":           128,
-                        "frameHeight":          128,
-                        "framesPerLine":        16
-                    },
-                    "position":                 [0.0, 0.0],
-                    "playing": {
-                        "animation":            3,
-                        "maxFrame":             16
-                    }
-                },
-                "position":                     [256.0, 0.0],
-                "velocity":                     [0.0, 0.0]
-            }
+            "drawable":                         "application/sample_entity.json"
         },
     
         {
             "type":                             "DET_PHYS",
-            "drawable":{
-                "entity": {
-                    "animation": {
-                        "sprite": {
-                            "filename":         "images/space_bug_top.png",
-                            "frameWidth":       128,
-                            "frameHeight":      128,
-                            "framesPerLine":    16
-                        },
-                        "position":             [0.0, 0.0],
-                        "playing":{
-                            "animation":        7,
-                            "maxFrame":         16
-                        }
-                    },
-                    "position":                 [512.0, 512.0]
-                },
-                
-                "modelBox": {
-                    "position":                 [20.0, 40.0],
-                    "dimensions":               [88.0, 88.0],
-                    "shapeType":                "CST_BOX"
-                },
-        
-                "useGravity":                   1,
-                "type":                         "PET_KINETIC"
-            }
+            "drawable":                         "application/sample_phys_ent.json"
         }
     ]
 }

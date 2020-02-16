@@ -1,0 +1,13 @@
+{
+    "sprite": {
+        "filename":                 "images/ed210.png",
+        "frameWidth":               128,
+        "frameHeight":              128,
+        "framesPerLine":            16
+    },
+    "position":                     [128.0, 0.0],
+    "playing": {
+        "animation":                1,
+        "maxFrame":                 16
+    }
+}

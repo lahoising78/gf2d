@@ -21,8 +21,17 @@ RenderEntity *gf2d_render_ent_new( Sprite *sprite )
 
 RenderEntity *gf2d_render_ent_load( SJson *json )
 {
+    SJson *obj = NULL;
     RenderEntity *rend = NULL;
     if(!json) return NULL;
+
+    if( sj_is_string(json) )
+    {
+        obj = sj_load( sj_get_string_value(json) );
+            rend = gf2d_render_ent_load(obj);
+        sj_free(obj);
+        return rend;
+    }
 
     rend = gf2d_render_ent_new(NULL);
     if(!rend) return NULL;
