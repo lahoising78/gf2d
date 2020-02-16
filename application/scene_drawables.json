@@ -2,15 +2,7 @@
     "drawables": [
         {
             "type":                             "DET_REND",
-            "drawable": {
-                "sprite": {
-                    "filename":                 "images/ed210.png",
-                    "frameWidth":               128,
-                    "frameHeight":              128,
-                    "framesPerLine":            16
-                },
-                "position":                     [0.0, 0.0]
-            }
+            "filename":                         "application/sample_render_ent.json"
         },
     
         {
