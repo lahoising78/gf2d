@@ -107,9 +107,18 @@ Sprite *gf2d_json_sprite(SJson *src)
     Sint32 w = 0;
     Sint32 h = 0;
     Sint32 framesPerLine = 0;
+    Sprite *sprite = NULL;
 
     SJson *obj = NULL;
     if(!src) return NULL;
+
+    if( sj_is_string(src) )
+    {
+        obj = sj_load( sj_get_string_value(src) );
+            sprite = gf2d_json_sprite(obj);
+        sj_free(obj);
+        return sprite;
+    }
 
     obj = sj_object_get_value(src, "filename");
     if(!obj) return NULL;
