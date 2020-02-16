@@ -1,4 +1,31 @@
 {
     "drawablesCount":                           128,
-    "awakeIndex":                               0
+    "awakeIndex":                               0,
+    "drawables": [
+        {
+            "type":                             "DET_REND",
+            "drawable": {
+                "sprite": {
+                    "filename":                 "images/ed210.png",
+                    "frameWidth":               128,
+                    "frameHeight":              128,
+                    "framesPerLine":            16
+                },
+                "position":                     [0.0, 0.0]
+            }
+        },
+        {
+            "type":                             "DET_REND",
+            "drawable": {
+                "sprite": {
+                    "filename":                 "images/ed210.png",
+                    "frameWidth":               128,
+                    "frameHeight":              128,
+                    "framesPerLine":            16
+                },
+                "position":                     [180.0, 270.0],
+                "frame":                        57.0
+            }
+        }
+    ]
 }

@@ -29,6 +29,7 @@ RenderEntity *gf2d_render_ent_load( SJson *json )
     
     rend->sprite = gf2d_json_sprite( sj_object_get_value(json, "sprite") );
     rend->position = gf2d_json_vector2d( sj_object_get_value(json, "position") );
+    sj_get_float_value( sj_object_get_value(json, "frame"), &rend->frame );
 
     return rend;
 }

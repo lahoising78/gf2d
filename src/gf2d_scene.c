@@ -56,11 +56,27 @@ void gf2d_scene_submit_awake( AwakeFunction scene_awake )
     gf2d_scene_awake_manager.gf2d_scene_awake_list[ gf2d_scene_awake_manager.current++ ] = scene_awake;
 }
 
+DrawableEntityType gf2d_scene_drawable_entity_type_from_string(const char *str)
+{
+    if(strcmp(str, "DET_REND") == 0) return DET_REND;
+    if(strcmp(str, "DET_ANIM") == 0) return DET_ANIM;
+    if(strcmp(str, "DET_ENT") == 0) return DET_ENT;
+    if(strcmp(str, "DET_PHYS") == 0) return DET_PHYS;
+    if(strcmp(str, "DET_TMAP") == 0) return DET_TMAP;
+    return DET_NONE;
+}
+
 void gf2d_scene_load_from_file(const char *filename)
 {
     SJson *json = NULL;
+    SJson *arr = NULL;
+    SJson *obj = NULL;
+    int i;
+
     uint32_t drawablesCount = 0;
     uint32_t awakeIndex = 0;
+
+    DrawableEntityType type;
 
     json = sj_load(filename);
 
@@ -68,6 +84,26 @@ void gf2d_scene_load_from_file(const char *filename)
     awakeIndex = gf2d_json_uint32( sj_object_get_value(json, "awakeIndex") );
 
     gf2d_scene_load(drawablesCount, gf2d_scene_awake_manager.gf2d_scene_awake_list[awakeIndex]);
+
+    arr = sj_object_get_value(json, "drawables");
+    if( arr && sj_is_array(arr) )
+    {
+        drawablesCount = sj_array_get_count(arr);
+        for(i = 0; i < drawablesCount; i++)
+        {
+            obj = sj_array_get_nth(arr, i);
+            type = gf2d_scene_drawable_entity_type_from_string( sj_get_string_value( sj_object_get_value(obj, "type") ) );
+            switch (type)
+            {
+            case DET_REND:
+                gf2d_scene_add_to_drawables( gf2d_render_ent_load( sj_object_get_value(obj, "drawable") ), type );
+                break;
+            
+            default:
+                break;
+            }
+        }
+    }
 
     sj_free(json);
 }
