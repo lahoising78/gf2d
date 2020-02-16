@@ -4,6 +4,11 @@
             "type":                             "DET_REND",
             "drawable":                         "application/sample_render_ent.json"
         },
+
+        {
+            "type":                             "DET_TMAP",
+            "drawable":                         "application/tilemap.json"
+        }
     
         {
             "type":                             "DET_ANIM",

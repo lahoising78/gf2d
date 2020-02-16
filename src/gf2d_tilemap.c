@@ -130,6 +130,10 @@ Tilemap *gf2d_tilemap_load(SJson *json)
 
     SJson *obj = NULL;
     if(!json) return NULL;
+
+    if( sj_is_string(json) )
+        return gf2d_tilemap_load_from_file( sj_get_string_value(json) );
+
     slog("load tilemap");
 
     spriteSheet = gf2d_json_sprite( sj_object_get_value(json, "sprite") );

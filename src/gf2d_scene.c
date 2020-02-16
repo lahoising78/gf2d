@@ -96,6 +96,11 @@ void gf2d_scene_load_from_json(SJson *arr)
 
         case DET_PHYS:
             gf2d_scene_add_to_drawables( gf2d_physics_entity_load( sj_object_get_value(obj, "drawable") ), type );
+            break;
+
+        case DET_TMAP:
+            gf2d_scene_add_to_drawables( gf2d_tilemap_load( sj_object_get_value(obj, "drawable") ), type );
+            break;
         
         default:
             break;
