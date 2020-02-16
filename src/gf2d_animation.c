@@ -87,6 +87,40 @@ Animation *gf2d_animation_new()
     return NULL;
 }
 
+Animation *gf2d_animation_load( SJson *json )
+{
+    Animation *anim = NULL;
+    uint32_t animation = 0;
+    uint32_t maxFrame = 0;
+
+    SJson *obj = NULL;
+    if(!json) return NULL;
+
+    anim = gf2d_animation_new();
+    if( !anim->rend ) 
+    {
+        anim->rend = gf2d_render_ent_new(NULL);
+    }
+    
+    anim->rend->sprite = gf2d_json_sprite( sj_object_get_value(json, "sprite") );
+    anim->rend->position = gf2d_json_vector2d( sj_object_get_value(json, "position") );
+
+    obj = sj_object_get_value(json, "playing");
+    if(obj)
+    {
+        animation = gf2d_json_uint32( sj_object_get_value(obj, "animation") );
+        maxFrame = gf2d_json_uint32( sj_object_get_value(obj, "maxFrame") );
+        gf2d_animation_play(anim, animation, maxFrame);
+    }
+    else
+    {
+        anim->playing = 0;
+        anim->maxFrame = 1;
+    }
+
+    return anim;
+}
+
 void gf2d_animation_free(Animation *anim, uint8_t del)
 {
     RenderEntity *rend = NULL;

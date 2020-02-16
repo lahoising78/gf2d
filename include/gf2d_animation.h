@@ -46,6 +46,16 @@ void gf2d_animation_init(Animation *anim);
 Animation *gf2d_animation_new();
 
 /** 
+ * @brief load an animation from a json object
+ * @note the animation will be paused by default and set to use only one frame.
+ * To override this, need to include a "playing" object in the json file
+ * that contains the animation row and max number of frame on that animation
+ * @param json the json object to read from
+ * @return the resulting animation
+ */
+Animation *gf2d_animation_load( SJson *json );
+
+/** 
  * @brief render the animation
  * @param anim the animation to be rendered
  */

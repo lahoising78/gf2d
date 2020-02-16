@@ -40,11 +40,15 @@ void smh_awake()
 {
     SJson *json = NULL;
     RenderEntity *rend = NULL;
+    Animation *anim = NULL;
 
     json = sj_load("application/drawables.json");
     
     rend = gf2d_render_ent_load( sj_object_get_value(json, "renderEnt") );
     gf2d_scene_add_to_drawables(rend, DET_REND);
+
+    anim = gf2d_animation_load( sj_object_get_value(json, "animation") );
+    gf2d_scene_add_to_drawables(anim, DET_ANIM);
 
     sj_free(json);
 }
