@@ -2,7 +2,7 @@
 #include "simple_logger.h"
 #include "gf2d_tilemap.h"
 #include "gf2d_main.h"
-#include "gf2d_label.h"
+#include "gf2d_ui.h"
 
 typedef struct
 {
@@ -13,7 +13,7 @@ typedef struct
         Entity          *ent;
         PhysicsEntity   *phys;
         Tilemap         *tmap;
-        Label           *label;
+        UIComponent     *ui;
     } drawable;
     DrawableEntityType  _type;
     uint8_t             _inuse;
@@ -234,12 +234,11 @@ void gf2d_scene_render()
                 break;
 
             case DET_TMAP:
-                // if( !ent->drawable.tmap->rend ) continue;
                 gf2d_tilemap_render(ent->drawable.tmap);
                 break;
 
             case DET_UI:
-                gf2d_label_render(ent->drawable.label);
+                gf2d_ui_render(ent->drawable.ui);
                 break;
         
         default:
@@ -281,7 +280,7 @@ int gf2d_scene_add_to_drawables( void *de, DrawableEntityType type )
         break;
 
     case DET_UI:
-        drawable->drawable.label = (Label*)de;
+        drawable->drawable.ui = (UIComponent*)de;
         break;
     
     default:

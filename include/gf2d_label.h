@@ -16,6 +16,8 @@ typedef struct
     Vector4D _textColor;
 } Label;
 
+
+
 Label *gf2d_label_new(const char *text, TTF_Font *font, uint32_t fontSize, Vector2D position);
 void gf2d_label_render( Label *label );
 void gf2d_label_free(Label *label);
