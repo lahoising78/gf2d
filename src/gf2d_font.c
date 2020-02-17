@@ -1,3 +1,4 @@
+#include "simple_logger.h"
 #include "gfc_list.h"
 #include "gf2d_font.h"
 
@@ -32,6 +33,7 @@ void gf2d_font_add(const char *fontPath, int size)
 {
     TTF_Font *font = NULL;
 
+    slog("opening font %s", fontPath);
     font = TTF_OpenFont(fontPath, size);
     gfc_list_append(gf2d_fonts, font);
 }

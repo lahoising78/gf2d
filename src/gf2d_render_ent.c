@@ -61,8 +61,16 @@ void gf2d_render_ent_draw(RenderEntity *ent)
 {
     // CollisionShape e = {0}, a = {0};
 
-    if(!ent) return;
-    if(!ent->sprite) return;
+    if(!ent) 
+    {
+        slog("Cannot render a null render ent");
+        return;
+    }
+    if(!ent->sprite) 
+    {
+        slog("Cannot render a null sprite");
+        return;
+    }
 
     // e.shapeType = CST_BOX;
     // e.position = gf2d_camera_get_displaced_position(ent->position);

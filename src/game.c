@@ -57,7 +57,7 @@ int main(int argc, char * argv[])
     gf2d_camera_set_view( vector2d((float)gf2d_main_get_render_width(), (float)gf2d_main_get_render_height()) );
     gf2d_scene_awake_list_start( gf2d_engine_config_get_scene_awake_max() );
     gf2d_font_start();
-    gf2d_font_add("fonts/doodlefont.ttf", 10);
+    gf2d_font_add("fonts/doodlefont.ttf", 32);
     
     /*demo setup*/
     gf2d_main();

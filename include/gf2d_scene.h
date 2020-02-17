@@ -12,7 +12,8 @@ typedef enum
     DET_ANIM = 2,
     DET_ENT  = 3,
     DET_PHYS = 4,
-    DET_TMAP = 5
+    DET_TMAP = 5,
+    DET_UI   = 6
 } DrawableEntityType;
 
 typedef void (*AwakeFunction)();

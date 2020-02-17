@@ -1,4 +1,5 @@
 #include <SDL.h>
+#include <SDL2/SDL_ttf.h>
 #include <stdlib.h>
 
 #include "gf2d_graphics.h"
@@ -52,6 +53,15 @@ void gf2d_graphics_initialize(
         return;
     }
     atexit(SDL_Quit);
+
+    if( TTF_Init() )
+    {
+        slog("Unable to initialize SDL_ttf: %s", SDL_GetError());
+    }
+    else{
+        atexit( TTF_Quit );
+    }
+
     if (fullscreen)
     {
         if (renderWidth == 0)
