@@ -13,6 +13,7 @@
 #include "gf2d_entity.h"
 #include "gf2d_physics_entity.h"
 #include "gf2d_tilemap.h"
+#include "gf2d_font.h"
 
 float frameTime = 0.0f;
 
@@ -55,6 +56,8 @@ int main(int argc, char * argv[])
     gf2d_input_init( gf2d_engine_config_get_input_max_keys() , gf2d_engine_config_get_input_max_joysticks() );
     gf2d_camera_set_view( vector2d((float)gf2d_main_get_render_width(), (float)gf2d_main_get_render_height()) );
     gf2d_scene_awake_list_start( gf2d_engine_config_get_scene_awake_max() );
+    gf2d_font_start();
+    gf2d_font_add("fonts/doodlefont.ttf", 10);
     
     /*demo setup*/
     gf2d_main();
