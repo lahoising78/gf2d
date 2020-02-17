@@ -8,15 +8,16 @@
 
 typedef struct
 {
-    char _text[GFCLINELEN];
-    uint32_t fontSize;
-    RenderEntity *_display;
-    TTF_Font *font;
+    char                    _text[GFCLINELEN];
+    uint32_t                fontSize;
+    RenderEntity            *_display;
+    TTF_Font                *font;
 
-    Vector4D _textColor;
+    Vector4D                _textColor;
+    uint8_t                 _inuse;
 } Label;
 
-
+void gf2d_label_manager_init( uint32_t count );
 
 Label *gf2d_label_new(const char *text, TTF_Font *font, uint32_t fontSize, Vector2D position);
 void gf2d_label_render( Label *label );

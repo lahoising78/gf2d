@@ -3,13 +3,68 @@
 #include "gf2d_graphics.h"
 #include "gf2d_label.h"
 
+typedef struct
+{
+    Label *label_list;
+    uint32_t count;
+} LabelManager;
+
+static LabelManager gf2d_label_manager = {0};
+
+Label *gf2d_label_get_new();
 void gf2d_label_set_display(Label *label);
+
+void gf2d_label_manager_close();
+
+void gf2d_label_manager_init( uint32_t count )
+{
+    gf2d_label_manager.label_list = (Label*)gfc_allocate_array(sizeof(Label), count);
+    if(!gf2d_label_manager.label_list)
+    {
+        slog("Unable to initialize labels");
+        return;
+    }
+    gf2d_label_manager.count = count;
+}
+
+void gf2d_label_manager_close()
+{
+    Label *label = NULL;
+    int i;
+
+    for(i = 0; i < gf2d_label_manager.count; i++)
+    {
+        label = &gf2d_label_manager.label_list[i];
+        gf2d_label_free(label);
+    }
+
+    free( gf2d_label_manager.label_list );
+}
+
+Label *gf2d_label_get_new()
+{
+    Label *label = NULL;
+    int i;
+
+    for(i = 0; i < gf2d_label_manager.count; i++)
+    {
+        label = &gf2d_label_manager.label_list[i];
+        if(label->_inuse) continue;
+
+        label->_inuse = 1;
+
+        return label;
+    }
+
+    slog("No more labels available");
+    return NULL;
+}
 
 Label *gf2d_label_new(const char *text, TTF_Font *font, uint32_t fontSize, Vector2D position)
 {
     Label *label = NULL;
 
-    label = (Label*) gfc_allocate_array(sizeof(Label), 1);
+    label = gf2d_label_get_new();
     if(!label) return NULL;    
 
     gfc_line_cpy(label->_text, text);
@@ -97,4 +152,5 @@ void gf2d_label_free(Label *label)
     if(!label) return;
 
     if(label->_display) gf2d_render_ent_free(label->_display);
+    memset( label, 0, sizeof(Label) );
 }

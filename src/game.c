@@ -59,6 +59,7 @@ int main(int argc, char * argv[])
     gf2d_scene_awake_list_start( gf2d_engine_config_get_scene_awake_max() );
     gf2d_font_start();
     gf2d_font_add("fonts/doodlefont.ttf", 32);
+    gf2d_label_manager_init(32);
     gf2d_ui_manager_init(32);
     
     /*demo setup*/

@@ -92,7 +92,6 @@ void gf2d_ui_free( UIComponent *ui )
     case UIT_LABEL:
         if(!ui->component.label) break;
         gf2d_label_free(ui->component.label);
-        free(ui->component.label);
         break;
     
     default:

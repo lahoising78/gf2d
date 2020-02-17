@@ -24,6 +24,7 @@ void gf2d_ui_manager_init( uint32_t count );
 void gf2d_ui_manager_render();
 
 void gf2d_ui_render( UIComponent *ui );
+
 UIComponent *gf2d_ui_label_new(const char *text, TTF_Font *font, uint32_t fontSize, Vector2D position);
 
 
