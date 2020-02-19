@@ -98,7 +98,7 @@ void gf2d_ui_free( UIComponent *ui )
         break;
     }
 
-    ui->_inuse = 0;
+    memset(ui, 0, sizeof(UIComponent));
 }
 
 UIComponent *gf2d_ui_label_new(const char *text, TTF_Font *font, uint32_t fontSize, Vector2D position)
@@ -106,8 +106,30 @@ UIComponent *gf2d_ui_label_new(const char *text, TTF_Font *font, uint32_t fontSi
     UIComponent *ui = NULL;
 
     ui = gf2d_ui_new();
+    if(!ui)
+    {
+        slog("No more uis available");
+        return NULL;
+    }
     ui->_uiType = UIT_LABEL;
     ui->component.label = gf2d_label_new(text, font, fontSize, position);
+
+    return ui;
+}
+
+UIComponent *gf2d_ui_progress_bar_new(Vector4D *backColor, Vector4D *foreColor)
+{
+    UIComponent *ui = NULL;
+
+    ui = gf2d_ui_new();
+    if(!ui)
+    {
+        slog("No more uis available");
+        return NULL;
+    }
+
+    ui->_uiType = UIT_PBAR;
+    ui->component.pb = gf2d_progress_bar_new(backColor, foreColor);
 
     return ui;
 }

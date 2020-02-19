@@ -65,7 +65,6 @@ void gf2d_animation_init(Animation *anim)
 {
     if(!anim) return;
     anim->_inuse = 1;
-    anim->playing = 1;
     anim->playbackSpeed = 1.0f;
 }
 

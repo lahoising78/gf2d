@@ -8,11 +8,11 @@ typedef struct
 {
     Sprite              *sprite;
     Vector2D            position;
-    Vector2D            *scale;
-    Vector2D            *scaleCenter;
-    Vector3D            *rotation;
-    Vector2D            *flip;
-    Vector4D            *colorShift;
+    Vector2D            scale;
+    Vector2D            scaleCenter;
+    Vector3D            rotation;
+    Vector2D            flip;
+    Vector4D            colorShift;
     float               frame;
 } RenderEntity;
 

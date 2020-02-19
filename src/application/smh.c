@@ -13,6 +13,7 @@ void smh_awake()
 {
     UIComponent *ui = NULL;
 
-    ui = gf2d_ui_label_new("hola como estas?", NULL, 32, vector2d(0.0f, 0.0f));
+    ui = gf2d_ui_progress_bar_new(NULL, NULL);
+    // gf2d_progress_bar_free(ui->component.pb);
     gf2d_scene_add_to_drawables(ui, DET_UI);
 }
