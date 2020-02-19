@@ -16,7 +16,7 @@ typedef struct
     union
     {
         Label *label;
-        ProgressBar *pb;
+        ProgressBar *pbar;
     }                           component;
     UIComponentType             _uiType;
     uint8_t                     _inuse;

@@ -78,6 +78,10 @@ void gf2d_ui_render( UIComponent *ui )
         gf2d_label_render(ui->component.label);
         break;
     
+    case UIT_PBAR:
+        gf2d_progress_bar_render(ui->component.pbar);
+        break;
+    
     default:
         break;
     }
@@ -93,7 +97,12 @@ void gf2d_ui_free( UIComponent *ui )
         if(!ui->component.label) break;
         gf2d_label_free(ui->component.label);
         break;
-    
+
+    case UIT_PBAR:
+        if(!ui->component.pbar) break;
+        gf2d_progress_bar_free(ui->component.pbar);
+        break;
+
     default:
         break;
     }
@@ -129,7 +138,7 @@ UIComponent *gf2d_ui_progress_bar_new(Vector4D *backColor, Vector4D *foreColor)
     }
 
     ui->_uiType = UIT_PBAR;
-    ui->component.pb = gf2d_progress_bar_new(backColor, foreColor);
+    ui->component.pbar = gf2d_progress_bar_new(backColor, foreColor);
 
     return ui;
 }

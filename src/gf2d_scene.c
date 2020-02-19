@@ -65,6 +65,7 @@ DrawableEntityType gf2d_scene_drawable_entity_type_from_string(const char *str)
     if(strcmp(str, "DET_ENT") == 0) return DET_ENT;
     if(strcmp(str, "DET_PHYS") == 0) return DET_PHYS;
     if(strcmp(str, "DET_TMAP") == 0) return DET_TMAP;
+    if(strcmp(str, "DET_UI") == 0) return DET_UI;
     return DET_NONE;
 }
 
