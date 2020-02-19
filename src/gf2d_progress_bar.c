@@ -76,7 +76,7 @@ ProgressBar *gf2d_progress_bar_get_new()
     return NULL;
 }
 
-ProgressBar *gf2d_progress_bar_new(Vector4D *backColor, Vector2D backScale, Vector4D *foreColor, Vector2D foreScale)
+ProgressBar *gf2d_progress_bar_new(Vector4D *backColor, Vector2D backSize, Vector4D *foreColor, Vector2D foreSize)
 {
     ProgressBar *pb = NULL;
 
@@ -92,8 +92,10 @@ ProgressBar *gf2d_progress_bar_new(Vector4D *backColor, Vector2D backScale, Vect
     pb->_foreground->sprite = gf2d_sprite_manipulation_get_default_solid();
     if(foreColor) vector4d_copy(pb->_foreground->colorShift, (*foreColor));
 
-    vector2d_copy(pb->_background->scale, backScale);
-    vector2d_copy(pb->_foreground->scale, foreScale);
+    vector2d_copy(pb->_background->scale, backSize);
+    vector2d_copy(pb->_foreground->scale, foreSize);
+    vector2d_copy(pb->backSize, backSize);
+    vector2d_copy(pb->foreSize, foreSize);
 
     return pb;
 }
@@ -123,4 +125,31 @@ void gf2d_progress_bar_free(ProgressBar *pbar)
 
     pbar->_background = bg;
     pbar->_foreground = fore;
+}
+
+void gf2d_progress_bar_set_position_and_offset(ProgressBar *pbar, Vector2D position, Vector2D offset)
+{
+    if(!pbar) return;
+
+    if(pbar->_background) vector2d_copy(pbar->_background->position, position);
+    if(pbar->_foreground) vector2d_add(pbar->_foreground->position, position, offset);
+}
+
+void gf2d_progress_bar_set_max_value(ProgressBar *pbar, float value)
+{
+    if(!pbar) return;
+    pbar->_maxValue = value;
+    gf2d_progress_bar_set_value(pbar, pbar->_value);
+}
+
+void gf2d_progress_bar_set_value(ProgressBar *pbar, float value)
+{
+    if(!pbar) return;
+
+    pbar->_value = value;
+
+    if(pbar->_foreground)
+    {
+        pbar->_foreground->scale.x = pbar->foreSize.x * value / pbar->_maxValue;
+    }
 }
