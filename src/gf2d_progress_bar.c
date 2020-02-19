@@ -76,7 +76,7 @@ ProgressBar *gf2d_progress_bar_get_new()
     return NULL;
 }
 
-ProgressBar *gf2d_progress_bar_new(Vector4D *backColor, Vector4D *foreColor)
+ProgressBar *gf2d_progress_bar_new(Vector4D *backColor, Vector2D backScale, Vector4D *foreColor, Vector2D foreScale)
 {
     ProgressBar *pb = NULL;
 
@@ -87,11 +87,13 @@ ProgressBar *gf2d_progress_bar_new(Vector4D *backColor, Vector4D *foreColor)
         return NULL;
     }
 
-    pb->_background->sprite = gf2d_sprite_load_image("images/backgrounds/bg_flat.png");
-    // pb->_background->sprite = gf2d_sprite_manipulation_get_default_solid();
+    pb->_background->sprite = gf2d_sprite_manipulation_get_default_solid();
     if(backColor) vector4d_copy(pb->_background->colorShift, (*backColor));
     pb->_foreground->sprite = gf2d_sprite_manipulation_get_default_solid();
     if(foreColor) vector4d_copy(pb->_foreground->colorShift, (*foreColor));
+
+    vector2d_copy(pb->_background->scale, backScale);
+    vector2d_copy(pb->_foreground->scale, foreScale);
 
     return pb;
 }

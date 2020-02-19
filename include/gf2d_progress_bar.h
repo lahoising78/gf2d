@@ -15,7 +15,7 @@ typedef struct
 
 void gf2d_progress_bar_manager_init(uint32_t count);
 
-ProgressBar *gf2d_progress_bar_new(Vector4D *backColor, Vector4D *foreColor);
+ProgressBar *gf2d_progress_bar_new(Vector4D *backColor, Vector2D backScale, Vector4D *foreColor, Vector2D foreScale);
 void gf2d_progress_bar_render(ProgressBar *pbar);
 void gf2d_progress_bar_free(ProgressBar *pbar);
 

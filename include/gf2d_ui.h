@@ -29,6 +29,6 @@ void gf2d_ui_manager_render();
 void gf2d_ui_render( UIComponent *ui );
 
 UIComponent *gf2d_ui_label_new(const char *text, TTF_Font *font, uint32_t fontSize, Vector2D position);
-UIComponent *gf2d_ui_progress_bar_new(Vector4D *backColor, Vector4D *foreColor);
+UIComponent *gf2d_ui_progress_bar_new(Vector4D *backColor, Vector2D backScale, Vector4D *foreColor, Vector2D foreScale);
 
 #endif

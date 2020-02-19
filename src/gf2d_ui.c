@@ -126,7 +126,7 @@ UIComponent *gf2d_ui_label_new(const char *text, TTF_Font *font, uint32_t fontSi
     return ui;
 }
 
-UIComponent *gf2d_ui_progress_bar_new(Vector4D *backColor, Vector4D *foreColor)
+UIComponent *gf2d_ui_progress_bar_new(Vector4D *backColor, Vector2D backScale, Vector4D *foreColor, Vector2D foreScale)
 {
     UIComponent *ui = NULL;
 
@@ -138,7 +138,7 @@ UIComponent *gf2d_ui_progress_bar_new(Vector4D *backColor, Vector4D *foreColor)
     }
 
     ui->_uiType = UIT_PBAR;
-    ui->component.pbar = gf2d_progress_bar_new(backColor, foreColor);
+    ui->component.pbar = gf2d_progress_bar_new(backColor, backScale, foreColor, foreScale);
 
     return ui;
 }

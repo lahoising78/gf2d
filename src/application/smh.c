@@ -12,12 +12,8 @@
 void smh_awake()
 {
     UIComponent *ui = NULL;
-    Vector4D bg = {255.0f, 255.0f, 255.0f, 255.0f};
+    Vector4D bg = {0.0f, 0.0f, 255.0f, 255.0f};
 
-    ui = gf2d_ui_progress_bar_new(&bg, NULL);
-    // vector2d_set(ui->component.pbar->_background->scale, 0.2, 0.2);
-    vector2d_set(ui->component.pbar->_foreground->scale, 600, 360);
-    // vector2d_set(ui->component.pbar->_background->position, 600.0f, 360.0f);
-    // gf2d_progress_bar_free(ui->component.pb);
+    ui = gf2d_ui_progress_bar_new(&bg, vector2d(100, 100), NULL, vector2d(50, 50));
     gf2d_scene_add_to_drawables(ui, DET_UI);
 }
