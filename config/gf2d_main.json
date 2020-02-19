@@ -2,7 +2,7 @@
     "windowName":                   "Punti Jordan - El Sayayin de la Patria",
     "renderWidth":                  1200,
     "renderHeight":                 720,
-    "bgcolor":                      [0.0, 0.0, 0.0, 255.0],
+    "bgcolor":                      [255.0, 255.0, 255.0, 255.0],
     "fullscreen":                   0,
     "frameDelay":                   16,
     "spriteCount":                  4096,

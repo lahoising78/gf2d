@@ -9,5 +9,5 @@ void gf2d_main()
 {
     slog("MAIN");
     gf2d_scene_submit_awake(smh_awake);
-    gf2d_scene_load(32, smh_awake);
+    gf2d_scene_load_from_file("application/scenes/first_scene.json");
 }
