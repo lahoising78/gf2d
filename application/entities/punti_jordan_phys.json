@@ -1,0 +1,16 @@
+{
+    "entity": {
+        "animation":             "application/sprites/punti_jordan_animations.json",
+        "position":             [10.0, 10.0],
+        "velocity":             [0.0, 0.0]
+    },
+
+    "modelBox": {
+        "position":             [0.0, 0.0],
+        "dimensions":           [64.0, 64.0],
+        "shapeType":            "CST_BOX"
+    },
+
+    "type":                     "PET_KINETIC",
+    "canCollide":                1
+}

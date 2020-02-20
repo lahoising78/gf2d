@@ -125,6 +125,11 @@ void gf2d_animation_load_to_animation( Animation *anim, SJson *json )
     
     anim->rend->sprite = gf2d_json_sprite( sj_object_get_value(json, "sprite") );
     anim->rend->position = gf2d_json_vector2d( sj_object_get_value(json, "position") );
+    sj_get_float_value( sj_object_get_value(json, "playbackSpeed"), &anim->playbackSpeed );
+    
+    anim->rend->scale = gf2d_json_vector2d( sj_object_get_value(json, "scale") );
+    if( anim->rend->scale.x == 0 )
+        vector2d_set(anim->rend->scale, 1.0f, 1.0f);
 
     obj = sj_object_get_value(json, "playing");
     if(obj)

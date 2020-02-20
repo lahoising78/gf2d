@@ -162,10 +162,19 @@ void gf2d_entity_load_to_entity(Entity *ent, SJson *json)
     if(!json) return;
     if(!ent) return;
 
-    if(!ent->anim)
-        ent->anim = gf2d_animation_load( sj_object_get_value(json, "animation") );
+    obj = sj_object_get_value(json, "animation");
+    if( sj_is_string(obj) )
+    {
+        obj = sj_load( sj_get_string_value(obj) );
+        if(!ent->anim) gf2d_animation_load( obj );
+        else gf2d_animation_load_to_animation( ent->anim, obj );
+        sj_free(obj);
+    }
     else
-        gf2d_animation_load_to_animation(ent->anim, sj_object_get_value(json, "animation"));
+    {
+        if(!ent->anim) ent->anim = gf2d_animation_load( obj );
+        else gf2d_animation_load_to_animation(ent->anim, obj );
+    }
     
     obj = sj_object_get_value(json, "position");
     if(obj) ent->position = gf2d_json_vector2d(obj);

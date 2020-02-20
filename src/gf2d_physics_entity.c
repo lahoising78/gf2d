@@ -142,9 +142,20 @@ PhysicsEntity *gf2d_physics_entity_load(SJson *json)
 
 void gf2d_physics_entity_load_to_entity(PhysicsEntity *phys, SJson *json)
 {
+    SJson *obj = NULL;
     if(!phys || !json) return;
 
-    gf2d_entity_load_to_entity(phys->entity, sj_object_get_value(json, "entity"));
+    obj = sj_object_get_value(json, "entity");
+    if( sj_is_string(obj) )
+    {
+        obj = sj_load( sj_get_string_value(obj) );
+        gf2d_entity_load_to_entity(phys->entity, obj);
+        sj_free(obj);
+    }
+    else
+    {
+        gf2d_entity_load_to_entity(phys->entity, obj);
+    }
     phys->modelBox = gf2d_collision_shape_load( sj_object_get_value(json, "modelBox") );
     phys->useGravity = gf2d_json_uint8( sj_object_get_value(json, "useGravity") );
     phys->canCollide = gf2d_json_uint8( sj_object_get_value(json, "canCollide") );
