@@ -2,6 +2,7 @@
 #include "simple_logger.h"
 
 #include "gf2d_tilemap.h"
+#include "gf2d_trie.h"
 
 #define GRAVITY                     98.0f
 
@@ -12,6 +13,7 @@ typedef struct
 {
     PhysicsEntity           *entity_list;
     uint32_t                count;
+    Trie                    entity_trie;
 } PhysicsEntityManager;
 
 static PhysicsEntityManager gf2d_physics_entity_manager = {0};
@@ -43,6 +45,7 @@ void gf2d_physics_entity_manager_init(uint32_t count)
     gf2d_physics_entity_manager.count = count;
 
     gf2d_physics_entity_manager_initialize_entities();
+    gf2d_physics_entity_manager.entity_trie = gf2d_trie_new();
 
     atexit(gf2d_physics_entity_manager_close);
 }
@@ -99,7 +102,7 @@ void gf2d_physics_entity_manager_update()
     }
 }
 
-PhysicsEntity *gf2d_physics_entity_new()
+PhysicsEntity *gf2d_physics_entity_new(const char *name)
 {
     int i;
     PhysicsEntity *ent = NULL;
@@ -108,7 +111,14 @@ PhysicsEntity *gf2d_physics_entity_new()
     {
         ent = &gf2d_physics_entity_manager.entity_list[i];
         if(ent->_inuse) continue;
+
         ent->_inuse = 1;
+        if(name && gfc_line_cmp(name, "") != 0)
+        {
+            gfc_line_cpy(ent->name, name);
+            gf2d_trie_insert(&gf2d_physics_entity_manager.entity_trie, ent->name, ent);
+        }
+        
         return ent;
     }
 
@@ -134,7 +144,7 @@ PhysicsEntity *gf2d_physics_entity_load(SJson *json)
         return phys;
     }
 
-    phys = gf2d_physics_entity_new();
+    phys = gf2d_physics_entity_new(NULL);
     gf2d_physics_entity_load_to_entity(phys, json);
 
     return phys;
@@ -160,6 +170,12 @@ void gf2d_physics_entity_load_to_entity(PhysicsEntity *phys, SJson *json)
     phys->useGravity = gf2d_json_uint8( sj_object_get_value(json, "useGravity") );
     phys->canCollide = gf2d_json_uint8( sj_object_get_value(json, "canCollide") );
     phys->type = gf2d_physics_entity_type_from_string( sj_get_string_value( sj_object_get_value(json, "type") ) );
+
+    obj = sj_object_get_value(json, "name");
+    if(obj && sj_is_string(obj))
+    {
+        gf2d_physics_entity_set_name(phys, sj_get_string_value(obj));
+    }
 }
 
 void gf2d_physics_entity_free( PhysicsEntity *ent )
@@ -167,6 +183,11 @@ void gf2d_physics_entity_free( PhysicsEntity *ent )
     Entity *e = NULL;
 
     if(!ent) return;
+
+    if( gfc_line_cmp(ent->name, "") != 0 )
+    {
+        gf2d_trie_remove(&gf2d_physics_entity_manager.entity_trie, ent->name);
+    }
 
     e = ent->entity;
     gf2d_entity_free(e);
@@ -430,4 +451,19 @@ void gf2d_physics_entity_handle_collision( PhysicsEntity *e, PhysicsEntity *o, C
     }
 
     gf2d_physics_entity_collision_resolution(e, info);
+}
+
+PhysicsEntity *gf2d_physics_entity_get_by_name(const char *name)
+{
+    if(!name) return NULL;
+
+    return (PhysicsEntity*)gf2d_trie_get(&gf2d_physics_entity_manager.entity_trie, name);
+}
+
+void gf2d_physics_entity_set_name(PhysicsEntity *ent, const char *name)
+{
+    if(!ent || !name) return;
+
+    gfc_line_cpy(ent->name, name);
+    gf2d_trie_insert(&gf2d_physics_entity_manager.entity_trie, name, ent);
 }

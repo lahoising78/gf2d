@@ -1,4 +1,5 @@
 {
+    "name":                     "punti",
     "entity": {
         "animation":             "application/sprites/punti_jordan_animations.json",
         "position":             [10.0, 10.0],

@@ -15,6 +15,7 @@ typedef enum
 /* A structure that can interact with the physics in the game */
 typedef struct physics_entity_s
 {
+    char                    name[GFCLINELEN];
     Entity                  *entity;
     PhysicsEntityType       type;
     uint8_t                 useGravity;
@@ -53,7 +54,7 @@ void gf2d_physics_entity_manager_update();
  * @brief get a physics entity that is not being used
  * @return a pointer to a physics entity
  */
-PhysicsEntity *gf2d_physics_entity_new();
+PhysicsEntity *gf2d_physics_entity_new(const char *name);
 
 PhysicsEntity *gf2d_physics_entity_load(SJson *json);
 void gf2d_physics_entity_load_to_entity(PhysicsEntity *phys, SJson *json);
@@ -62,5 +63,8 @@ void gf2d_physics_entity_load_to_entity(PhysicsEntity *phys, SJson *json);
  * @brief free the physics entity and clear values
  */
 void gf2d_physics_entity_free( PhysicsEntity *ent );
+
+PhysicsEntity *gf2d_physics_entity_get_by_name(const char *name);
+void gf2d_physics_entity_set_name(PhysicsEntity *ent, const char *name);
 
 #endif
