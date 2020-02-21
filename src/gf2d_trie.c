@@ -91,7 +91,7 @@ void gf2d_trie_node_free(TrieNode *node)
     int i;
     if(!node) return;
 
-    slog("free trie node");
+    // slog("free trie node");
 
     for(i = 0; i < GF2D_LETTERS_IN_ALPHABET; i++)
     {

@@ -78,6 +78,9 @@ void gf2d_physics_entity_manager_clean( uint32_t freeEntity )
         ent = &gf2d_physics_entity_manager.entity_list[i];
         gf2d_physics_entity_free(ent);
     }
+
+    gf2d_trie_free(&gf2d_physics_entity_manager.entity_trie);
+    gf2d_physics_entity_manager.entity_trie = gf2d_trie_new();
 }
 
 void gf2d_physics_entity_manager_close()
@@ -86,6 +89,7 @@ void gf2d_physics_entity_manager_close()
 
     gf2d_physics_entity_manager_clean(1);
     free(gf2d_physics_entity_manager.entity_list);
+    gf2d_trie_free(&gf2d_physics_entity_manager.entity_trie);
 }
 
 void gf2d_physics_entity_manager_update()
