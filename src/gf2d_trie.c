@@ -38,7 +38,7 @@ uint8_t gf2d_trie_insert(Trie *trie, const char *key, void *val)
         if( !cur->children[c] )
         {
             cur->children[c] = (TrieNode*)gfc_allocate_array(sizeof(TrieNode), 1);
-            cur->children[c]->parent = cur;
+            if(cur->children[c]) cur->children[c]->parent = cur;
         }
 
         cur = cur->children[c];

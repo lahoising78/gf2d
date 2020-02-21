@@ -1,0 +1,6 @@
+{
+    "name":                 "punti",
+    "animation":            "application/sprites/punti_jordan_animations.json",
+    "position":             [10.0, 10.0],
+    "velocity":             [0.0, 0.0]
+}

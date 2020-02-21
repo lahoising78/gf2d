@@ -7,8 +7,8 @@
             "drawable":                     "application/scenes/first_scene_tilemap.json"
         },
         {
-            "type":                         "DET_PHYS",
-            "drawable":                     "application/entities/punti_jordan_phys.json"
+            "type":                         "DET_ENT",
+            "drawable":                     "application/entities/punti_jordan_ent.json"
         }
     ]
 }

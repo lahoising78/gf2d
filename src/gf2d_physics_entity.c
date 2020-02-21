@@ -58,7 +58,7 @@ void gf2d_physics_entity_manager_initialize_entities()
     for(i = 0; i < gf2d_physics_entity_manager.count; i++)
     {
         ent = &gf2d_physics_entity_manager.entity_list[i];
-        ent->entity = gf2d_entity_new();
+        ent->entity = gf2d_entity_new(NULL);
     }
 }
 

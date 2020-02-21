@@ -6,6 +6,7 @@
 
 typedef struct entity_s
 {
+    char                name[GFCLINELEN];
     Animation           *anim;
     Vector2D            position;
     Vector2D            velocity;
@@ -58,7 +59,7 @@ void gf2d_entity_init(Entity *ent);
  * @brief get new entity
  * @return an entity pointer
  */
-Entity *gf2d_entity_new();
+Entity *gf2d_entity_new(const char *name);
 
 /** 
  * 
@@ -72,5 +73,8 @@ void gf2d_entity_load_to_entity(Entity *ent, SJson *json);
  * @param ent the entity to free
  */
 void gf2d_entity_free(Entity *ent);
+
+Entity *gf2d_entity_get_by_name(const char *name);
+void gf2d_entity_set_name(Entity *self, const char *name);
 
 #endif

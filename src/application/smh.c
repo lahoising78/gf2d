@@ -36,13 +36,15 @@ void somethink(Entity *self)
 
     self->velocity.x = 3.0f * hor;
     self->velocity.y = 3.0f * ver;
+
+    slog("hola como esta");
 }
 
 void smh_awake()
 {
-    PhysicsEntity *phys = NULL;
+    Entity *ent = NULL;
 
-    phys = gf2d_physics_entity_get_by_name("punti");
-    if(phys)
-        phys->entity->update = somethink;
+    ent = gf2d_entity_get_by_name("punti");
+    if(ent)
+        ent->update = somethink;
 }
