@@ -41,8 +41,7 @@ void gf2d_tilemap_manager_close()
         gf2d_tilemap_free(tilemap);
     }
 
-    free(gf2d_tilemap_manager.tilemaps);
-    memset(&gf2d_tilemap_manager, 0, sizeof(TilemapManager));
+    if(gf2d_tilemap_manager.tilemaps) free(gf2d_tilemap_manager.tilemaps);
 }
 
 Tilemap *gf2d_tilemap_new()
@@ -190,7 +189,7 @@ void gf2d_tilemap_free(Tilemap *tilemap)
     if(!tilemap) return;
 
     if( tilemap->tiles ) free(tilemap->tiles);
-    gf2d_sprite_free(tilemap->spriteSheet);
+    if( tilemap->spriteSheet ) gf2d_sprite_free(tilemap->spriteSheet);
 
     memset(tilemap, 0, sizeof(Tilemap));
 }

@@ -7,6 +7,7 @@ typedef struct
 {
     Label *label_list;
     uint32_t count;
+    SDL_Color defaultColor;
 } LabelManager;
 
 static LabelManager gf2d_label_manager = {0};
@@ -25,6 +26,11 @@ void gf2d_label_manager_init( uint32_t count )
         return;
     }
     gf2d_label_manager.count = count;
+
+    gf2d_label_manager.defaultColor.r = 255;
+    gf2d_label_manager.defaultColor.g = 255;
+    gf2d_label_manager.defaultColor.b = 255;
+    gf2d_label_manager.defaultColor.a = 255;
 }
 
 void gf2d_label_manager_close()
@@ -78,7 +84,6 @@ Label *gf2d_label_new(const char *text, TTF_Font *font, uint32_t fontSize, Vecto
         return NULL;
     }
     vector2d_copy(label->_display->position, position);
-    label->_textColor = vector4d(255.0f, 255.0f, 255.0f, 255.0f);
 
     gf2d_label_set_display(label);
 
@@ -92,10 +97,15 @@ void gf2d_label_set_display(Label *label)
     SDL_Color color = {0};
     if(!label) return;
 
-    color.r = label->_textColor.x;
-    color.g = label->_textColor.y;
-    color.b = label->_textColor.z;
-    color.a = label->_textColor.w;
+    if( label->_display )
+    {
+        color.r = label->_display->colorShift.x;
+        color.g = label->_display->colorShift.y;
+        color.b = label->_display->colorShift.z;
+        color.a = label->_display->colorShift.w;
+    }
+    else
+        color = gf2d_label_manager.defaultColor;
 
     sprite = gf2d_sprite_new();
     if(!sprite) 
@@ -153,4 +163,10 @@ void gf2d_label_free(Label *label)
 
     if(label->_display) gf2d_render_ent_free(label->_display);
     memset( label, 0, sizeof(Label) );
+}
+
+void gf2d_label_set_text_color(Label *label, Vector4D newColor)
+{
+    if(!label) return;
+    vector4d_copy(label->_display->colorShift, newColor);
 }
