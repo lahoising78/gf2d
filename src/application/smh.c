@@ -9,6 +9,8 @@
 #include "gf2d_camera.h"
 #include "gf2d_ui.h"
 
+#include "gf2d_trie.h"
+
 UIComponent *ui = NULL;
 
 float hor = 0.0f;
@@ -41,6 +43,7 @@ void smh_awake()
     SJson *punti = NULL;
     PhysicsEntity *phys = NULL;
     UIComponent *ui = NULL;
+    Trie trie = {0};
 
     punti = sj_load("application/entities/punti_jordan_phys.json");
     phys = gf2d_physics_entity_load( punti );
@@ -52,4 +55,14 @@ void smh_awake()
     ui = gf2d_ui_label_new("Esto es un texto", NULL, 10, vector2d(128.0f, 128.0f));
     gf2d_label_set_text_color(ui->component.label, vector4d(0.0f, 0.0f, 0.0f, 255.0f));
     gf2d_scene_add_to_drawables(ui, DET_UI);
+
+    trie = gf2d_trie_new();
+    gf2d_trie_insert(&trie, "punti", punti);
+    gf2d_trie_insert(&trie, "phys", phys);
+    gf2d_trie_insert(&trie, "ui", ui);  
+
+    slog("hola contains %u", gf2d_trie_remove(&trie, "hola"));
+    slog("phys contrains %u", gf2d_trie_remove(&trie, "phys"));
+
+    gf2d_trie_free(&trie);
 }
