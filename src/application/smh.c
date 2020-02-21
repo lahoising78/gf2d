@@ -49,7 +49,7 @@ void smh_awake()
     phys->entity->update = somethink;
     gf2d_scene_add_to_drawables(phys, DET_PHYS);
 
-    ui = gf2d_ui_label_new("Esto es un texto", NULL, 10, vector2d(10.0f, 10.0f));
+    ui = gf2d_ui_label_new("Esto es un texto", NULL, 10, vector2d(128.0f, 128.0f));
     gf2d_label_set_text_color(ui->component.label, vector4d(0.0f, 0.0f, 0.0f, 255.0f));
     gf2d_scene_add_to_drawables(ui, DET_UI);
 }

@@ -125,7 +125,7 @@ void gf2d_scene_load_from_file(const char *filename)
     drawablesCount = gf2d_json_uint32( sj_object_get_value(json, "drawablesCount") );
     awakeIndex = gf2d_json_uint32( sj_object_get_value(json, "awakeIndex") );
 
-    gf2d_scene_load(drawablesCount, gf2d_scene_awake_manager.gf2d_scene_awake_list[awakeIndex]);
+    gf2d_scene_load(drawablesCount, NULL);
 
     arr = sj_object_get_value(json, "drawables");
     if(arr)
@@ -143,6 +143,8 @@ void gf2d_scene_load_from_file(const char *filename)
     }
 
     sj_free(json);
+
+    if(gf2d_scene_awake_manager.gf2d_scene_awake_list[awakeIndex]) gf2d_scene_awake_manager.gf2d_scene_awake_list[awakeIndex]();
 }
 
 void gf2d_scene_load( uint32_t drawablesCount, AwakeFunction scene_awake )
@@ -175,7 +177,7 @@ void gf2d_scene_close()
     {
         free(gf2d_scene.drawable_entities);
     }
-    gf2d_scene.drawable_entities_count = gf2d_scene.drawable_entities_size = 0;
+    // gf2d_scene.drawable_entities_count = gf2d_scene.drawable_entities_size = 0;
     memset(&gf2d_scene, 0, sizeof(Scene));
 }
 
@@ -188,7 +190,7 @@ void gf2d_scene_render()
     {
         ent = &gf2d_scene.drawable_entities[i];
         if(!ent->_inuse) continue;
-
+        
         switch (ent->_type)
         {
             case DET_REND:
