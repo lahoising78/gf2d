@@ -64,5 +64,7 @@ void smh_awake()
     slog("hola contains %u", gf2d_trie_remove(&trie, "hola"));
     slog("phys contrains %u", gf2d_trie_remove(&trie, "phys"));
 
+    slog("can i get punti? %u == %u", punti, gf2d_trie_get(&trie, "punti"));
+
     gf2d_trie_free(&trie);
 }

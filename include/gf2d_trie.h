@@ -22,5 +22,6 @@ Trie gf2d_trie_new();
 uint8_t gf2d_trie_insert(Trie *trie, const char *key, void *val);
 void *gf2d_trie_remove(Trie *trie, const char *key);
 void gf2d_trie_free(Trie *trie);
+void *gf2d_trie_get(Trie *trie, const char *key);
 
 #endif

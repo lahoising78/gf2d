@@ -100,3 +100,26 @@ void gf2d_trie_node_free(TrieNode *node)
         free( node->children[i] );
     }
 }
+
+void *gf2d_trie_get(Trie *trie, const char *key)
+{
+    TrieNode *cur = NULL;
+    int i, c;
+    size_t len;
+
+    if(!trie || !key) return NULL;
+
+    cur = trie->root;
+    len = strlen(key);
+    for(i = 0; i < len; i++)
+    {
+        c = gf2d_trie_get_index(key[i]);
+
+        if(!cur->children[c])
+            return NULL;
+
+        cur = cur->children[c];
+    }
+
+    return cur->leaf;
+}
