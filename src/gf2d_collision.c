@@ -47,6 +47,8 @@ CollisionShape gf2d_collision_shape_load(SJson *json)
 
 uint8_t gf2d_collision_check( CollisionShape *a, CollisionShape *b, CollisionInfo *info )
 {
+    Vector2D aMax = {0};
+    Vector2D bMax = {0};
     int i;
 
     if(!a || !b) return 0;
@@ -54,11 +56,16 @@ uint8_t gf2d_collision_check( CollisionShape *a, CollisionShape *b, CollisionInf
 
     if( a->shapeType == CST_BOX && b->shapeType == CST_BOX )
     {
-        if ( a->position.x <= b->position.x + b->dimensions.wh.x &&  
-            a->position.x + a->dimensions.wh.x >= b->position.x &&
-            a->position.y <= b->position.y + b->dimensions.wh.y &&
-            a->position.y + a->dimensions.wh.y >= b->position.y ) 
+        vector2d_set(aMax, a->position.x + a->dimensions.wh.x, a->position.y + a->dimensions.wh.y);
+        vector2d_set(bMax, b->position.x + b->dimensions.wh.x, b->position.y + b->dimensions.wh.y);
+        // if ( a->position.x <= b->position.x + b->dimensions.wh.x &&  
+        //     a->position.x + a->dimensions.wh.x >= b->position.x &&
+        //     a->position.y <= b->position.y + b->dimensions.wh.y &&
+        //     a->position.y + a->dimensions.wh.y >= b->position.y ) 
+        if( bMax.x > a->position.x && aMax.x > b->position.x &&
+            bMax.y > a->position.y && aMax.y > b->position.y )
         {
+            slog("colliding");
             if (info)
             {
                 for(i = 0; info->poc.x == 0.0f && info->poc.y == 0.0f && info->normal.x == 0.0f && info->normal.y == 0.0f; i++)
@@ -80,7 +87,7 @@ uint8_t gf2d_collision_check( CollisionShape *a, CollisionShape *b, CollisionInf
                         info->poc.y = a->position.y;
                         info->normal.y = -1;
                     }
-                    if (b->position.y + i >= a->position.y + a->dimensions.wh.y)
+                    else if (b->position.y + i >= a->position.y + a->dimensions.wh.y)
                     {
                         info->normal.y = 1;
                         info->poc.y = b->position.y;
@@ -89,6 +96,11 @@ uint8_t gf2d_collision_check( CollisionShape *a, CollisionShape *b, CollisionInf
                 info->a = *a;
                 info->b = *b;
             }
+
+            info->overlap = MIN( 
+                MIN( aMax.x, bMax.x ) - MAX( a->position.x, b->position.x ),
+                MIN( aMax.y, bMax.y ) - MAX( a->position.y, b->position.y )
+            );
 
             return 1;
         }

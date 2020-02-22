@@ -29,6 +29,8 @@ typedef struct
     CollisionShape b;
     Vector2D poc;
     Vector2D normal;
+    Vector2D originalPosition;
+    float overlap;
 } CollisionInfo;
 
 /** 

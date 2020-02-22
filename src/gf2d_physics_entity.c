@@ -218,13 +218,14 @@ void gf2d_physics_entity_update( struct physics_entity_s *ent )
     
     if( ent->type == PET_KINETIC )
     {
+        info.originalPosition = ent->entity->position;
         
         if( ent->useGravity && !ent->_onFloor )
         {
             ent->entity->velocity.y += frameTime * GRAVITY * TIME_MULTIPLIER;
         }
 
-        if( ent->entity->velocity.y < 1.0f ) ent->_onFloor = 0;
+        if( ent->entity->velocity.y < 0.0f ) ent->_onFloor = 0;
 
         /* df = di + vt */
         vector2d_scale( buf, ent->entity->velocity, frameTime * TIME_MULTIPLIER );                                      // vt
@@ -360,59 +361,20 @@ uint8_t gf2d_physics_entity_check_tilemap_collision(PhysicsEntity *e, CollisionI
 
 void gf2d_physics_entity_collision_resolution(PhysicsEntity *e, CollisionInfo info)
 {
-    float theta = 0.0f;
-    float speed = 0.0f;
+    Vector2D dir = {0};
+    float mag = 0.0f;
     if(!e) return;
 
-    if( info.poc.x != 0.0f )
-    {
-        if( info.normal.x > 0.0f )
-        {
-            e->entity->position.x = info.poc.x + 1.0f;
-            e->entity->position.x -= e->modelBox.position.x;
-            e->entity->velocity.x = 0.0f;
-        }
-        else if( info.normal.x < 0.0f )
-        {
-            e->entity->position.x = info.poc.x - info.a.dimensions.wh.x - 1.0f;
-            e->entity->position.x -= e->modelBox.position.x;
-        }
-    }
-    if( info.poc.y != 0.0f )
-    {
-        /* the thing you collided with is below you */
-        if( info.normal.y > 0.0f )
-        {
-            e->entity->position.y = info.poc.y - e->modelBox.dimensions.wh.y + 1.0f;
-            e->entity->position.y -= e->modelBox.position.y;
-        }
-        else if ( info.normal.y < 0.0f )
-        {
-            e->entity->position.y = info.poc.y + 1.0f;
-            e->entity->position.y -= e->modelBox.position.y;
-        }
-    }
+    vector2d_sub(dir, info.b.position, info.a.position);
+    mag = vector2d_magnitude(dir);
+    vector2d_scale(dir, dir, info.overlap / mag);
+    vector2d_sub(e->entity->position, e->entity->position, dir);
 
-    /* if the normal.y is positive, that means we are on top of a surface */
-    if( info.normal.y > 0 )
+    if(info.normal.y > 0.0f)
+    {
         e->_onFloor = 1;
-
-    speed = vector2d_magnitude(e->entity->velocity);
-    if( speed != 0.0f )
-    {
-        /* A . B = ||A|| * ||B|| * cos(theta) where theta is the angle between the vectors */
-        theta = acosf( (vector2d_dot_product(e->entity->velocity, info.normal)) / speed );
-        
-        /* A * sin(theta) will give us the line perpendicular to the normal, which would be parallel to the surface
-           we are colliding with. The magnitude of the resulting vector would be proportional to the component of the
-           original vector that is parallel to the surface */
-        vector2d_scale(e->entity->velocity, e->entity->velocity, sinf(theta));
-
-        /* do this to deal with floating point precision */
-        if( fabs(e->entity->velocity.y) <= 1.0f ) e->entity->velocity.y = 0.0f;
-        if( fabs(e->entity->velocity.x) <= 1.0f ) e->entity->velocity.x = 0.0f;
+        e->entity->velocity.y = 0.0f;
     }
-
 }
 
 void gf2d_physics_entity_handle_collision( PhysicsEntity *e, PhysicsEntity *o, CollisionInfo info )

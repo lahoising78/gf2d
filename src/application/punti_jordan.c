@@ -27,7 +27,7 @@ void punti_jordan_think(Entity *self)
         hor = 0.0f;
 
     if( gf2d_input_key_just_pressed(SDL_SCANCODE_W) )
-        ver = -3.0f;
+        ver = -1.0f;
     else if( gf2d_input_key_just_pressed(SDL_SCANCODE_S) )
         ver = 1.0f;
     else if( gf2d_input_key_released(SDL_SCANCODE_W) || gf2d_input_key_released(SDL_SCANCODE_S) )
