@@ -136,6 +136,7 @@ Entity *gf2d_entity_new(const char *name)
         if(ent->_inuse) continue;
 
         gf2d_entity_init(ent);
+        gf2d_entity_set_name(ent, name);
 
         return ent;
     }

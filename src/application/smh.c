@@ -36,15 +36,24 @@ void somethink(Entity *self)
 
     self->velocity.x = 3.0f * hor;
     self->velocity.y = 3.0f * ver;
-
-    slog("hola como esta");
 }
 
 void smh_awake()
 {
     Entity *ent = NULL;
+    Entity *hey = NULL;
+    Entity *a = NULL;
 
     ent = gf2d_entity_get_by_name("punti");
     if(ent)
         ent->update = somethink;
+
+    hey = gf2d_entity_new("hey");
+    gf2d_scene_add_to_drawables(hey, DET_ENT);
+
+    a = gf2d_entity_get_by_name("hey");
+    slog("a %u == hey %u", a, hey);
+
+    a = gf2d_entity_new(NULL);
+    slog("a = %u", a);
 }
