@@ -228,7 +228,7 @@ void gf2d_physics_entity_update( struct physics_entity_s *ent )
 
         /* df = di + vt */
         vector2d_scale( buf, ent->entity->velocity, frameTime * TIME_MULTIPLIER );                                      // vt
-        vector2d_add( ent->entity->position, ent->entity->position, buf );                                              // df = di + vt
+        vector2d_add( ent->entity->position, ent->entity->position, buf );
         
         while( (o = gf2d_physics_entity_check_collision(ent, o, &info)) != NULL )
         {

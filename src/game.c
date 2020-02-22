@@ -101,13 +101,13 @@ int main(int argc, char * argv[])
             gf2d_main_set_draw_collisions( !gf2d_main_get_draw_collisions() );
             slog("pressing tab");
         }
-        if( gf2d_timer_get_ticks(&perSecond) >= 0.1f )
+        if( gf2d_timer_get_ticks(&perSecond) / 10000.0f >= 1.0f )
         {
             slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());
             gf2d_timer_start(&perSecond);
         }
         
-        frameTime = gf2d_timer_get_ticks(&fTimer);
+        frameTime = (float)gf2d_timer_get_ticks(&fTimer) / 10000.0f;
     }
     slog("---==== END ====---");
     return 0;

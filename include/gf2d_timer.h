@@ -1,15 +1,16 @@
 #ifndef _GF2D_TIMER_H_
 #define _GF2D_TIMER_H_
 
-#include <time.h>
+// #include <time.h>
+#include <SDL.h>
 
 typedef struct Timer_s
 {
-    clock_t startTicks;
-    clock_t pausedTicks;
+    uint32_t startTicks;
+    uint32_t pausedTicks;
 
-    int paused;
-    int started;
+    uint8_t paused;
+    uint8_t started;
 } Timer;
 
 /**
@@ -47,6 +48,6 @@ void gf2d_timer_unpause(Timer *timer);
  * @param timer to get ticks from
  * @return a floating point with ticks since timer started
  */
-float gf2d_timer_get_ticks(Timer *timer);
+uint32_t gf2d_timer_get_ticks(Timer *timer);
 
 #endif
