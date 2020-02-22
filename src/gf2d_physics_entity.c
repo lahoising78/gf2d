@@ -4,7 +4,7 @@
 #include "gf2d_tilemap.h"
 #include "gf2d_trie.h"
 
-#define GRAVITY                     98.0f
+#define GRAVITY                     2.0f
 
 #define TIME_MULTIPLIER             1000.0f
 extern float frameTime;
@@ -221,7 +221,7 @@ void gf2d_physics_entity_update( struct physics_entity_s *ent )
         
         if( ent->useGravity && !ent->_onFloor )
         {
-            ent->entity->velocity.y += GRAVITY * frameTime;
+            ent->entity->velocity.y += frameTime * GRAVITY * TIME_MULTIPLIER;
         }
 
         if( ent->entity->velocity.y < 1.0f ) ent->_onFloor = 0;
