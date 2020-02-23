@@ -1,8 +1,21 @@
 #include "simple_logger.h"
+#include "gf2d_camera.h"
 #include "gf2d_input.h"
 #include "player.h"
 
 #define VELOCITY_CONST 3.0f
+
+/* Animation defines */
+#define ANIM_IDLE 0
+#define ANIM_IDLE_MAX 2
+#define ANIM_WALKING 2
+#define ANIM_WALKING_MAX 4
+
+typedef enum
+{
+    PS_IDLE =                   0,
+    PS_WALKING =                1
+} PlayerState;
 
 typedef enum
 {
@@ -14,25 +27,68 @@ typedef enum
 } WalkDirection;
 
 void player_update(Entity *self);
+void player_think(Entity *self);
 
 void player_walking();
 
 float walkDir = 0.0f;
 uint8_t left, right;
+PlayerState currentState = PS_IDLE;
 
 void player_create(PhysicsEntity *self)
 {
     if(!self || !self->entity) return;
     
+    self->entity->think = player_think;
     self->entity->update = player_update;
+}
+
+void player_think(Entity *self)
+{
+    if(!self) return;
+
+    if(walkDir != 0.0f)
+    {
+        currentState = PS_WALKING;
+    }
+    else
+    {
+        currentState = PS_IDLE;
+    }
+
+    switch (currentState)
+    {
+    case PS_WALKING:
+        if( self->anim->animation != ANIM_WALKING )
+        {
+            gf2d_animation_play(self->anim, ANIM_WALKING, ANIM_WALKING_MAX);
+            self->anim->playbackSpeed = 0.2f;
+        }
+        break;
+    
+    default:
+        if( self->anim->animation != ANIM_IDLE )
+        {
+            gf2d_animation_play(self->anim, ANIM_IDLE, ANIM_IDLE_MAX);
+            self->anim->playbackSpeed = 0.1f;
+        }
+        break;
+    }
 }
 
 void player_update(Entity *self)
 {
+    Vector2D cam = {0};
     if(!self) return;
 
     player_walking();
     self->velocity.x = walkDir * VELOCITY_CONST;
+
+    cam.x = self->anim->rend->sprite->frame_w * self->anim->rend->scale.x;
+    cam.y = self->anim->rend->sprite->frame_h * self->anim->rend->scale.y;
+    vector2d_scale(cam, cam, 0.5);
+    vector2d_add(cam, cam, self->position);
+    gf2d_camera_set_position(cam);
 }
 
 void player_walking()

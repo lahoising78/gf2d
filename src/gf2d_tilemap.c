@@ -198,14 +198,24 @@ void gf2d_tilemap_render(Tilemap *tilemap)
 {
     int i, j;
     Tile *tile = NULL;
+    Vector2D finalPosition = {0};
+    Vector2D view = {0};
     if(!tilemap) return;
 
+    view = gf2d_camera_get_view();
     for(i = 0; i < tilemap->h; i++)
     {
         for(j = 0; j < tilemap->w; j++)
         {
             tile = &tilemap->tiles[i * tilemap->w + j];
             if(tile->id == 0) continue;
+
+            finalPosition = gf2d_camera_get_displaced_position(tile->_pos);
+            if (finalPosition.x < -(float)tilemap->spriteSheet->frame_w || finalPosition.x > view.x ||
+                finalPosition.y < -(float)tilemap->spriteSheet->frame_h || finalPosition.y > view.y)
+            {
+                continue;
+            }
 
             gf2d_sprite_draw(
                 tilemap->spriteSheet,

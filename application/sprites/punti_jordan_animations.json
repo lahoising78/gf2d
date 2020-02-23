@@ -4,6 +4,5 @@
         "animation":            0,
         "maxFrame":             2
     },
-    "playbackSpeed":            0.1,
-    "scale":                    [2.0, 2.0]
+    "playbackSpeed":            0.1
 }

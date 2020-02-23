@@ -5,6 +5,7 @@
 #include "gf2d_collision.h"
 
 void gf2d_camera_set_view(Vector2D view);
+Vector2D gf2d_camera_get_view();
 
 /** 
  * @brief get position after displacing by camera

@@ -13,6 +13,11 @@ void gf2d_camera_set_view(Vector2D view)
     vector2d_copy(gf2d_camera.view, view);
 }
 
+Vector2D gf2d_camera_get_view()
+{
+    return gf2d_camera.view;
+}
+
 Vector2D gf2d_camera_get_displaced_position(Vector2D position)
 {
     Vector2D finalPos = {0};
