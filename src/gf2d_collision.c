@@ -49,6 +49,8 @@ uint8_t gf2d_collision_check( CollisionShape *a, CollisionShape *b, CollisionInf
 {
     Vector2D aMax = {0};
     Vector2D bMax = {0};
+    Vector2D min = {0};
+    Vector2D max = {0};
     int i;
 
     if(!a || !b) return 0;
@@ -62,45 +64,46 @@ uint8_t gf2d_collision_check( CollisionShape *a, CollisionShape *b, CollisionInf
         //     a->position.x + a->dimensions.wh.x >= b->position.x &&
         //     a->position.y <= b->position.y + b->dimensions.wh.y &&
         //     a->position.y + a->dimensions.wh.y >= b->position.y ) 
-        if( bMax.x > a->position.x && aMax.x > b->position.x &&
-            bMax.y > a->position.y && aMax.y > b->position.y )
+        if( bMax.x >= a->position.x && aMax.x >= b->position.x &&
+            bMax.y >= a->position.y && aMax.y >= b->position.y )
         {
             slog("colliding");
             if (info)
             {
-                for(i = 0; info->poc.x == 0.0f && info->poc.y == 0.0f && info->normal.x == 0.0f && info->normal.y == 0.0f; i++)
+                min.x = MIN( aMax.x, bMax.x ) - MAX( a->position.x, b->position.x );
+                min.y = MIN( aMax.y, bMax.y ) - MAX( a->position.y, b->position.y );
+
+                slog("min %.2f %.2f", min.x, min.y);
+
+                if(min.x < min.y)
                 {
-                    info->poc.y = info->poc.x = 0;
-                    info->normal.x = info->normal.y = 0;
-                    if (a->position.x + i >= b->position.x + b->dimensions.wh.x)
-                    {
-                        info->poc.x = a->position.x;
-                        info->normal.x = 1;
-                    }
-                    else if (b->position.x + i >= a->position.x + a->dimensions.wh.x)
-                    {
-                        info->poc.x = b->position.x;
-                        info->normal.x = -1;
-                    }
-                    if (a->position.y + i >= b->position.y + b->dimensions.wh.y)
-                    {
-                        info->poc.y = a->position.y;
-                        info->normal.y = -1;
-                    }
-                    else if (b->position.y + i >= a->position.y + a->dimensions.wh.y)
-                    {
-                        info->normal.y = 1;
-                        info->poc.y = b->position.y;
-                    }
+                    info->overlap = min.x;
+                    info->normal.x = a->position.x > b->position.x ? 1.0f : -1.0f;
                 }
+                else if (min.x > min.y)
+                {
+                    info->overlap = min.y;
+                    info->normal.y = a->position.y > b->position.y ? 1.0f : -1.0f;
+                }
+
+                // if(info->normal.x == 0.0f && info->normal.y == 0.0f)
+                // {
+                //     if(min.x < 0.01f)
+                //     {
+                //         info->overlap = min.y;
+                //         info->normal.y = a->position.y > b->position.y ? 1.0f : -1.0f;
+                //     }
+                //     else if (min.y < 0.01f)
+                //     {
+                //         info->overlap = min.x;
+                //         info->normal.x = a->position.x > b->position.x ? 1.0f : -1.0f;
+                //     }
+                // }
+
                 info->a = *a;
                 info->b = *b;
             }
 
-            info->overlap = MIN( 
-                MIN( aMax.x, bMax.x ) - MAX( a->position.x, b->position.x ),
-                MIN( aMax.y, bMax.y ) - MAX( a->position.y, b->position.y )
-            );
 
             return 1;
         }

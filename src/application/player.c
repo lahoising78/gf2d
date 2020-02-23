@@ -18,6 +18,7 @@ void player_update(Entity *self);
 void player_walking();
 
 float walkDir = 0.0f;
+float ydir = 0.0f;
 uint8_t left, right;
 
 void player_create(PhysicsEntity *self)
@@ -33,6 +34,7 @@ void player_update(Entity *self)
 
     player_walking();
     self->velocity.x = walkDir * VELOCITY_CONST;
+    self->velocity.y = ydir * VELOCITY_CONST;
 }
 
 void player_walking()
@@ -40,6 +42,7 @@ void player_walking()
     float dir = 0.0f;
 
     dir = gf2d_input_joystick_get_axis(0, 0);
+    ydir = gf2d_input_joystick_get_axis(0, 1);
     if( dir != 0.0f ) 
     {
         walkDir = dir;

@@ -9,6 +9,5 @@
     },
 
     "type":                     "PET_KINETIC",
-    "canCollide":               1,
-    "useGravity":               1
+    "canCollide":               1
 }
