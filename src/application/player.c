@@ -1,6 +1,8 @@
 #include "simple_logger.h"
 #include "gf2d_camera.h"
 #include "gf2d_input.h"
+#include "gf2d_scene.h"
+#include "punti_jordan.h"
 #include "player.h"
 
 #define VELOCITY_CONST 3.0f
@@ -45,8 +47,11 @@ void player_create(PhysicsEntity *self)
 
 void player_think(Entity *self)
 {
+    uint32_t *anim = NULL;
+    float animSpeed = 0.0f;
     if(!self) return;
 
+    player_walking();
     if(walkDir != 0.0f)
     {
         currentState = PS_WALKING;
@@ -61,16 +66,20 @@ void player_think(Entity *self)
     case PS_WALKING:
         if( self->anim->animation != ANIM_WALKING )
         {
-            gf2d_animation_play(self->anim, ANIM_WALKING, ANIM_WALKING_MAX);
-            self->anim->playbackSpeed = 0.2f;
+            anim = punti_jordan_get_walking();
+            animSpeed = punti_jordan_get_walking_speed();
+            gf2d_animation_play(self->anim, anim[0], anim[1]);
+            self->anim->playbackSpeed = animSpeed;
         }
         break;
     
     default:
         if( self->anim->animation != ANIM_IDLE )
         {
-            gf2d_animation_play(self->anim, ANIM_IDLE, ANIM_IDLE_MAX);
-            self->anim->playbackSpeed = 0.1f;
+            anim = punti_jordan_get_idle();
+            animSpeed = punti_jordan_get_idle_speed();
+            gf2d_animation_play(self->anim, anim[0], anim[1]);
+            self->anim->playbackSpeed = animSpeed;
         }
         break;
     }
@@ -81,14 +90,18 @@ void player_update(Entity *self)
     Vector2D cam = {0};
     if(!self) return;
 
-    player_walking();
+    /* update walking */
     self->velocity.x = walkDir * VELOCITY_CONST;
 
+    /* make camera follow player */
     cam.x = self->anim->rend->sprite->frame_w * self->anim->rend->scale.x;
     cam.y = self->anim->rend->sprite->frame_h * self->anim->rend->scale.y;
     vector2d_scale(cam, cam, 0.5);
     vector2d_add(cam, cam, self->position);
     gf2d_camera_set_position(cam);
+
+    if( gf2d_input_key_released(SDL_SCANCODE_R) )
+        gf2d_scene_load_from_file("application/scenes/first_scene.json");
 }
 
 void player_walking()

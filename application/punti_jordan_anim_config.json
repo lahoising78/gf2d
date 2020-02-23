@@ -1,0 +1,13 @@
+{
+    "idle": {
+        "animation":                    0,
+        "maxFrame":                     2,
+        "playbackSpeed":                0.1
+    },
+
+    "walking": {
+        "animation":                    2,
+        "maxFrame":                     4,
+        "playbackSpeed":                0.2
+    }
+}
