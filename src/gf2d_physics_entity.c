@@ -4,7 +4,7 @@
 #include "gf2d_tilemap.h"
 #include "gf2d_trie.h"
 
-#define GRAVITY                     2.0f
+#define GRAVITY                     1.0f
 #define FLOOR_ANGLE_THRESHOLD       0.5f
 
 #define TIME_MULTIPLIER             1000.0f
@@ -221,7 +221,7 @@ void gf2d_physics_entity_update( struct physics_entity_s *ent )
     {
         info.originalPosition = ent->entity->position;
         
-        if( ent->useGravity /* && !ent->_onFloor */ )
+        if( ent->useGravity )
         {
             ent->entity->velocity.y += frameTime * GRAVITY * TIME_MULTIPLIER;
         }
@@ -342,19 +342,14 @@ uint8_t gf2d_physics_entity_check_tilemap_collision(PhysicsEntity *e, CollisionI
                 tile = &tilemaps->tiles[y * tilemaps->w + x];
                 if( tile->body.dimensions.wh.x <= 0.0f && tile->body.dimensions.wh.y <= 0.0f ) continue;
 
-                slog("pos %.2f %.2f", e->entity->position.x, e->entity->position.y);
                 vector2d_add(e->modelBox.position, e->modelBox.position, e->entity->position);
                 vector2d_add(tile->body.position, tile->body.position, tile->_pos);
                 if( gf2d_collision_check(&e->modelBox, &tile->body, info) ) 
                 {
-                    slog("tilemap 2");
                     vector2d_sub(e->modelBox.position, e->modelBox.position, e->entity->position);
                     vector2d_sub(tile->body.position, tile->body.position, tile->_pos);
                     gf2d_physics_entity_collision_resolution(e, *info);
-                    // y = (int)worldToMap.y;
-                    // x = (int)worldToMap.x;
                     continue;
-                    // return 1;
                 }
                 vector2d_sub(tile->body.position, tile->body.position, tile->_pos);
                 vector2d_sub(e->modelBox.position, e->modelBox.position, e->entity->position);
@@ -373,8 +368,6 @@ void gf2d_physics_entity_collision_resolution(PhysicsEntity *e, CollisionInfo in
     float mag = 0.0f;
     if(!e) return;
 
-    slog("normal %.2f %.2f", info.normal.x, info.normal.y);
-
     // dot = vector2d_dot_product(info.normal, e->entity->velocity);
     // vector2d_scale(dir, info.normal, dot);
     // vector2d_sub(e->entity->velocity, e->entity->velocity, dir);
@@ -385,13 +378,13 @@ void gf2d_physics_entity_collision_resolution(PhysicsEntity *e, CollisionInfo in
     // mag = vector2d_magnitude(dir);
     // vector2d_scale(dir, dir, info.overlap / mag);
     // vector2d_sub(e->entity->position, e->entity->position, dir);
+
     vector2d_scale(dir, info.normal, info.overlap);
     vector2d_add(e->entity->position, e->entity->position, dir);
 
     /* ngl, took strong inspiration from godot engine */
     e->_onFloor = acosf(vector2d_dot_product(up, info.normal)) <= FLOOR_ANGLE_THRESHOLD;
     if(e->_onFloor) e->entity->velocity.y = 0.0f;
-    slog("floor %u", e->_onFloor);
 }
 
 void gf2d_physics_entity_handle_collision( PhysicsEntity *e, PhysicsEntity *o, CollisionInfo info )

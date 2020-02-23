@@ -60,20 +60,17 @@ uint8_t gf2d_collision_check( CollisionShape *a, CollisionShape *b, CollisionInf
     {
         vector2d_set(aMax, a->position.x + a->dimensions.wh.x, a->position.y + a->dimensions.wh.y);
         vector2d_set(bMax, b->position.x + b->dimensions.wh.x, b->position.y + b->dimensions.wh.y);
-        // if ( a->position.x <= b->position.x + b->dimensions.wh.x &&  
-        //     a->position.x + a->dimensions.wh.x >= b->position.x &&
-        //     a->position.y <= b->position.y + b->dimensions.wh.y &&
-        //     a->position.y + a->dimensions.wh.y >= b->position.y ) 
+        
         if( bMax.x >= a->position.x && aMax.x >= b->position.x &&
             bMax.y >= a->position.y && aMax.y >= b->position.y )
         {
-            slog("colliding");
+            // slog("colliding");
             if (info)
             {
                 min.x = MIN( aMax.x, bMax.x ) - MAX( a->position.x, b->position.x );
                 min.y = MIN( aMax.y, bMax.y ) - MAX( a->position.y, b->position.y );
 
-                slog("min %.2f %.2f", min.x, min.y);
+                // slog("min %.2f %.2f", min.x, min.y);
 
                 if(min.x < min.y)
                 {
@@ -85,20 +82,6 @@ uint8_t gf2d_collision_check( CollisionShape *a, CollisionShape *b, CollisionInf
                     info->overlap = min.y;
                     info->normal.y = a->position.y > b->position.y ? 1.0f : -1.0f;
                 }
-
-                // if(info->normal.x == 0.0f && info->normal.y == 0.0f)
-                // {
-                //     if(min.x < 0.01f)
-                //     {
-                //         info->overlap = min.y;
-                //         info->normal.y = a->position.y > b->position.y ? 1.0f : -1.0f;
-                //     }
-                //     else if (min.y < 0.01f)
-                //     {
-                //         info->overlap = min.x;
-                //         info->normal.x = a->position.x > b->position.x ? 1.0f : -1.0f;
-                //     }
-                // }
 
                 info->a = *a;
                 info->b = *b;
