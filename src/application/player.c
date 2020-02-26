@@ -16,7 +16,8 @@
 typedef enum
 {
     PS_IDLE =                   0,
-    PS_WALKING =                1
+    PS_WALKING =                1,
+    PS_JUMPING =                2
 } PlayerState;
 
 typedef enum
@@ -32,6 +33,7 @@ void player_update(Entity *self);
 void player_think(Entity *self);
 
 void player_walking();
+uint8_t player_jumping();
 
 float walkDir = 0.0f;
 uint8_t left, right;
@@ -52,7 +54,11 @@ void player_think(Entity *self)
     if(!self) return;
 
     player_walking();
-    if(walkDir != 0.0f)
+    if( player_jumping() )
+    {
+        currentState = PS_JUMPING;
+    }
+    else if(walkDir != 0.0f)
     {
         currentState = PS_WALKING;
     }
@@ -66,18 +72,32 @@ void player_think(Entity *self)
     case PS_WALKING:
         if( self->anim->animation != ANIM_WALKING )
         {
-            anim = punti_jordan_get_walking();
-            animSpeed = punti_jordan_get_walking_speed();
+            anim = pj_anim_walking();
+            animSpeed = pj_anim_walking_speed();
             gf2d_animation_play(self->anim, anim[0], anim[1]);
             self->anim->playbackSpeed = animSpeed;
+        }
+        break;
+
+    case PS_JUMPING:
+        anim = pj_anim_jumping();
+        animSpeed = pj_anim_jumping_speed();
+        if( self->anim->animation != anim[0] )
+        {
+            gf2d_animation_play(self->anim, anim[0], anim[1]);
+            self->anim->playbackSpeed = animSpeed;
+        }
+        else if( self->anim->rend->frame >= anim[0] * self->anim->rend->sprite->frames_per_line + anim[1] - 1)
+        {
+            gf2d_animation_pause(self->anim);
         }
         break;
     
     default:
         if( self->anim->animation != ANIM_IDLE )
         {
-            anim = punti_jordan_get_idle();
-            animSpeed = punti_jordan_get_idle_speed();
+            anim = pj_anim_idle();
+            animSpeed = pj_anim_idle_speed();
             gf2d_animation_play(self->anim, anim[0], anim[1]);
             self->anim->playbackSpeed = animSpeed;
         }
@@ -92,6 +112,10 @@ void player_update(Entity *self)
 
     /* update walking */
     self->velocity.x = walkDir * VELOCITY_CONST;
+
+    /* update jumping */
+    if( currentState == PS_JUMPING )
+        self->velocity.y = -10.0f;
 
     /* make camera follow player */
     cam.x = self->anim->rend->sprite->frame_w * self->anim->rend->scale.x;
@@ -126,4 +150,9 @@ void player_walking()
         left = 0;
 
     walkDir = (float)(right - left);
+}
+
+uint8_t player_jumping()
+{
+    return gf2d_input_is_key_pressed(SDL_SCANCODE_UP);
 }

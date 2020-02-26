@@ -9,6 +9,8 @@ typedef struct
     float                   idleSpeed;
     uint32_t                walking[2];
     float                   walkingSpeed;
+    uint32_t                jumping[2];
+    float                   jumpingSpeed;
 } PuntiJordanConfig;
 
 static PuntiJordanConfig pj_config = {0};
@@ -23,6 +25,7 @@ void punti_jordan_load(const char *filename)
 
     punti_jordan_load_anim_values(pj_config.idle, &pj_config.idleSpeed, sj_object_get_value(json, "idle"));
     punti_jordan_load_anim_values(pj_config.walking, &pj_config.walkingSpeed, sj_object_get_value(json, "walking"));
+    punti_jordan_load_anim_values(pj_config.jumping, &pj_config.jumpingSpeed, sj_object_get_value(json, "jumping"));
 
     sj_free(json);
 }
@@ -34,22 +37,32 @@ void punti_jordan_load_anim_values(uint32_t *dst, float *speed, SJson *obj)
     sj_get_float_value( sj_object_get_value(obj, "playbackSpeed"), speed );
 }
 
-uint32_t *punti_jordan_get_idle()
+uint32_t *pj_anim_idle()
 {
     return pj_config.idle;
 }
 
-float punti_jordan_get_idle_speed()
+float pj_anim_idle_speed()
 {
     return pj_config.idleSpeed;
 }
 
-uint32_t *punti_jordan_get_walking()
+uint32_t *pj_anim_walking()
 {
     return pj_config.walking;
 }
 
-float punti_jordan_get_walking_speed()
+float pj_anim_walking_speed()
 {
     return pj_config.walkingSpeed;
+}
+
+uint32_t *pj_anim_jumping()
+{
+    return pj_config.jumping;
+}
+
+float pj_anim_jumping_speed()
+{
+    return pj_config.jumpingSpeed;
 }

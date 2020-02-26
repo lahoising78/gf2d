@@ -9,5 +9,11 @@
         "animation":                    2,
         "maxFrame":                     4,
         "playbackSpeed":                0.2
+    },
+
+    "jumping": {
+        "animation":                    3,
+        "maxFrame":                     4,
+        "playbackSpeed":                0.4
     }
 }

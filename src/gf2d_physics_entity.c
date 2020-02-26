@@ -224,6 +224,7 @@ void gf2d_physics_entity_update( struct physics_entity_s *ent )
         if( ent->useGravity )
         {
             ent->entity->velocity.y += frameTime * GRAVITY * TIME_MULTIPLIER;
+            // slog("%.2f %.2f", ent->entity->velocity.x, ent->entity->velocity.y);
         }
 
         /* df = di + vt */
