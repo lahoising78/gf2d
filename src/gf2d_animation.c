@@ -195,3 +195,12 @@ void gf2d_animation_render( Animation *anim )
 
     gf2d_render_ent_draw(anim->rend);
 }
+
+void gf2d_animation_set_frame( Animation *anim, uint32_t newFrame )
+{
+    if(!anim) return;
+
+    newFrame += anim->rend->sprite->frames_per_line * anim->animation;
+    if(newFrame > anim->maxFrame)
+        anim->rend->frame = newFrame;
+}

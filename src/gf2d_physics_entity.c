@@ -4,7 +4,7 @@
 #include "gf2d_tilemap.h"
 #include "gf2d_trie.h"
 
-#define GRAVITY                     1.0f
+#define GRAVITY                     0.5f
 #define FLOOR_ANGLE_THRESHOLD       0.5f
 
 #define TIME_MULTIPLIER             1000.0f
@@ -226,6 +226,7 @@ void gf2d_physics_entity_update( struct physics_entity_s *ent )
             ent->entity->velocity.y += frameTime * GRAVITY * TIME_MULTIPLIER;
             // slog("%.2f %.2f", ent->entity->velocity.x, ent->entity->velocity.y);
         }
+        ent->_onFloor = 0;
 
         /* df = di + vt */
         vector2d_scale( buf, ent->entity->velocity, frameTime * TIME_MULTIPLIER );                                      // vt

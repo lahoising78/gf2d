@@ -13,7 +13,7 @@
 
     "jumping": {
         "animation":                    3,
-        "maxFrame":                     4,
+        "maxFrame":                     3,
         "playbackSpeed":                0.4
     }
 }

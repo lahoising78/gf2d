@@ -33,11 +33,12 @@ void player_update(Entity *self);
 void player_think(Entity *self);
 
 void player_walking();
-uint8_t player_jumping();
+void player_jumping(Entity *self);
 
 float walkDir = 0.0f;
 uint8_t left, right;
 PlayerState currentState = PS_IDLE;
+PhysicsEntity *phys = NULL;
 
 void player_create(PhysicsEntity *self)
 {
@@ -45,6 +46,7 @@ void player_create(PhysicsEntity *self)
     
     self->entity->think = player_think;
     self->entity->update = player_update;
+    phys = self;
 }
 
 void player_think(Entity *self)
@@ -54,7 +56,7 @@ void player_think(Entity *self)
     if(!self) return;
 
     player_walking();
-    if( player_jumping() )
+    if(phys && !phys->_onFloor)
     {
         currentState = PS_JUMPING;
     }
@@ -85,11 +87,16 @@ void player_think(Entity *self)
         if( self->anim->animation != anim[0] )
         {
             gf2d_animation_play(self->anim, anim[0], anim[1]);
+            gf2d_animation_set_frame(self->anim, anim[1]-1);
             self->anim->playbackSpeed = animSpeed;
         }
-        else if( self->anim->rend->frame >= anim[0] * self->anim->rend->sprite->frames_per_line + anim[1] - 1)
+        else if ( self->velocity.y < 0.0f && (int)self->anim->rend->frame%anim[1] == anim[1]-1 )
         {
             gf2d_animation_pause(self->anim);
+        }
+        else
+        {
+            gf2d_animation_set_frame(self->anim, anim[1]);
         }
         break;
     
@@ -113,9 +120,9 @@ void player_update(Entity *self)
     /* update walking */
     self->velocity.x = walkDir * VELOCITY_CONST;
 
-    /* update jumping */
-    if( currentState == PS_JUMPING )
-        self->velocity.y = -10.0f;
+    /* jump */
+    if(phys->_onFloor && gf2d_input_key_just_pressed(SDL_SCANCODE_UP) ) 
+        player_jumping(self);
 
     /* make camera follow player */
     cam.x = self->anim->rend->sprite->frame_w * self->anim->rend->scale.x;
@@ -140,19 +147,27 @@ void player_walking()
     }
 
     if( gf2d_input_key_just_pressed(SDL_SCANCODE_RIGHT) )
+    {
         right = 1;
+        phys->entity->anim->rend->flip.x = 0;
+    }
     else if ( gf2d_input_key_released(SDL_SCANCODE_RIGHT) )
         right = 0;
     
     if ( gf2d_input_key_just_pressed(SDL_SCANCODE_LEFT) )
+    {
         left = 1;
+        phys->entity->anim->rend->flip.x = 1;
+    }
     else if ( gf2d_input_key_released(SDL_SCANCODE_LEFT) )
         left = 0;
 
     walkDir = (float)(right - left);
 }
 
-uint8_t player_jumping()
+void player_jumping(Entity *self)
 {
-    return gf2d_input_is_key_pressed(SDL_SCANCODE_UP);
+    if(!self) return;
+
+    self->velocity.y = -15.0f;
 }
