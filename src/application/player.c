@@ -17,7 +17,8 @@ typedef enum
 {
     PS_IDLE =                   0,
     PS_WALKING =                1,
-    PS_JUMPING =                2
+    PS_JUMPING =                2,
+    PS_ATTACK1 =                3
 } PlayerState;
 
 typedef enum
@@ -34,11 +35,13 @@ void player_think(Entity *self);
 
 void player_walking();
 void player_jumping(Entity *self);
+void player_attacking();
 
 float walkDir = 0.0f;
 uint8_t left, right;
 PlayerState currentState = PS_IDLE;
 PhysicsEntity *phys = NULL;
+uint8_t attacking = 0;
 
 void player_create(PhysicsEntity *self)
 {
@@ -56,9 +59,14 @@ void player_think(Entity *self)
     if(!self) return;
 
     player_walking();
+    player_attacking();
     if(phys && !phys->_onFloor)
     {
         currentState = PS_JUMPING;
+    }
+    else if( attacking )
+    {
+        currentState = PS_ATTACK1;
     }
     else if(walkDir != 0.0f)
     {
@@ -97,6 +105,16 @@ void player_think(Entity *self)
         else
         {
             gf2d_animation_set_frame(self->anim, anim[1]);
+        }
+        break;
+
+    case PS_ATTACK1:
+        anim = pj_anim_slash_down();
+        animSpeed = pj_anim_slash_down_speed();
+        if( self->anim->animation != anim[0] )
+        {
+            gf2d_animation_play(self->anim, anim[0], anim[1]);
+            self->anim->playbackSpeed = animSpeed;
         }
         break;
     
@@ -170,4 +188,10 @@ void player_jumping(Entity *self)
     if(!self) return;
 
     self->velocity.y = -15.0f;
+}
+
+void player_attacking()
+{
+    if( gf2d_input_is_key_pressed(SDL_SCANCODE_Z) )
+        attacking = 1;
 }

@@ -14,4 +14,7 @@ float pj_anim_walking_speed();
 uint32_t *pj_anim_jumping();
 float pj_anim_jumping_speed();
 
+uint32_t *pj_anim_slash_down();
+float pj_anim_slash_down_speed();
+
 #endif
