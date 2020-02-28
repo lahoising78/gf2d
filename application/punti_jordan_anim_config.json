@@ -8,7 +8,7 @@
     "walking": {
         "animation":                    2,
         "maxFrame":                     4,
-        "playbackSpeed":                0.2
+        "playbackSpeed":                0.4
     },
 
     "jumping": {
@@ -19,6 +19,12 @@
 
     "slashDown": {
         "animation":                    4,
+        "maxFrame":                     8,
+        "playbackSpeed":                0.8
+    },
+
+    "slashUp": {
+        "animation":                    5,
         "maxFrame":                     8,
         "playbackSpeed":                0.8
     }

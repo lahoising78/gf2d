@@ -18,7 +18,8 @@ typedef enum
     PS_IDLE =                   0,
     PS_WALKING =                1,
     PS_JUMPING =                2,
-    PS_ATTACK1 =                3
+    PS_ATTACK1 =                3,
+    PS_ATTACK2 =                4
 } PlayerState;
 
 typedef enum
@@ -42,6 +43,7 @@ uint8_t left, right;
 PlayerState currentState = PS_IDLE;
 PhysicsEntity *phys = NULL;
 uint8_t attacking = 0;
+uint8_t canCombo = 0;
 
 void player_create(PhysicsEntity *self)
 {
@@ -56,6 +58,7 @@ void player_think(Entity *self)
 {
     uint32_t *anim = NULL;
     float animSpeed = 0.0f;
+    uint32_t frame = 0;
     if(!self) return;
 
     player_walking();
@@ -66,7 +69,7 @@ void player_think(Entity *self)
     }
     else if( attacking )
     {
-        currentState = PS_ATTACK1;
+        currentState = PS_ATTACK1 + attacking - 1;
     }
     else if(walkDir != 0.0f)
     {
@@ -111,6 +114,28 @@ void player_think(Entity *self)
     case PS_ATTACK1:
         anim = pj_anim_slash_down();
         animSpeed = pj_anim_slash_down_speed();
+        frame = gf2d_animation_get_frame(self->anim);
+        if( self->anim->animation != anim[0] )
+        {
+            gf2d_animation_play(self->anim, anim[0], anim[1]);
+            self->anim->playbackSpeed = animSpeed;
+            canCombo = 0;
+        }
+        else if ( frame == anim[1]-1 )
+        {
+            attacking = 0;
+            canCombo = 0;
+        }
+        else if ( frame >= anim[1]-4 )
+        {
+            canCombo = 1;
+        }
+        break;
+
+    case PS_ATTACK2:
+        anim = pj_anim_slash_up();
+        animSpeed = pj_anim_slash_up_speed();
+        canCombo = 0;
         if( self->anim->animation != anim[0] )
         {
             gf2d_animation_play(self->anim, anim[0], anim[1]);
@@ -161,10 +186,13 @@ void player_walking()
 {
     float dir = 0.0f;
 
+    if(attacking) return;
+
     dir = gf2d_input_joystick_get_axis(0, 0);
     if( dir != 0.0f ) 
     {
         walkDir = dir;
+        phys->entity->anim->rend->flip.x = (int)walkDir + 1;
         return;
     }
 
@@ -196,9 +224,9 @@ void player_jumping(Entity *self)
 
 void player_attacking()
 {
-    if( !gf2d_input_key_just_pressed(SDL_SCANCODE_Z) && !attacking ) return;
+    if( !gf2d_input_key_just_pressed(SDL_SCANCODE_Z) ) return;
     if( !phys->_onFloor ) return;
         
-    attacking = 1;
+    if(!attacking || canCombo) attacking++;
     walkDir = 0.0f;
 }

@@ -13,6 +13,8 @@ typedef struct
     float                   jumpingSpeed;
     uint32_t                slashDown[2];
     float                   slashDownSpeed;
+    uint32_t                slashUp[2];
+    float                   slashUpSpeed;
 } PuntiJordanConfig;
 
 static PuntiJordanConfig pj_config = {0};
@@ -29,6 +31,7 @@ void punti_jordan_load(const char *filename)
     punti_jordan_load_anim_values(pj_config.walking, &pj_config.walkingSpeed, sj_object_get_value(json, "walking"));
     punti_jordan_load_anim_values(pj_config.jumping, &pj_config.jumpingSpeed, sj_object_get_value(json, "jumping"));
     punti_jordan_load_anim_values(pj_config.slashDown, &pj_config.slashDownSpeed, sj_object_get_value(json, "slashDown"));
+    punti_jordan_load_anim_values(pj_config.slashUp, &pj_config.slashUpSpeed, sj_object_get_value(json, "slashUp"));
 
     sj_free(json);
 }
@@ -78,4 +81,14 @@ uint32_t *pj_anim_slash_down()
 float pj_anim_slash_down_speed()
 {
     return pj_config.slashDownSpeed;
+}
+
+uint32_t *pj_anim_slash_up()
+{
+    return pj_config.slashUp;
+}
+
+float pj_anim_slash_up_speed()
+{
+    return pj_config.slashUpSpeed;
 }
