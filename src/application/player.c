@@ -18,10 +18,8 @@ typedef enum
     PS_IDLE =                   0,
     PS_WALKING =                1,
     PS_JUMPING =                2,
-    PS_ATTACKING =              3
-    // PS_ATTACK1 =                3,
-    // PS_ATTACK2 =                4,
-    // PS_ATTACK3 =                5
+    PS_ATTACKING =              3,
+    PS_DASH =                   4
 } PlayerState;
 
 typedef enum
@@ -39,14 +37,15 @@ void player_think(Entity *self);
 void player_walking();
 void player_jumping(Entity *self);
 void player_attacking();
+uint8_t player_dash();
 
 float walkDir = 0.0f;
 uint8_t left, right;
 PlayerState currentState = PS_IDLE;
 PhysicsEntity *phys = NULL;
-// float lastAttack = -1.0f;
 uint8_t attacking = 0;
 uint8_t canCombo = 0;
+float dash = 0.0f;
 
 void player_create(PhysicsEntity *self)
 {
@@ -67,7 +66,22 @@ void player_think(Entity *self)
 
     player_walking();
     player_attacking();
-    if(phys && !phys->_onFloor)
+    if(player_dash())
+    {
+        if(dash < pj_dash()[0])
+        {
+            dash += frameTime;
+            phys->useGravity = 0;
+            self->velocity.y = 0.0f;
+            currentState = PS_DASH;
+        }
+        else
+        {
+            dash = 0.0f;
+            phys->useGravity = 1;
+        }
+    }
+    else if(phys && !phys->_onFloor)
     {
         attacking = 0;
         currentState = PS_JUMPING;
@@ -198,6 +212,15 @@ void player_think(Entity *self)
         }
 
         break;
+
+    case PS_DASH:
+        anim = pj_anim_walking();
+        if( self->anim->animation != anim[0] )
+        {
+            gf2d_animation_play(self->anim, anim[0], anim[1]);
+            self->anim->playbackSpeed = 0.0f;
+        }
+        break;
     
     default:
         if( self->anim->animation != ANIM_IDLE )
@@ -218,6 +241,7 @@ void player_update(Entity *self)
 
     /* update walking */
     self->velocity.x = walkDir * VELOCITY_CONST;
+    if( dash > 0.0f ) self->velocity.x *= pj_dash()[1];
 
     /* jump */
     if(phys->_onFloor && gf2d_input_key_just_pressed(SDL_SCANCODE_UP) ) 
@@ -242,7 +266,7 @@ void player_walking()
     if(attacking) return;
 
     dir = gf2d_input_joystick_get_axis(0, 0);
-    if( dir != 0.0f ) 
+    if( dir != 0.0f && dash <= 0.0f ) 
     {
         walkDir = dir;
         if(walkDir != 0.0f) phys->entity->anim->rend->flip.x = walkDir < 0.0f;
@@ -254,17 +278,24 @@ void player_walking()
         right = 1;
     }
     else if ( gf2d_input_key_released(SDL_SCANCODE_RIGHT) )
+    {
         right = 0;
+    }
     
     if ( gf2d_input_key_just_pressed(SDL_SCANCODE_LEFT) )
     {
         left = 1;
     }
     else if ( gf2d_input_key_released(SDL_SCANCODE_LEFT) )
+    {
         left = 0;
+    }
 
-    walkDir = (float)(right - left);
-    if(walkDir != 0.0f) phys->entity->anim->rend->flip.x = walkDir < 0.0f;
+    if(dash <= 0.0f)
+    {
+        walkDir = (float)(right - left);
+        if(walkDir != 0.0f) phys->entity->anim->rend->flip.x = walkDir < 0.0f;
+    }
 }
 
 void player_jumping(Entity *self)
@@ -284,4 +315,11 @@ void player_attacking()
     if(canCombo) canCombo = 0;
     
     walkDir = 0.0f;
+}
+
+uint8_t player_dash()
+{
+    uint8_t mod = gf2d_input_key_just_pressed(SDL_SCANCODE_C) || gf2d_input_joystick_button_pressed(0, 0);
+    uint8_t dir = right || left;
+    return (mod && dir) || dash > 0.0f;
 }

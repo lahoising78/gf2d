@@ -17,11 +17,13 @@ typedef struct
     float                   slashUpSpeed;
     uint32_t                slashSide[2];
     float                   slashSideSpeed;
+    float                   dash[2];
 } PuntiJordanConfig;
 
 static PuntiJordanConfig pj_config = {0};
 
 void punti_jordan_load_anim_values(uint32_t *dst, float *speed, SJson *obj);
+void punti_jordan_load_dash(SJson *obj);
 
 void punti_jordan_load(const char *filename)
 {
@@ -36,6 +38,8 @@ void punti_jordan_load(const char *filename)
     punti_jordan_load_anim_values(pj_config.slashUp, &pj_config.slashUpSpeed, sj_object_get_value(json, "slashUp"));
     punti_jordan_load_anim_values(pj_config.slashSide, &pj_config.slashSideSpeed, sj_object_get_value(json, "slashSide"));
 
+    punti_jordan_load_dash( sj_object_get_value(json, "dash") );
+
     sj_free(json);
 }
 
@@ -44,6 +48,12 @@ void punti_jordan_load_anim_values(uint32_t *dst, float *speed, SJson *obj)
     dst[0] = gf2d_json_uint32( sj_object_get_value(obj, "animation") );
     dst[1] = gf2d_json_uint32( sj_object_get_value(obj, "maxFrame") );
     sj_get_float_value( sj_object_get_value(obj, "playbackSpeed"), speed );
+}
+
+void punti_jordan_load_dash(SJson *obj)
+{
+    sj_get_float_value( sj_object_get_value(obj, "time"), &pj_config.dash[0] );
+    sj_get_float_value( sj_object_get_value(obj, "multiplier"), &pj_config.dash[1] );
 }
 
 uint32_t *pj_anim_idle()
@@ -104,4 +114,9 @@ uint32_t *pj_anim_slash_side()
 float pj_anim_slash_side_speed()
 {
     return pj_config.slashSideSpeed;
+}
+
+float *pj_dash()
+{
+    return pj_config.dash;
 }

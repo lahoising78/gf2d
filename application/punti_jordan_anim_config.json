@@ -33,5 +33,10 @@
         "animation":                    6,
         "maxFrame":                     8,
         "playbackSpeed":                0.8
+    },
+
+    "dash": {
+        "time":                         0.02,
+        "multiplier":                   5.0
     }
 }
