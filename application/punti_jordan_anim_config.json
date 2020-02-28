@@ -27,5 +27,11 @@
         "animation":                    5,
         "maxFrame":                     8,
         "playbackSpeed":                0.8
+    },
+
+    "slashSide": {
+        "animation":                    6,
+        "maxFrame":                     8,
+        "playbackSpeed":                0.8
     }
 }

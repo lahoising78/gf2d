@@ -18,8 +18,10 @@ typedef enum
     PS_IDLE =                   0,
     PS_WALKING =                1,
     PS_JUMPING =                2,
-    PS_ATTACK1 =                3,
-    PS_ATTACK2 =                4
+    PS_ATTACKING =              3
+    // PS_ATTACK1 =                3,
+    // PS_ATTACK2 =                4,
+    // PS_ATTACK3 =                5
 } PlayerState;
 
 typedef enum
@@ -42,6 +44,7 @@ float walkDir = 0.0f;
 uint8_t left, right;
 PlayerState currentState = PS_IDLE;
 PhysicsEntity *phys = NULL;
+// float lastAttack = -1.0f;
 uint8_t attacking = 0;
 uint8_t canCombo = 0;
 
@@ -54,6 +57,7 @@ void player_create(PhysicsEntity *self)
     phys = self;
 }
 
+extern float frameTime;
 void player_think(Entity *self)
 {
     uint32_t *anim = NULL;
@@ -65,11 +69,12 @@ void player_think(Entity *self)
     player_attacking();
     if(phys && !phys->_onFloor)
     {
+        attacking = 0;
         currentState = PS_JUMPING;
     }
     else if( attacking )
     {
-        currentState = PS_ATTACK1 + attacking - 1;
+        currentState = PS_ATTACKING;
     }
     else if(walkDir != 0.0f)
     {
@@ -111,40 +116,87 @@ void player_think(Entity *self)
         }
         break;
 
-    case PS_ATTACK1:
-        anim = pj_anim_slash_down();
-        animSpeed = pj_anim_slash_down_speed();
-        frame = gf2d_animation_get_frame(self->anim);
-        if( self->anim->animation != anim[0] )
+    case PS_ATTACKING:
+        /* first attack */
+        if( self->anim->animation == pj_anim_slash_down()[0] )
         {
-            gf2d_animation_play(self->anim, anim[0], anim[1]);
-            self->anim->playbackSpeed = animSpeed;
-            canCombo = 0;
-        }
-        else if ( frame == anim[1]-1 )
-        {
-            attacking = 0;
-            canCombo = 0;
-        }
-        else if ( frame >= anim[1]-4 )
-        {
-            canCombo = 1;
-        }
-        break;
+            anim = pj_anim_slash_down();
+            animSpeed = pj_anim_slash_down_speed();
+            frame = gf2d_animation_get_frame(self->anim);
 
-    case PS_ATTACK2:
-        anim = pj_anim_slash_up();
-        animSpeed = pj_anim_slash_up_speed();
-        canCombo = 0;
-        if( self->anim->animation != anim[0] )
+            if ( frame >= anim[1] - 1 )
+            {
+                if(attacking <= 1)
+                {
+                    attacking = 0;
+                }
+                else
+                {
+                    /* start second attack if you asked for it */
+                    anim = pj_anim_slash_up();
+                    animSpeed = pj_anim_slash_up_speed();
+                    gf2d_animation_play(self->anim, anim[0], anim[1]);
+                    self->anim->playbackSpeed = animSpeed;
+                    canCombo = 0;
+                }
+                canCombo = 0;
+            }
+            else if ( frame >= anim[1] - 5 )
+            {
+                canCombo = 1;
+            }
+        }
+        /* second attack */
+        else if( self->anim->animation == pj_anim_slash_up()[0] )
         {
+            anim = pj_anim_slash_up();
+            animSpeed = pj_anim_slash_up_speed();
+            frame = gf2d_animation_get_frame(self->anim);
+            if (frame == anim[1] - 1)
+            {
+                if( attacking <= 2 )
+                {
+                    attacking = 0;
+                }
+                else
+                {
+                    anim = pj_anim_slash_side();
+                    animSpeed = pj_anim_slash_side_speed();
+                    gf2d_animation_play(self->anim, anim[0], anim[1]);
+                    self->anim->playbackSpeed = animSpeed;
+                    canCombo = 0;
+                }
+                
+                canCombo = 0;
+            }
+            else if ( frame >= anim[1] - 5 )
+            {
+                canCombo = 1;
+            }
+        }
+        /* third attack */
+        else if ( self->anim->animation == pj_anim_slash_side()[0] )
+        {
+            anim = pj_anim_slash_side();
+            animSpeed = pj_anim_slash_side_speed();
+            frame = gf2d_animation_get_frame(self->anim);
+            if ( frame == anim[1] - 1 )
+            {
+                attacking = 0;
+                canCombo = 0;
+            }
+        }
+        /* in attack state but not playing any attacking animation */
+        else
+        {
+            slog("start slash down");
+            anim = pj_anim_slash_down();
+            animSpeed = pj_anim_slash_down_speed();
             gf2d_animation_play(self->anim, anim[0], anim[1]);
             self->anim->playbackSpeed = animSpeed;
+            canCombo = 0;
         }
-        else if ( gf2d_animation_get_frame(self->anim) == anim[1]-1 )
-        {
-            attacking = 0;
-        }
+
         break;
     
     default:
@@ -186,20 +238,20 @@ void player_walking()
 {
     float dir = 0.0f;
 
+    // if(lastAttack >= 0.0f) return;
     if(attacking) return;
 
     dir = gf2d_input_joystick_get_axis(0, 0);
     if( dir != 0.0f ) 
     {
         walkDir = dir;
-        phys->entity->anim->rend->flip.x = (int)walkDir + 1;
+        if(walkDir != 0.0f) phys->entity->anim->rend->flip.x = walkDir < 0.0f;
         return;
     }
 
     if( gf2d_input_key_just_pressed(SDL_SCANCODE_RIGHT) )
     {
         right = 1;
-        phys->entity->anim->rend->flip.x = 0;
     }
     else if ( gf2d_input_key_released(SDL_SCANCODE_RIGHT) )
         right = 0;
@@ -207,12 +259,12 @@ void player_walking()
     if ( gf2d_input_key_just_pressed(SDL_SCANCODE_LEFT) )
     {
         left = 1;
-        phys->entity->anim->rend->flip.x = 1;
     }
     else if ( gf2d_input_key_released(SDL_SCANCODE_LEFT) )
         left = 0;
 
     walkDir = (float)(right - left);
+    if(walkDir != 0.0f) phys->entity->anim->rend->flip.x = walkDir < 0.0f;
 }
 
 void player_jumping(Entity *self)
@@ -226,7 +278,10 @@ void player_attacking()
 {
     if( !gf2d_input_key_just_pressed(SDL_SCANCODE_Z) ) return;
     if( !phys->_onFloor ) return;
+    if( attacking >= 3 ) return;
         
-    if(!attacking || canCombo) attacking++;
+    if( (!attacking || canCombo) ) attacking++;
+    if(canCombo) canCombo = 0;
+    
     walkDir = 0.0f;
 }
