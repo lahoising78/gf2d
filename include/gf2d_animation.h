@@ -89,4 +89,6 @@ void gf2d_animation_pause( Animation *anim );
  */
 void gf2d_animation_set_frame( Animation *anim, uint32_t newFrame );
 
+uint32_t gf2d_animation_get_frame( Animation *anim );
+
 #endif

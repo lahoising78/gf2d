@@ -116,6 +116,10 @@ void player_think(Entity *self)
             gf2d_animation_play(self->anim, anim[0], anim[1]);
             self->anim->playbackSpeed = animSpeed;
         }
+        else if ( gf2d_animation_get_frame(self->anim) == anim[1]-1 )
+        {
+            attacking = 0;
+        }
         break;
     
     default:
@@ -192,6 +196,8 @@ void player_jumping(Entity *self)
 
 void player_attacking()
 {
-    if( gf2d_input_is_key_pressed(SDL_SCANCODE_Z) )
-        attacking = 1;
+    if( !gf2d_input_key_just_pressed(SDL_SCANCODE_Z) && !attacking ) return;
+        
+    attacking = 1;
+    walkDir = 0.0f;
 }

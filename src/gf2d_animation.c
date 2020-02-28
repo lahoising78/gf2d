@@ -204,3 +204,8 @@ void gf2d_animation_set_frame( Animation *anim, uint32_t newFrame )
     if(newFrame > anim->maxFrame)
         anim->rend->frame = newFrame;
 }
+
+uint32_t gf2d_animation_get_frame( Animation *anim )
+{
+    return (int)anim->rend->frame%anim->maxFrame;
+}

@@ -20,6 +20,6 @@
     "slashDown": {
         "animation":                    4,
         "maxFrame":                     8,
-        "playbackSpeed":                0.4
+        "playbackSpeed":                0.8
     }
 }
