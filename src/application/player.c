@@ -197,6 +197,7 @@ void player_jumping(Entity *self)
 void player_attacking()
 {
     if( !gf2d_input_key_just_pressed(SDL_SCANCODE_Z) && !attacking ) return;
+    if( !phys->_onFloor ) return;
         
     attacking = 1;
     walkDir = 0.0f;
