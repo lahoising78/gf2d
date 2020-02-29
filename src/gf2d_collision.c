@@ -50,8 +50,6 @@ uint8_t gf2d_collision_check( CollisionShape *a, CollisionShape *b, CollisionInf
     Vector2D aMax = {0};
     Vector2D bMax = {0};
     Vector2D min = {0};
-    Vector2D max = {0};
-    int i;
 
     if(!a || !b) return 0;
     if( a->shapeType == CST_NONE || b->shapeType == CST_NONE ) return 0;

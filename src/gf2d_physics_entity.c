@@ -370,8 +370,6 @@ void gf2d_physics_entity_collision_resolution(PhysicsEntity *e, CollisionInfo in
 {
     Vector2D dir = {0};
     Vector2D up = {0.0f, -1.0f};
-    float dot = 0.0f;
-    float mag = 0.0f;
     if(!e) return;
 
     // dot = vector2d_dot_product(info.normal, e->entity->velocity);
@@ -446,6 +444,7 @@ void gf2d_physics_entity_set_name(PhysicsEntity *ent, const char *name)
 {
     if(!ent || !name) return;
 
+    gf2d_trie_remove(&gf2d_physics_entity_manager.entity_trie, name);
     gfc_line_cpy(ent->name, name);
     gf2d_trie_insert(&gf2d_physics_entity_manager.entity_trie, name, ent);
 }
