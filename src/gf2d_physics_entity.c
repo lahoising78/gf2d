@@ -121,7 +121,11 @@ PhysicsEntity *gf2d_physics_entity_new(const char *name)
         if(name && gfc_line_cmp(name, "") != 0)
         {
             gfc_line_cpy(ent->name, name);
-            gf2d_trie_insert(&gf2d_physics_entity_manager.entity_trie, ent->name, ent);
+            if(!gf2d_trie_insert(&gf2d_physics_entity_manager.entity_trie, ent->name, ent))
+            {
+                gf2d_physics_entity_free(ent);
+                return NULL;
+            }
         }
         
         return ent;

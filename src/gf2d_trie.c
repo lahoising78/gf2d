@@ -61,6 +61,7 @@ void *gf2d_trie_remove(Trie *trie, const char *key)
     size_t len;
     
     if(!trie || !key) return 0;
+    if( key[0] == 0 ) return 0;
     
     cur = trie->root;
     len = strlen(key);

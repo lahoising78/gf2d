@@ -227,7 +227,7 @@ void gf2d_entity_set_name(Entity *self, const char *name)
 {
     if(!self || !name) return;
 
-    if( gfc_line_cmp(self->name, "") != 0 ) gf2d_trie_remove(&gf2d_entity_manager.entity_trie, self->name);
+    gf2d_trie_remove(&gf2d_entity_manager.entity_trie, self->name);
     gfc_line_cpy(self->name, name);
     gf2d_trie_insert(&gf2d_entity_manager.entity_trie, self->name, self);
 }

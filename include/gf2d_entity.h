@@ -17,7 +17,9 @@ typedef struct entity_s
     void (*update)      (struct entity_s *ent);
     void (*touch)       (struct entity_s *ent, struct entity_s *other);
 
-    uint8_t _inuse;
+    uint8_t             _inuse;
+    void                *abstraction;
+    void                *data;
 } Entity;
 
 /** 

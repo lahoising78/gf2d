@@ -15,6 +15,7 @@
 #include "gf2d_tilemap.h"
 #include "gf2d_font.h"
 #include "gf2d_ui.h"
+#include "gf2d_projectile.h"
 
 float frameTime = 0.0f;
 
@@ -59,6 +60,7 @@ int main(int argc, char * argv[])
     gf2d_scene_awake_list_start( gf2d_engine_config_get_scene_awake_max() );
     gf2d_font_start();
     gf2d_font_add("fonts/doodlefont.ttf", 32);
+    gf2d_projectile_manager_init(1024);
     gf2d_label_manager_init(32);
     gf2d_progress_bar_manager_init(32);
     gf2d_ui_manager_init(32 + 32);

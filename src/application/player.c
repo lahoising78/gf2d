@@ -3,6 +3,7 @@
 #include "gf2d_input.h"
 #include "gf2d_scene.h"
 #include "punti_jordan.h"
+#include "gf2d_projectile.h"
 #include "player.h"
 
 #define VELOCITY_CONST 3.0f
@@ -344,19 +345,25 @@ uint8_t player_special_neutral()
 void player_special_neutral_perform(Entity *self)
 {
     PhysicsEntity *proj = NULL;
+    Sprite *projSprite = NULL;
     float fwd = 0.0f;
     uint32_t *anim;
     float animSpeed = 0.0f;
     if(!self) return;
 
-    proj = gf2d_physics_entity_new(NULL);
-    vector2d_copy(proj->entity->position, self->position);
-    pj_spin_sword(&proj->entity->anim->rend->sprite, &anim, &animSpeed, &fwd);
+    
+    pj_spin_sword(&projSprite, &anim, &animSpeed, &fwd);
+    proj = gf2d_projectile_create(
+        self->position, 
+        vector2d(-((float)(self->anim->rend->flip.x * 2) - 1.0f), 0.0f),
+        fwd,
+        1000.0f,
+        self
+    );
+
+    proj->entity->anim->rend->sprite = projSprite;
     gf2d_animation_play(proj->entity->anim, anim[0], anim[1]);
     proj->entity->anim->playbackSpeed = animSpeed;
-    proj->entity->velocity.x = ((float)(self->anim->rend->flip.x * 2) - 1.0f) * -fwd;
-    proj->useGravity = 0;
-    proj->canCollide = 0;
-    proj->type = PET_KINETIC;
+    
     gf2d_scene_add_to_drawables(proj, DET_PHYS);
 }
