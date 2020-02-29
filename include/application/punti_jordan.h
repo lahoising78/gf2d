@@ -25,6 +25,6 @@ float pj_anim_slash_side_speed();
 
 float *pj_dash();
 
-void pj_spin_sword(Sprite **sprite, uint32_t **anim, float *animSpeed, float *fwd);
+void pj_spin_sword(Sprite **sprite, uint32_t **anim, float *animSpeed, float *fwd, float *distance);
 
 #endif

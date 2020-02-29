@@ -29,6 +29,7 @@ typedef struct
     uint32_t                spinSwordAnim[2];
     float                   spinSwordSpeed;
     float                   spinSwordFwd;
+    float                   spinSwordDistance;
 } PuntiJordanConfig;
 
 static PuntiJordanConfig pj_config = {0};
@@ -74,6 +75,7 @@ void punti_jordan_load_spin_sword( SJson *obj )
 {
     pj_config.spinSwordSprite = gf2d_json_sprite( sj_object_get_value(obj, "sprite") );
     sj_get_float_value( sj_object_get_value(obj, "fwd"), &pj_config.spinSwordFwd );
+    sj_get_float_value( sj_object_get_value(obj, "distance"), &pj_config.spinSwordDistance );
 }
 
 uint32_t *pj_anim_idle()
@@ -141,10 +143,11 @@ float *pj_dash()
     return pj_config.dash;
 }
 
-void pj_spin_sword(Sprite **sprite, uint32_t **anim, float *animSpeed, float *fwd)
+void pj_spin_sword(Sprite **sprite, uint32_t **anim, float *animSpeed, float *fwd, float *distance)
 {
     if(sprite) *sprite = pj_config.spinSwordSprite;
     if(anim) *anim = pj_config.spinSwordAnim;
     if(animSpeed) *animSpeed = pj_config.spinSwordSpeed;
     if(fwd) *fwd = pj_config.spinSwordFwd;
+    if(distance) *distance = pj_config.spinSwordDistance;
 }

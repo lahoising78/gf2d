@@ -349,15 +349,17 @@ void player_special_neutral_perform(Entity *self)
     float fwd = 0.0f;
     uint32_t *anim;
     float animSpeed = 0.0f;
+    float distance = 0.0f;
     if(!self) return;
 
     
-    pj_spin_sword(&projSprite, &anim, &animSpeed, &fwd);
+    pj_spin_sword(&projSprite, &anim, &animSpeed, &fwd, &distance);
+    
     proj = gf2d_projectile_create(
         self->position, 
         vector2d(-((float)(self->anim->rend->flip.x * 2) - 1.0f), 0.0f),
         fwd,
-        1000.0f,
+        distance,
         self
     );
 
