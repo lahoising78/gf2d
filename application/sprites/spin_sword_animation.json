@@ -1,0 +1,8 @@
+{
+    "sprite":                               "application/sprites/spin_sword.json",
+    "playing": {
+        "animation":                        0,
+        "maxFrame":                         3
+    },
+    "playbackSpeed":                        1.0
+}

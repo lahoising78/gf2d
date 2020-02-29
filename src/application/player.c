@@ -19,7 +19,8 @@ typedef enum
     PS_WALKING =                1,
     PS_JUMPING =                2,
     PS_ATTACKING =              3,
-    PS_DASH =                   4
+    PS_DASH =                   4,
+    PS_SPECIAL_NEUTRAL =        5
 } PlayerState;
 
 typedef enum
@@ -38,6 +39,9 @@ void player_walking();
 void player_jumping(Entity *self);
 void player_attacking();
 uint8_t player_dash();
+uint8_t player_special_neutral();
+
+void player_special_neutral_perform(Entity *self);
 
 float walkDir = 0.0f;
 uint8_t left, right;
@@ -89,6 +93,10 @@ void player_think(Entity *self)
     else if( attacking )
     {
         currentState = PS_ATTACKING;
+    }
+    else if ( player_special_neutral() )
+    {
+        currentState = PS_SPECIAL_NEUTRAL;
     }
     else if(walkDir != 0.0f)
     {
@@ -200,7 +208,7 @@ void player_think(Entity *self)
                 canCombo = 0;
             }
         }
-        /* in attack state but not playing any attacking animation */
+        /* in attack state but not playing any attacking animation, play the first anim */
         else
         {
             slog("start slash down");
@@ -220,6 +228,10 @@ void player_think(Entity *self)
             gf2d_animation_play(self->anim, anim[0], anim[1]);
             self->anim->playbackSpeed = 0.0f;
         }
+        break;
+
+    case PS_SPECIAL_NEUTRAL:
+        player_special_neutral_perform(self);
         break;
     
     default:
@@ -322,4 +334,29 @@ uint8_t player_dash()
     uint8_t mod = gf2d_input_key_just_pressed(SDL_SCANCODE_C) || gf2d_input_joystick_button_pressed(0, 0);
     uint8_t dir = right || left;
     return (mod && dir) || dash > 0.0f;
+}
+
+uint8_t player_special_neutral()
+{
+    return gf2d_input_key_just_pressed(SDL_SCANCODE_X);
+}
+
+void player_special_neutral_perform(Entity *self)
+{
+    PhysicsEntity *proj = NULL;
+    float fwd = 0.0f;
+    uint32_t *anim;
+    float animSpeed = 0.0f;
+    if(!self) return;
+
+    proj = gf2d_physics_entity_new(NULL);
+    vector2d_copy(proj->entity->position, self->position);
+    pj_spin_sword(&proj->entity->anim->rend->sprite, &anim, &animSpeed, &fwd);
+    gf2d_animation_play(proj->entity->anim, anim[0], anim[1]);
+    proj->entity->anim->playbackSpeed = animSpeed;
+    proj->entity->velocity.x = ((float)(self->anim->rend->flip.x * 2) - 1.0f) * -fwd;
+    proj->useGravity = 0;
+    proj->canCollide = 0;
+    proj->type = PET_KINETIC;
+    gf2d_scene_add_to_drawables(proj, DET_PHYS);
 }

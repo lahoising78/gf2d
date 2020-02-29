@@ -38,5 +38,13 @@
     "dash": {
         "time":                         0.02,
         "multiplier":                   5.0
+    },
+
+    "spinSword": {
+        "animation":                    0,
+        "maxFrame":                     3,
+        "playbackSpeed":                1.0,
+        "sprite":                       "application/sprites/spin_sword.json",
+        "fwd":                          5.0
     }
 }
