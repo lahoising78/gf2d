@@ -22,7 +22,8 @@ typedef enum
     PS_ATTACKING =              3,
     PS_DASH =                   4,
     PS_SPECIAL_NEUTRAL =        5,
-    PS_SPECIAL_DOWN =           6
+    PS_SPECIAL_DOWN =           6,
+    PS_SPECIAL_UP =             7
 } PlayerState;
 
 typedef enum
@@ -43,17 +44,20 @@ void player_attacking();
 uint8_t player_dash();
 uint8_t player_special_neutral();
 uint8_t player_special_down();
+uint8_t player_special_up();
 
 void player_special_neutral_perform(Entity *self);
 
 float walkDir = 0.0f;
 uint8_t left, right;
 uint8_t down = 0;
+uint8_t up = 0;
 PlayerState currentState = PS_IDLE;
 PhysicsEntity *phys = NULL;
 uint8_t attacking = 0;
 uint8_t canCombo = 0;
 float dash = 0.0f;
+uint8_t capSpUp = 0;
 
 void player_create(PhysicsEntity *self)
 {
@@ -103,6 +107,11 @@ void player_think(Entity *self)
             phys->useGravity = 1;
         }
     }
+    else if( player_special_up() )
+    {
+        currentState = PS_SPECIAL_UP;
+        capSpUp = 1;
+    }
     else if(phys && !phys->_onFloor)
     {
         attacking = 0;
@@ -128,6 +137,9 @@ void player_think(Entity *self)
     {
         currentState = PS_IDLE;
     }
+
+    if( phys->_onFloor )
+        capSpUp = 0;
 
     switch (currentState)
     {
@@ -274,6 +286,23 @@ void player_think(Entity *self)
             currentState = PS_SPECIAL_DOWN;
         }
         break;
+
+    case PS_SPECIAL_UP:
+        anim = pj_anim_recover();
+        frame = gf2d_animation_get_frame(self->anim);
+        if( player_play_anim(self->anim, anim, pj_anim_recover_speed()) )
+        {
+            currentState = PS_SPECIAL_UP;
+        }
+        else if ( frame >= anim[1] - 1 ) 
+        {
+            currentState = PS_IDLE;
+        }
+        else if ( frame >= anim[1] - 4 )
+        {
+            self->velocity.y = -15.0f;
+        }
+        break;
     
     default:
         if( self->anim->animation != ANIM_IDLE )
@@ -297,7 +326,7 @@ void player_update(Entity *self)
     if( dash > 0.0f ) self->velocity.x *= pj_dash()[1];
 
     /* jump */
-    if(phys->_onFloor && gf2d_input_key_just_pressed(SDL_SCANCODE_UP) ) 
+    if(phys->_onFloor && gf2d_input_key_just_pressed(SDL_SCANCODE_A) ) 
         player_jumping(self);
 
     /* make camera follow player */
@@ -377,6 +406,7 @@ uint8_t player_dash()
     return (mod && dir) || dash > 0.0f;
 }
 
+/* ==================SPECIAL NEUTRAL============== */
 uint8_t player_special_neutral()
 {
     return gf2d_input_key_just_pressed(SDL_SCANCODE_X) || currentState == PS_SPECIAL_NEUTRAL;
@@ -409,6 +439,7 @@ void player_special_neutral_perform(Entity *self)
     gf2d_scene_add_to_drawables(proj, DET_PHYS);
 }
 
+/* ======================SPECIAL DOWN============== */
 uint8_t player_special_down()
 {
     if( gf2d_input_key_just_pressed(SDL_SCANCODE_DOWN) )
@@ -420,6 +451,21 @@ uint8_t player_special_down()
         down = 0;
     }
     uint32_t btn = gf2d_input_key_just_pressed(SDL_SCANCODE_X) || currentState == PS_SPECIAL_DOWN;
-    slog("down %u btn %u state %u", down, btn, currentState == PS_SPECIAL_DOWN);
     return down && btn;
+}
+
+/* =======================SPECIAL UP=================== */
+uint8_t player_special_up()
+{
+    if( gf2d_input_key_just_pressed(SDL_SCANCODE_UP) )
+    {
+        up = 1;
+    }
+    else if (gf2d_input_key_released(SDL_SCANCODE_UP))
+    {
+        up = 0;
+    }
+    uint8_t btn = gf2d_input_key_just_pressed(SDL_SCANCODE_X) && !capSpUp; 
+    btn = btn || currentState == PS_SPECIAL_UP;
+    return up && btn;
 }

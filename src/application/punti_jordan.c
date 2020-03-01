@@ -36,6 +36,9 @@ typedef struct
 
     uint32_t                tornado[2];
     float                   tornadoSpeed;
+    
+    uint32_t                recover[2];
+    float                   recoverSpeed;
 } PuntiJordanConfig;
 
 static PuntiJordanConfig pj_config = {0};
@@ -59,6 +62,7 @@ void punti_jordan_load(const char *filename)
     punti_jordan_load_anim_values(pj_config.spinSwordAnim, &pj_config.spinSwordSpeed, sj_object_get_value(json, "spinSword"));
     punti_jordan_load_anim_values(pj_config.swordThrow, &pj_config.swordThrowSpeed, sj_object_get_value(json, "swordThrow"));
     punti_jordan_load_anim_values(pj_config.tornado, &pj_config.tornadoSpeed, sj_object_get_value(json, "tornado"));
+    punti_jordan_load_anim_values(pj_config.recover, &pj_config.recoverSpeed, sj_object_get_value(json, "recover"));
 
     punti_jordan_load_dash( sj_object_get_value(json, "dash") );
     punti_jordan_load_spin_sword( sj_object_get_value(json, "spinSword") );
@@ -178,4 +182,14 @@ uint32_t *pj_anim_tornado()
 float pj_anim_tornado_speed()
 {
     return pj_config.tornadoSpeed;
+}
+
+uint32_t *pj_anim_recover()
+{
+    return pj_config.recover;
+}
+
+float pj_anim_recover_speed()
+{
+    return pj_config.recoverSpeed;
 }

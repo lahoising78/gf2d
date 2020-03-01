@@ -59,5 +59,11 @@
         "animation":                    8,
         "maxFrame":                     4,
         "playbackSpeed":                1.5
+    },
+
+    "recover": {
+        "animation":                    9,
+        "maxFrame":                     8,
+        "playbackSpeed":                0.8
     }
 }

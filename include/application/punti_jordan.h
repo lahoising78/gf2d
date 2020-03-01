@@ -32,4 +32,7 @@ void pj_spin_sword(Sprite **sprite, uint32_t **anim, float *animSpeed, float *fw
 uint32_t *pj_anim_tornado();
 float pj_anim_tornado_speed();
 
+uint32_t *pj_anim_recover();
+float pj_anim_recover_speed();
+
 #endif
