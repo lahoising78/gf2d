@@ -189,7 +189,7 @@ void gf2d_scene_render()
     for(i = 0; i < gf2d_scene.drawable_entities_count; i++)
     {
         ent = &gf2d_scene.drawable_entities[i];
-        if(!ent->_inuse) continue;
+        if(!ent->_inuse || !ent->drawable.ent) continue;
         
         switch (ent->_type)
         {
@@ -304,13 +304,13 @@ void gf2d_scene_remove_from_drawables( void *e )
         if(d->drawable.ent == e)
         {
             gf2d_scene.drawable_entities_count--;
-            if( i == (int)gf2d_scene.drawable_entities_count-1 || i == 0 )
+            if( i == (int)(gf2d_scene.drawable_entities_count) || i == 0 )
             {
                 memset( d, 0, sizeof(DrawableEntity) );
                 return;
             }
 
-            memmove( d, d+1, sizeof(DrawableEntityType)*(gf2d_scene.drawable_entities_count - i) );
+            memmove( d, d+1, sizeof(DrawableEntity)*(gf2d_scene.drawable_entities_count - i) );
             return;
         }
     }

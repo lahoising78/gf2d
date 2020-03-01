@@ -25,6 +25,9 @@ typedef struct
     
     float                   dash[2];
 
+    uint32_t                swordThrow[2];
+    float                   swordThrowSpeed;
+
     Sprite                  *spinSwordSprite;
     uint32_t                spinSwordAnim[2];
     float                   spinSwordSpeed;
@@ -51,6 +54,7 @@ void punti_jordan_load(const char *filename)
     punti_jordan_load_anim_values(pj_config.slashUp, &pj_config.slashUpSpeed, sj_object_get_value(json, "slashUp"));
     punti_jordan_load_anim_values(pj_config.slashSide, &pj_config.slashSideSpeed, sj_object_get_value(json, "slashSide"));
     punti_jordan_load_anim_values(pj_config.spinSwordAnim, &pj_config.spinSwordSpeed, sj_object_get_value(json, "spinSword"));
+    punti_jordan_load_anim_values(pj_config.swordThrow, &pj_config.swordThrowSpeed, sj_object_get_value(json, "swordThrow"));
 
     punti_jordan_load_dash( sj_object_get_value(json, "dash") );
     punti_jordan_load_spin_sword( sj_object_get_value(json, "spinSword") );
@@ -141,6 +145,16 @@ float pj_anim_slash_side_speed()
 float *pj_dash()
 {
     return pj_config.dash;
+}
+
+uint32_t *pj_anim_sword_throw()
+{
+    return pj_config.swordThrow;
+}
+
+float pj_anim_sword_throw_speed()
+{
+    return pj_config.swordThrowSpeed;
 }
 
 void pj_spin_sword(Sprite **sprite, uint32_t **anim, float *animSpeed, float *fwd, float *distance)

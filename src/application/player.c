@@ -232,7 +232,19 @@ void player_think(Entity *self)
         break;
 
     case PS_SPECIAL_NEUTRAL:
-        player_special_neutral_perform(self);
+        anim = pj_anim_sword_throw();
+        animSpeed = pj_anim_sword_throw_speed();
+        frame = gf2d_animation_get_frame(self->anim);
+        if( self->anim->animation != anim[0] )
+        {
+            gf2d_animation_play(self->anim, anim[0], anim[1]);
+            self->anim->playbackSpeed = animSpeed;
+        }
+        else if ( frame >= anim[1] - 1 )
+        {
+            player_special_neutral_perform(self);
+            currentState = PS_IDLE;
+        }
         break;
     
     default:
@@ -339,7 +351,7 @@ uint8_t player_dash()
 
 uint8_t player_special_neutral()
 {
-    return gf2d_input_key_just_pressed(SDL_SCANCODE_X);
+    return gf2d_input_key_just_pressed(SDL_SCANCODE_X) || currentState == PS_SPECIAL_NEUTRAL;
 }
 
 void player_special_neutral_perform(Entity *self)
@@ -351,7 +363,6 @@ void player_special_neutral_perform(Entity *self)
     float animSpeed = 0.0f;
     float distance = 0.0f;
     if(!self) return;
-
     
     pj_spin_sword(&projSprite, &anim, &animSpeed, &fwd, &distance);
     

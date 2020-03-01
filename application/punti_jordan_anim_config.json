@@ -40,6 +40,12 @@
         "multiplier":                   5.0
     },
 
+    "swordThrow": {
+        "animation":                    7,
+        "maxFrame":                     4,
+        "playbackSpeed":                0.8
+    },
+
     "spinSword": {
         "animation":                    0,
         "maxFrame":                     3,
