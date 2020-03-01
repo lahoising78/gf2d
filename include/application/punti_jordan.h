@@ -29,4 +29,7 @@ uint32_t *pj_anim_sword_throw();
 float pj_anim_sword_throw_speed();
 void pj_spin_sword(Sprite **sprite, uint32_t **anim, float *animSpeed, float *fwd, float *distance);
 
+uint32_t *pj_anim_tornado();
+float pj_anim_tornado_speed();
+
 #endif

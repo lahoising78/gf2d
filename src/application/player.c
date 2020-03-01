@@ -21,7 +21,8 @@ typedef enum
     PS_JUMPING =                2,
     PS_ATTACKING =              3,
     PS_DASH =                   4,
-    PS_SPECIAL_NEUTRAL =        5
+    PS_SPECIAL_NEUTRAL =        5,
+    PS_SPECIAL_DOWN =           6
 } PlayerState;
 
 typedef enum
@@ -41,11 +42,13 @@ void player_jumping(Entity *self);
 void player_attacking();
 uint8_t player_dash();
 uint8_t player_special_neutral();
+uint8_t player_special_down();
 
 void player_special_neutral_perform(Entity *self);
 
 float walkDir = 0.0f;
 uint8_t left, right;
+uint8_t down = 0;
 PlayerState currentState = PS_IDLE;
 PhysicsEntity *phys = NULL;
 uint8_t attacking = 0;
@@ -59,6 +62,20 @@ void player_create(PhysicsEntity *self)
     self->entity->think = player_think;
     self->entity->update = player_update;
     phys = self;
+}
+
+uint8_t player_play_anim(Animation *anim, uint32_t *params, float speed)
+{
+    if(!anim || !params) return 0;
+
+    if( anim->animation != params[0] )
+    {
+        gf2d_animation_play(anim, params[0], params[1]);
+        anim->playbackSpeed = speed;
+        return 1;
+    }
+
+    return 0;
 }
 
 extern float frameTime;
@@ -94,6 +111,10 @@ void player_think(Entity *self)
     else if( attacking )
     {
         currentState = PS_ATTACKING;
+    }
+    else if ( player_special_down() )
+    {
+        currentState = PS_SPECIAL_DOWN;
     }
     else if ( player_special_neutral() )
     {
@@ -246,6 +267,13 @@ void player_think(Entity *self)
             currentState = PS_IDLE;
         }
         break;
+
+    case PS_SPECIAL_DOWN:
+        if( player_play_anim(self->anim, pj_anim_tornado(), pj_anim_tornado_speed()) )
+        {
+            currentState = PS_SPECIAL_DOWN;
+        }
+        break;
     
     default:
         if( self->anim->animation != ANIM_IDLE )
@@ -379,4 +407,19 @@ void player_special_neutral_perform(Entity *self)
     proj->entity->anim->playbackSpeed = animSpeed;
     
     gf2d_scene_add_to_drawables(proj, DET_PHYS);
+}
+
+uint8_t player_special_down()
+{
+    if( gf2d_input_key_just_pressed(SDL_SCANCODE_DOWN) )
+    {
+        down = 1;
+    }
+    else if (gf2d_input_key_released(SDL_SCANCODE_DOWN))
+    {
+        down = 0;
+    }
+    uint32_t btn = gf2d_input_key_just_pressed(SDL_SCANCODE_X) || currentState == PS_SPECIAL_DOWN;
+    slog("down %u btn %u state %u", down, btn, currentState == PS_SPECIAL_DOWN);
+    return down && btn;
 }
