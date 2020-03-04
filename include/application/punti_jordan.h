@@ -35,4 +35,7 @@ float pj_anim_tornado_speed();
 uint32_t *pj_anim_recover();
 float pj_anim_recover_speed();
 
+uint32_t *pj_anim_down_attack();
+float pj_anim_down_attack_speed();
+
 #endif

@@ -23,7 +23,8 @@ typedef enum
     PS_DASH =                   4,
     PS_SPECIAL_NEUTRAL =        5,
     PS_SPECIAL_DOWN =           6,
-    PS_SPECIAL_UP =             7
+    PS_SPECIAL_UP =             7,
+    PS_DOWN_ATTACK =            8
 } PlayerState;
 
 typedef enum
@@ -45,6 +46,7 @@ uint8_t player_dash();
 uint8_t player_special_neutral();
 uint8_t player_special_down();
 uint8_t player_special_up();
+uint8_t player_down_attack();
 
 void player_special_neutral_perform(Entity *self);
 
@@ -90,9 +92,22 @@ void player_think(Entity *self)
     uint32_t frame = 0;
     if(!self) return;
 
+    if( gf2d_input_key_just_pressed(SDL_SCANCODE_DOWN) )
+    {
+        down = 1;
+    }
+    else if (gf2d_input_key_released(SDL_SCANCODE_DOWN))
+    {
+        down = 0;
+    }
+
     player_walking();
     player_attacking();
-    if(player_dash())
+    if( player_down_attack() )
+    {
+        currentState = PS_DOWN_ATTACK;
+    }
+    else if(player_dash())
     {
         if(dash < pj_dash()[0])
         {
@@ -303,6 +318,18 @@ void player_think(Entity *self)
             self->velocity.y = -15.0f;
         }
         break;
+
+    case PS_DOWN_ATTACK:
+        frame = gf2d_animation_get_frame(self->anim);
+        if( player_play_anim(self->anim, pj_anim_down_attack(), pj_anim_down_attack_speed()) )
+        {
+            self->velocity.y = -4.0f;
+        }
+        else if ( frame >= self->anim->maxFrame - 1 )
+        {
+            gf2d_animation_pause(self->anim);
+        }
+        break;
     
     default:
         if( self->anim->animation != ANIM_IDLE )
@@ -442,14 +469,6 @@ void player_special_neutral_perform(Entity *self)
 /* ======================SPECIAL DOWN============== */
 uint8_t player_special_down()
 {
-    if( gf2d_input_key_just_pressed(SDL_SCANCODE_DOWN) )
-    {
-        down = 1;
-    }
-    else if (gf2d_input_key_released(SDL_SCANCODE_DOWN))
-    {
-        down = 0;
-    }
     uint32_t btn = gf2d_input_key_just_pressed(SDL_SCANCODE_X) || currentState == PS_SPECIAL_DOWN;
     return down && btn;
 }
@@ -468,4 +487,11 @@ uint8_t player_special_up()
     uint8_t btn = gf2d_input_key_just_pressed(SDL_SCANCODE_X) && !capSpUp; 
     btn = btn || currentState == PS_SPECIAL_UP;
     return up && btn;
+}
+
+uint8_t player_down_attack()
+{
+    uint8_t btn = gf2d_input_key_just_pressed(SDL_SCANCODE_Z);
+    btn = btn || currentState == PS_DOWN_ATTACK;
+    return down && btn && !phys->_onFloor;
 }

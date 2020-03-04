@@ -65,5 +65,11 @@
         "animation":                    9,
         "maxFrame":                     8,
         "playbackSpeed":                0.8
+    },
+
+    "downAttack": {
+        "animation":                    10,
+        "maxFrame":                     5,
+        "playbackSpeed":                0.8
     }
 }
