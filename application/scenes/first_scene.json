@@ -28,6 +28,10 @@
                 "type":                     "PET_KINETIC",
                 "canCollide":               1
             }
+        },
+        {
+            "type":                         "DET_PHYS",
+            "drawable":                     "application/entities/sentry_phys.json"
         }
     ]
 }

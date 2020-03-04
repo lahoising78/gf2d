@@ -22,5 +22,5 @@ void smh_awake()
         CST_BOX
     );
     transition->entity->touch = load_next_level;
-    transition->entity->position = vector2d(360.0f, 128.0f);
+    transition->entity->position = vector2d(1280.0f, 128.0f);
 }
