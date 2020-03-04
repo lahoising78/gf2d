@@ -492,6 +492,7 @@ uint8_t player_special_up()
 uint8_t player_down_attack()
 {
     uint8_t btn = gf2d_input_key_just_pressed(SDL_SCANCODE_Z);
+    btn = btn && down;
     btn = btn || currentState == PS_DOWN_ATTACK;
-    return down && btn && !phys->_onFloor;
+    return  btn && !phys->_onFloor;
 }
