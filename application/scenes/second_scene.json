@@ -1,0 +1,10 @@
+{
+    "drawablesCount":                       128,
+    "awakeIndex":                           1,
+    "drawables": [
+        {
+            "type":                         "DET_TMAP",
+            "drawable":                     "application/scenes/second_scene_tilemap.json"
+        }
+    ]
+}

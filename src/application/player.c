@@ -489,6 +489,7 @@ uint8_t player_special_up()
     return up && btn;
 }
 
+/* ====================DOWN AIR ATTACK================ */
 uint8_t player_down_attack()
 {
     uint8_t btn = gf2d_input_key_just_pressed(SDL_SCANCODE_Z);
