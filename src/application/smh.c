@@ -3,7 +3,7 @@
 
 #include "gf2d_scene.h"
 #include "player.h"
-#include "punti_jordan.h"
+#include "sentry.h"
 
 void load_next_level(Entity *self, Entity *other)
 {
@@ -12,15 +12,13 @@ void load_next_level(Entity *self, Entity *other)
 
 void smh_awake()
 {
-    PhysicsEntity *transition = NULL;
+    PhysicsEntity *s = NULL;
+    int i;
     player_create( gf2d_physics_entity_get_by_name("punti") );
 
-    transition = gf2d_physics_entity_new(NULL);
-    transition->modelBox = gf2d_collision_shape(
-        vector2d(0.0f, 0.0f),
-        vector2d(64.0f, 64.0f),
-        CST_BOX
-    );
-    transition->entity->touch = load_next_level;
-    transition->entity->position = vector2d(1280.0f, 128.0f);
+    for(i = 0; i < 10; i++)
+    {
+        s = sentry_new();
+        gf2d_scene_add_to_drawables(s, DET_PHYS);
+    }
 }

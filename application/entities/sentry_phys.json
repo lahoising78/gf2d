@@ -1,8 +1,8 @@
 {
     "entity":                           "application/entities/sentry.json",
     "modelBox": {
-        "position":                     [0.0, 2.0],
-        "dimensions":                   [64.0, 62.0],
+        "position":                     [0.0, 24.0],
+        "dimensions":                   [64.0, 40.0],
         "shapeType":                    "CST_BOX"
     },
     "type":                             "PET_STATIC",
