@@ -3,6 +3,7 @@
 
 #include "gf2d_physics_entity.h"
 
+void sentry_load_config(const char *filename);
 PhysicsEntity *sentry_new();
 void sentry_init(PhysicsEntity *ent);
 

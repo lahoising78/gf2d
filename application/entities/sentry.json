@@ -1,5 +1,4 @@
 {
     "animation":                            "application/sprites/sentry_anim.json",
-    "position":                             [0.0, 0.0],
     "velocity":                             [0.0, 0.0]
 }

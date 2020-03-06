@@ -32,7 +32,7 @@
         {
             "type":                         "DET_PHYS",
             "drawable":                     "empty",
-            "position":                     [192.0, 0.0],
+            "position":                     [300.0, 0.0],
             "name":                         "sentry0"
         }
     ]
