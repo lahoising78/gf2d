@@ -16,7 +16,7 @@ void gf2d_main()
     game_object_manager_init(1024);
     gf2d_scene_submit_awake(smh_awake);
     gf2d_scene_submit_awake(two_awake);
-    punti_jordan_load("application/punti_jordan_anim_config.json");
-    sentry_load_config("application/sentry_config.json");
+    // punti_jordan_load("application/punti_jordan_anim_config.json");
+    // sentry_load_config("application/sentry_config.json");
     gf2d_scene_load_from_file("application/scenes/first_scene.json");
 }

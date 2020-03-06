@@ -26,6 +26,7 @@ typedef struct
     float projSpeed;
     float projCooldown;
     float projDistance;
+    Vector2D projOffset;
 } SentryJson;
 
 static SentryJson config = {0};
@@ -59,6 +60,7 @@ void sentry_load_config(const char *filename)
         sj_get_float_value( sj_object_get_value(obj, "speed"), &config.projSpeed );
         sj_get_float_value( sj_object_get_value(obj, "coolDown"), &config.projCooldown );
         sj_get_float_value( sj_object_get_value(obj, "distance"), &config.projDistance );
+        config.projOffset = gf2d_json_vector2d( sj_object_get_value(obj, "offset") );
     }
 
     sj_free(json);
@@ -107,6 +109,7 @@ void sentry_update(Entity *self)
     if(!self || !self->abstraction) return;
 
     obj = (GameObject*)self->abstraction;
+    self->anim->rend->flip.x = player->entity->position.x - self->position.x <= 0.0f;
     
     if(obj->coolDown <= 0.0f)
     {
@@ -127,6 +130,7 @@ void sentry_touch(Entity *self, Entity *other)
 void sentry_shoot(Entity *self)
 {
     GameObject *obj = NULL;
+    Vector2D start = {0};
     Vector2D dir = {0};
     PhysicsEntity *proj = NULL;
 
@@ -134,8 +138,14 @@ void sentry_shoot(Entity *self)
 
     if(player)
         vector2d_sub(dir, player->entity->position, self->position);
+    start.y = self->position.y + config.projOffset.y;
+    start.x = self->position.x;
+    if( self->anim->rend->flip.x )
+        start.x -= config.projOffset.x / 2.0f;
+    else
+        start.x += config.projOffset.x;
     proj = gf2d_projectile_create(
-        self->position,
+        start,
         dir,
         config.projSpeed,
         config.projDistance,

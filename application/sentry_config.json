@@ -6,6 +6,7 @@
         },
         "speed":                    10.0,
         "coolDown":                 0.1,
-        "distance":                 750.0
+        "distance":                 750.0,
+        "offset":                   [50.0, 20.0]
     }
 }
