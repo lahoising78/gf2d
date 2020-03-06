@@ -31,7 +31,9 @@
         },
         {
             "type":                         "DET_PHYS",
-            "drawable":                     "application/entities/sentry_phys.json"
+            "drawable":                     "empty",
+            "position":                     [192.0, 0.0],
+            "name":                         "sentry0"
         }
     ]
 }

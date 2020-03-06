@@ -12,6 +12,9 @@ typedef struct
 } GameObject;
 
 void game_object_manager_init(uint32_t count);
+void game_object_manager_clean();
+
 GameObject *game_object_new();
+void game_object_free(GameObject *obj);
 
 #endif

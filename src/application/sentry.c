@@ -1,4 +1,5 @@
 #include "simple_logger.h"
+#include "game_object.h"
 #include "sentry.h"
 
 extern float frameTime;
@@ -20,20 +21,30 @@ PhysicsEntity *sentry_new()
 
 void sentry_init(PhysicsEntity *phys)
 {
+    GameObject *obj = NULL;
     if(!phys || !phys->entity) return;
-    coolDown = gfc_random() * 5.0f;
-    slog("cool down to %.2f", coolDown);
 
     phys->entity->update = sentry_update;
     phys->entity->touch = sentry_touch;
+    obj = game_object_new();
+    if(!obj)
+    {
+        slog("unable to allocate game obj for sentry");
+        gf2d_physics_entity_free(phys);
+        return;
+    }
+
+    obj->coolDown = gfc_random() * 5.0f;
+    phys->entity->abstraction = obj;
+    slog("cool down %.2f", obj->coolDown);
 }
 
 void sentry_update(Entity *self)
 {
-    if(!self) return;
+    GameObject *obj = NULL;
+    if(!self || !self->abstraction) return;
 
-    // if(self->name)
-        // slog("%s has cool down of %.2f", self->name, coolDown);
+    obj = (GameObject*)self->abstraction;
 }
 
 void sentry_touch(Entity *self, Entity *other)

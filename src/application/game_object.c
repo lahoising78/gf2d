@@ -9,6 +9,8 @@ typedef struct
 
 static GameObjectManager manager = {0};
 
+void game_object_manager_close();
+
 void game_object_manager_init(uint32_t count)
 {
     if(manager.list) return;
@@ -22,6 +24,21 @@ void game_object_manager_init(uint32_t count)
     manager.count = count;
 
     slog("init game object manager with %u objects", count);
+
+    atexit(game_object_manager_close);
+}
+
+void game_object_manager_clean()
+{
+    slog("cleaning object manager");
+    if(manager.list) memset(manager.list, 0, sizeof(GameObject) * manager.count);
+}
+
+void game_object_manager_close()
+{
+    game_object_manager_clean();
+    slog("closing object manager");
+    if(manager.list) free(manager.list);
 }
 
 GameObject *game_object_new()
@@ -40,4 +57,11 @@ GameObject *game_object_new()
     }
 
     return NULL;
+}
+
+void game_object_free(GameObject *obj)
+{
+    if(!obj) return;
+
+    memset(obj, 0, sizeof(GameObject));
 }

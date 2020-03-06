@@ -72,37 +72,57 @@ DrawableEntityType gf2d_scene_drawable_entity_type_from_string(const char *str)
 void gf2d_scene_load_from_json(SJson *arr)
 {
     SJson *obj = NULL;
+    SJson *data = NULL;
     uint32_t drawablesCount = 0;
     DrawableEntityType type = DET_NONE;
-    int i;
+    DrawableEntity *de = NULL;
+    int i, x;
 
     drawablesCount = sj_array_get_count(arr);
     for(i = 0; i < drawablesCount; i++)
     {
         obj = sj_array_get_nth(arr, i);
-        if( !sj_object_get_value(obj, "type") ) continue;
-        type = gf2d_scene_drawable_entity_type_from_string( sj_get_string_value( sj_object_get_value(obj, "type") ) );
+        data = sj_object_get_value(obj, "type");
+        if( !data ) continue;
+        type = gf2d_scene_drawable_entity_type_from_string( sj_get_string_value( data ) );
 
         switch (type)
         {
         case DET_REND:
-            gf2d_scene_add_to_drawables( gf2d_render_ent_load( sj_object_get_value(obj, "drawable") ), type );
+            x = gf2d_scene_add_to_drawables( gf2d_render_ent_load( sj_object_get_value(obj, "drawable") ), type );
             break;
 
         case DET_ANIM:
-            gf2d_scene_add_to_drawables( gf2d_animation_load( sj_object_get_value(obj, "drawable") ), type );
+            x = gf2d_scene_add_to_drawables( gf2d_animation_load( sj_object_get_value(obj, "drawable") ), type );
             break;
 
         case DET_ENT:
-            gf2d_scene_add_to_drawables( gf2d_entity_load( sj_object_get_value(obj, "drawable") ), type );
+            x = gf2d_scene_add_to_drawables( gf2d_entity_load( sj_object_get_value(obj, "drawable") ), type );
             break;
 
         case DET_PHYS:
-            gf2d_scene_add_to_drawables( gf2d_physics_entity_load( sj_object_get_value(obj, "drawable") ), type );
+            data = sj_object_get_value(obj, "drawable");
+            if( sj_is_string(data) && strcmp(sj_get_string_value(data), "empty") == 0 )
+            {
+                x = gf2d_scene_add_to_drawables( gf2d_physics_entity_new(NULL), type );
+            }
+            else
+            {
+                x = gf2d_scene_add_to_drawables( gf2d_physics_entity_load( sj_object_get_value(obj, "drawable") ), type );
+            }
+            if( x >= 0 )
+            {
+                data = sj_object_get_value(obj, "position");
+                if(data)
+                {
+                    de = &gf2d_scene.drawable_entities[x];
+                    de->drawable.phys->entity->position = gf2d_json_vector2d(data);
+                }
+            }
             break;
 
         case DET_TMAP:
-            gf2d_scene_add_to_drawables( gf2d_tilemap_load( sj_object_get_value(obj, "drawable") ), type );
+            x = gf2d_scene_add_to_drawables( gf2d_tilemap_load( sj_object_get_value(obj, "drawable") ), type );
             break;
         
         default:
