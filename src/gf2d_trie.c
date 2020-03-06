@@ -6,7 +6,7 @@ void gf2d_trie_node_free(TrieNode *node);
 
 int gf2d_trie_get_index(char c)
 {
-    return tolower(c) - 'a';
+    return tolower(c) - ' ';
 }
 
 Trie gf2d_trie_new()
@@ -44,7 +44,7 @@ uint8_t gf2d_trie_insert(Trie *trie, const char *key, void *val)
         cur = cur->children[c];
     }
 
-    if( cur->leaf ) 
+    if( cur && cur->leaf ) 
     {
         slog("Cannot insert in key %s. It is already in use", key);
         return 0;

@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-#define GF2D_LETTERS_IN_ALPHABET 27
+#define GF2D_LETTERS_IN_ALPHABET 128-32
 
 typedef struct trie_node_s
 {

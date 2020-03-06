@@ -108,16 +108,15 @@ void gf2d_scene_load_from_json(SJson *arr)
             }
             else
             {
-                x = gf2d_scene_add_to_drawables( gf2d_physics_entity_load( sj_object_get_value(obj, "drawable") ), type );
+                x = gf2d_scene_add_to_drawables( gf2d_physics_entity_load( data ), type );
             }
             if( x >= 0 )
             {
+                de = &gf2d_scene.drawable_entities[x];
                 data = sj_object_get_value(obj, "position");
-                if(data)
-                {
-                    de = &gf2d_scene.drawable_entities[x];
-                    de->drawable.phys->entity->position = gf2d_json_vector2d(data);
-                }
+                if(data) de->drawable.phys->entity->position = gf2d_json_vector2d( data );
+                data = sj_object_get_value(obj, "name");
+                if(data) gf2d_physics_entity_set_name(de->drawable.phys, sj_get_string_value(data));
             }
             break;
 

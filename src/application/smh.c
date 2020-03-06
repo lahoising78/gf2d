@@ -13,12 +13,14 @@ void load_next_level(Entity *self, Entity *other)
 void smh_awake()
 {
     PhysicsEntity *s = NULL;
+    char name[128];
     int i;
     player_create( gf2d_physics_entity_get_by_name("punti") );
 
-    for(i = 0; i < 10; i++)
+    for(i = 0; i < 1; i++)
     {
-        s = sentry_new();
-        gf2d_scene_add_to_drawables(s, DET_PHYS);
+        snprintf(name, GFCLINELEN, "sentry%d", i);
+        s = gf2d_physics_entity_get_by_name(name);
+        sentry_init(s);
     }
 }
