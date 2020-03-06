@@ -1,5 +1,7 @@
 #include "simple_logger.h"
 #include "game_object.h"
+#include "gf2d_projectile.h"
+#include "gf2d_scene.h"
 #include "sentry.h"
 
 extern float frameTime;
@@ -18,6 +20,7 @@ typedef struct
 } SentryJson;
 
 static SentryJson config = {0};
+static PhysicsEntity *player = NULL;
 
 void sentry_load_config(const char *filename)
 {
@@ -63,7 +66,7 @@ void sentry_init(PhysicsEntity *phys)
         return;
     }
 
-    obj->coolDown = gfc_random() * 5.0f;
+    obj->coolDown = gfc_random() * 0.50f;
     phys->entity->abstraction = obj;
     slog("cool down %.2f", obj->coolDown);
 
@@ -71,14 +74,39 @@ void sentry_init(PhysicsEntity *phys)
     phys->modelBox = config.shape;
     phys->entity->anim->rend->sprite = config.sprite;
     phys->type = config.physType;
+
+    player = gf2d_physics_entity_get_by_name("punti");
 }
 
 void sentry_update(Entity *self)
 {
+    Vector2D dir = {0};
     GameObject *obj = NULL;
+    PhysicsEntity *proj = NULL;
     if(!self || !self->abstraction) return;
 
     obj = (GameObject*)self->abstraction;
+
+    if(player)
+        vector2d_sub(dir, player->entity->position, self->position);
+    if(obj->coolDown <= 0.0f)
+    {
+        proj = gf2d_projectile_create(
+            self->position,
+            dir,
+            3.0f,
+            1000.0f,
+            self
+        );
+        proj->entity->anim->rend->sprite = gf2d_sprite_load_image("images/sentry_shot.png");
+        gf2d_scene_add_to_drawables(proj, DET_PHYS);
+        obj->coolDown = 0.50f;
+    }
+    else
+    {
+        obj->coolDown -= frameTime;
+    }
+    slog("cooldown %.2f", obj->coolDown);
 }
 
 void sentry_touch(Entity *self, Entity *other)
