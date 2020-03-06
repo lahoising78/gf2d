@@ -17,6 +17,6 @@ void gf2d_main()
     gf2d_scene_submit_awake(smh_awake);
     gf2d_scene_submit_awake(two_awake);
     punti_jordan_load("application/punti_jordan_anim_config.json");
-    sentry_load_config("application/entities/sentry_phys.json");
+    sentry_load_config("application/sentry_config.json");
     gf2d_scene_load_from_file("application/scenes/first_scene.json");
 }

@@ -1,0 +1,11 @@
+{
+    "phys":                         "application/entities/sentry_phys.json",
+    "projectile": {
+        "sprite": {
+            "filename":             "images/sentry_shot.png"
+        },
+        "speed":                    10.0,
+        "coolDown":                 0.1,
+        "distance":                 750.0
+    }
+}
