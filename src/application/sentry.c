@@ -12,6 +12,7 @@ void sentry_update(Entity *self);
 void sentry_touch(Entity *self, Entity *other);
 
 void sentry_shoot(Entity *self);
+void sentry_shot_touch(Entity *self, Entity *other);
 
 typedef struct 
 {
@@ -27,6 +28,7 @@ typedef struct
     float projCooldown;
     float projDistance;
     Vector2D projOffset;
+    CollisionShape projShape;
 } SentryJson;
 
 static SentryJson config = {0};
@@ -61,6 +63,7 @@ void sentry_load_config(const char *filename)
         sj_get_float_value( sj_object_get_value(obj, "coolDown"), &config.projCooldown );
         sj_get_float_value( sj_object_get_value(obj, "distance"), &config.projDistance );
         config.projOffset = gf2d_json_vector2d( sj_object_get_value(obj, "offset") );
+        config.projShape = gf2d_collision_shape_load( sj_object_get_value(obj, "hitbox") );
     }
 
     sj_free(json);
@@ -152,6 +155,18 @@ void sentry_shoot(Entity *self)
         self
     );
     proj->entity->anim->rend->sprite = config.projSprite;
+    proj->modelBox = config.projShape;
+    proj->entity->touch = sentry_shot_touch;
     gf2d_scene_add_to_drawables(proj, DET_PHYS);
     obj->coolDown = config.projCooldown;
+}
+
+void sentry_shot_touch(Entity *self, Entity *other)
+{
+    if(!self || !other) return;
+
+    if(other != player->entity) return;
+
+    gf2d_projectile_free(self);
+    
 }
