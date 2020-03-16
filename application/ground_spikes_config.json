@@ -3,7 +3,7 @@
         "entity": {
             "anim": {
                 "sprite": {
-                    "filename":    "images/spikes.png"
+                    "filename":                                 "images/spikes.png"
                 }   
             },
             "velocity":                                         [0.0, 0.0]
@@ -17,5 +17,9 @@
 
         "type":                                                 "CST_STATIC",
         "canCollide":                                           0
+    },
+
+    "damage": {
+        "cooldown":                                             0.4
     }
 }
