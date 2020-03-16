@@ -6,8 +6,6 @@
 
 extern float frameTime;
 
-float coolDown = 0.0f;
-
 void sentry_update(Entity *self);
 void sentry_touch(Entity *self, Entity *other);
 
@@ -25,9 +23,10 @@ typedef struct
     /* projectile */
     Sprite *projSprite;
     float projSpeed;
-    float projCooldown;
     float projDistance;
+    Vector3D burst;
     Vector2D projOffset;
+    float projScale;
     CollisionShape projShape;
 } SentryJson;
 
@@ -60,8 +59,10 @@ void sentry_load_config(const char *filename)
     {
         config.projSprite = gf2d_json_sprite( sj_object_get_value(obj, "sprite") );
         sj_get_float_value( sj_object_get_value(obj, "speed"), &config.projSpeed );
-        sj_get_float_value( sj_object_get_value(obj, "coolDown"), &config.projCooldown );
         sj_get_float_value( sj_object_get_value(obj, "distance"), &config.projDistance );
+        sj_get_float_value( sj_object_get_value(obj, "scale"), &config.projScale );
+        config.burst = gf2d_json_vector3d( sj_object_get_value(obj, "burst") );
+        if(config.projScale == 0.0f) config.projScale = 1.0f;
         config.projOffset = gf2d_json_vector2d( sj_object_get_value(obj, "offset") );
         config.projShape = gf2d_collision_shape_load( sj_object_get_value(obj, "hitbox") );
     }
@@ -94,9 +95,8 @@ void sentry_init(PhysicsEntity *phys)
         return;
     }
 
-    obj->coolDown = config.projCooldown;
+    obj->coolDown = config.burst.x;
     phys->entity->abstraction = obj;
-    slog("cool down %.2f", obj->coolDown);
 
     phys->canCollide = config.canCollide;
     phys->modelBox = config.shape;
@@ -122,7 +122,6 @@ void sentry_update(Entity *self)
     {
         obj->coolDown -= frameTime;
     }
-    slog("cooldown %.2f", obj->coolDown);
 }
 
 void sentry_touch(Entity *self, Entity *other)
@@ -158,7 +157,16 @@ void sentry_shoot(Entity *self)
     proj->modelBox = config.projShape;
     proj->entity->touch = sentry_shot_touch;
     gf2d_scene_add_to_drawables(proj, DET_PHYS);
-    obj->coolDown = config.projCooldown;
+    obj->shotsFired++;
+    if(obj->shotsFired >= config.burst.z)
+    {
+        obj->shotsFired = 0.0f;
+        obj->coolDown = config.burst.y;
+    }
+    else
+    {
+        obj->coolDown = config.burst.x;
+    }
 }
 
 void sentry_shot_touch(Entity *self, Entity *other)

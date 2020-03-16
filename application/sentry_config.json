@@ -5,12 +5,12 @@
             "filename":             "images/sentry_shot.png"
         },
         "speed":                    10.0,
-        "coolDown":                 0.1,
+        "burst":                    [0.005, 0.1, 5.0],
         "distance":                 750.0,
         "offset":                   [50.0, 20.0],
         "hitbox": {
             "position":             [0.0, 0.0],
-            "dimensions":           [32.0, 32.0],
+            "dimensions":           [16.0, 16.0],
             "shapeType":            "CST_BOX"
         }
     }

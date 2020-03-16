@@ -2,12 +2,14 @@
 #define _GAME_OBJECT_H_
 
 #include "gf2d_physics_entity.h"
+#include <inttypes.h>
 
 typedef struct
 {
     float health;
     float coolDown;
     int state;
+    float shotsFired;
     uint8_t _inuse;
 } GameObject;
 
