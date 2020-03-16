@@ -11,6 +11,9 @@ typedef struct
     int state;
     float shotsFired;
     uint8_t _inuse;
+
+    PhysicsEntity *selfPhys;
+    Entity *self;
 } GameObject;
 
 void game_object_manager_init(uint32_t count);

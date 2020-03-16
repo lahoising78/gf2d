@@ -61,7 +61,9 @@ GameObject *game_object_new()
 
 void game_object_free(GameObject *obj)
 {
+    PhysicsEntity *phys = obj->selfPhys;
     if(!obj) return;
 
+    gf2d_physics_entity_free(phys);
     memset(obj, 0, sizeof(GameObject));
 }

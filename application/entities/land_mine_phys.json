@@ -6,5 +6,6 @@
         "shapeType":                                    "CST_BOX"
     },
     "type":                                             "PET_STATIC",
-    "canCollide":                                       0
+    "canCollide":                                       0,
+    "useGravity":                                       0
 }
