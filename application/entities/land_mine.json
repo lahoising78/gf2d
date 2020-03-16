@@ -1,0 +1,4 @@
+{
+    "animation":                        "application/sprites/land_mine_anim.json",
+    "velocity":                         [0.0, 0.0]
+}

@@ -1,0 +1,10 @@
+{
+    "entity":                                           "application/entities/land_mine.json",
+    "modelBox": {
+        "position":                                     [0.0, 0.0],
+        "dimensions":                                   [32.0, 9.0],
+        "shapeType":                                    "CST_BOX"
+    },
+    "type":                                             "PET_STATIC",
+    "canCollide":                                       0
+}
