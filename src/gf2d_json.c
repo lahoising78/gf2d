@@ -120,6 +120,8 @@ Sprite *gf2d_json_sprite(SJson *src)
         return sprite;
     }
 
+    // slog("sprite load");
+
     obj = sj_object_get_value(src, "filename");
     if(!obj) return NULL;
     filename = sj_get_string_value(obj);
@@ -127,6 +129,7 @@ Sprite *gf2d_json_sprite(SJson *src)
     obj = sj_object_get_value(src, "framesPerLine");
     if(!obj) 
     {
+        slog("return sprite %s", filename);
         return gf2d_sprite_load_image( filename );
     }
     framesPerLine = gf2d_json_sint32(obj);

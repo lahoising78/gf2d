@@ -170,6 +170,8 @@ void gf2d_entity_load_to_entity(Entity *ent, SJson *json)
     if(!json) return;
     if(!ent) return;
 
+    // slog("entity load");
+
     obj = sj_object_get_value(json, "animation");
     if( sj_is_string(obj) )
     {

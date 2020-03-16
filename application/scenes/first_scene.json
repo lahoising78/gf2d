@@ -40,6 +40,12 @@
             "drawable":                     "empty",
             "position":                     [360.0, 192.0],
             "name":                         "mine0"
+        },
+        {
+            "type":                         "DET_PHYS",
+            "drawable":                     "empty",
+            "position":                     [400.0, 236.0],
+            "name":                         "spike0"
         }
     ]
 }

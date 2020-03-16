@@ -111,6 +111,8 @@ void gf2d_animation_load_to_animation( Animation *anim, SJson *json )
     uint32_t maxFrame = 0;
 
     SJson *obj = NULL;
+
+    // slog("anim load");
     if(!anim) 
     {
         slog("no animation provided");
@@ -118,7 +120,8 @@ void gf2d_animation_load_to_animation( Animation *anim, SJson *json )
     }
     if(!json) 
     {
-        gf2d_animation_free(anim, 0);
+        slog("no json file provided");
+        // gf2d_animation_free(anim, 0);
         return;
     }
 

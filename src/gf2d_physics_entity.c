@@ -153,6 +153,7 @@ PhysicsEntity *gf2d_physics_entity_load(SJson *json)
         return phys;
     }
 
+
     phys = gf2d_physics_entity_new(NULL);
     gf2d_physics_entity_load_to_entity(phys, json);
 
@@ -163,6 +164,7 @@ void gf2d_physics_entity_load_to_entity(PhysicsEntity *phys, SJson *json)
 {
     SJson *obj = NULL;
     if(!phys || !json) return;
+    // slog("phys ent load");
 
     obj = sj_object_get_value(json, "entity");
     if( sj_is_string(obj) )
