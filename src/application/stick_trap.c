@@ -57,6 +57,7 @@ void stick_trap_config(const char *filepath)
     if(config.player)
         config.yOffset = config.player->modelBox.dimensions.wh.y - config.shape.dimensions.wh.y;
 
+    gf2d_physics_entity_free(phys);
     sj_free(json);
 }
 

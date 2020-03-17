@@ -8,6 +8,7 @@
 #include "land_mine.h"
 #include "ground_spikes.h"
 #include "stick_trap.h"
+#include "toxic_bomb.h"
 
 void load_next_level(Entity *self, Entity *other)
 {
@@ -25,6 +26,7 @@ void smh_awake()
     land_mine_config("application/land_mine_config.json");
     ground_spikes_config("application/ground_spikes_config.json");
     stick_trap_config("application/stick_trap_config.json");
+    toxic_bomb_config("application/toxic_bomb_config.json");
 
     player_create( gf2d_physics_entity_get_by_name("punti") );
 
@@ -54,5 +56,12 @@ void smh_awake()
         snprintf(name, GFCLINELEN, "trap%d", i);
         s = gf2d_physics_entity_get_by_name(name);
         stick_trap_init(s);
+    }
+
+    for(i = 0; i < 1; i++)
+    {
+        snprintf(name, GFCLINELEN, "tox%d", i);
+        s = gf2d_physics_entity_get_by_name(name);
+        toxic_bomb_init(s);
     }
 }
