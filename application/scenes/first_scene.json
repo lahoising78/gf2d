@@ -46,6 +46,12 @@
             "drawable":                     "empty",
             "position":                     [400.0, 236.0],
             "name":                         "spike0"
+        },
+        {
+            "type":                         "DET_PHYS",
+            "drawable":                     "empty",
+            "position":                     [470.0, 236.0],
+            "name":                         "trap0"
         }
     ]
 }

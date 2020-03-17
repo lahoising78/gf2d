@@ -7,6 +7,7 @@
 #include "sentry.h"
 #include "land_mine.h"
 #include "ground_spikes.h"
+#include "stick_trap.h"
 
 void load_next_level(Entity *self, Entity *other)
 {
@@ -23,6 +24,7 @@ void smh_awake()
     sentry_load_config("application/sentry_config.json");
     land_mine_config("application/land_mine_config.json");
     ground_spikes_config("application/ground_spikes_config.json");
+    stick_trap_config("application/stick_trap_config.json");
 
     player_create( gf2d_physics_entity_get_by_name("punti") );
 
@@ -45,5 +47,12 @@ void smh_awake()
         snprintf(name, GFCLINELEN, "spike%d", i);
         s = gf2d_physics_entity_get_by_name(name);
         ground_spikes_init(s);
+    }
+
+    for(i = 0; i < 1; i++)
+    {
+        snprintf(name, GFCLINELEN, "trap%d", i);
+        s = gf2d_physics_entity_get_by_name(name);
+        stick_trap_init(s);
     }
 }
