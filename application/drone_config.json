@@ -18,5 +18,15 @@
         "canCollide":                                           0,
         "useGravity":                                           0,
         "type":                                                 "PET_KINETIC"
-    }
+    },
+
+    "dmgArea": {
+        "position":                                             [-10.0, -10.0],
+        "dimensions":                                           [20.0, 20.0],
+        "shapeType":                                            "CST_BOX"
+    },
+
+    "dmg":                                                      [0.01, 10.0],
+
+    "ttf":                                                 1.0
 }
