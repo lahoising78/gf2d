@@ -64,6 +64,12 @@
             "drawable":                     "empty",
             "position":                     [1280.0, 192.0],
             "name":                         "door"
+        },
+        {
+            "type":                         "DET_PHYS",
+            "drawable":                     "empty",
+            "position":                     [900.0, 192.0],
+            "name":                         "drone0"
         }
     ]
 }

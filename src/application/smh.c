@@ -2,6 +2,7 @@
 #include "simple_logger.h"
 
 #include "gf2d_scene.h"
+#include "game_object.h"
 #include "player.h"
 #include "punti_jordan.h"
 #include "sentry.h"
@@ -10,7 +11,7 @@
 #include "stick_trap.h"
 #include "toxic_bomb.h"
 #include "scene_door.h"
-#include "game_object.h"
+#include "drone.h"
 
 void load_next_level(Entity *self, Entity *other)
 {
@@ -31,6 +32,7 @@ void smh_awake()
     stick_trap_config("application/stick_trap_config.json");
     toxic_bomb_config("application/toxic_bomb_config.json");
     scene_door_config("application/scene_door_config.json");
+    drone_config("application/drone_config.json");
 
     player_create( gf2d_physics_entity_get_by_name("punti") );
 
@@ -75,5 +77,12 @@ void smh_awake()
     if(gobj)
     {
         gfc_line_cpy( gobj->buf, "application/scenes/second_scene.json" );
+    }
+
+    for(i = 0; i < 1; i++)
+    {
+        snprintf(name, GFCLINELEN, "drone%d", i);
+        s = gf2d_physics_entity_get_by_name(name);
+        drone_init(s);
     }
 }
