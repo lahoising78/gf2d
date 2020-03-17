@@ -74,8 +74,7 @@ void gf2d_graphics_initialize(
         }
     }
     gf2d_graphics.main_window = SDL_CreateWindow(windowName,
-                             SDL_WINDOWPOS_UNDEFINED,
-                             SDL_WINDOWPOS_UNDEFINED,
+                             0, 0,
                              renderWidth, renderHeight,
                              flags);
 

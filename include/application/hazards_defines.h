@@ -47,4 +47,7 @@ if(gobj) { \
     self->entity->abstraction = gobj; \
 }
 
+#define HAZARD_TOUCH_CHECK(self, other) if(!config.player) return; \
+if(!self || !other) return;
+
 #endif
