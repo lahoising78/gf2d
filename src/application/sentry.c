@@ -122,6 +122,8 @@ void sentry_update(Entity *self)
     {
         obj->coolDown -= frameTime;
     }
+
+    game_object_update(obj);
 }
 
 void sentry_touch(Entity *self, Entity *other)

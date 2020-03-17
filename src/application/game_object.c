@@ -59,6 +59,15 @@ GameObject *game_object_new()
     return NULL;
 }
 
+extern float frameTime;
+void game_object_update(GameObject *gobj)
+{
+    if(!gobj) return;
+
+    gobj->hitstun -= frameTime;
+    if(gobj->hitstun < 0.0f) gobj->hitstun = 0.0f;
+}
+
 void game_object_free(GameObject *obj)
 {
     PhysicsEntity *phys = obj->selfPhys;

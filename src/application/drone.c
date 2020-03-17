@@ -33,6 +33,7 @@ void drone_config(const char *filepath)
     {
         if(config.area.shapeType == CST_BOX)
         {
+            vector2d_scale(config.area.dimensions.wh, config.area.position, -2.0f);
             vector2d_add(config.area.dimensions.wh, config.area.dimensions.wh, config.player->modelBox.dimensions.wh);
         }
     }
@@ -59,6 +60,7 @@ void drone_init(PhysicsEntity *self)
 void drone_touch(Entity *self, Entity *other)
 {
     GameObject *gobj = NULL;
+    GameObject *otherGobj = NULL;
     HAZARD_TOUCH_CHECK(self, other)
     
     gobj = (GameObject*)self->abstraction;
@@ -75,7 +77,14 @@ void drone_touch(Entity *self, Entity *other)
     case DRONE_STATE_ACTIVE:
         if(other == config.player->entity) return;
 
-        slog("touching entity");
+        otherGobj = (GameObject*)other->abstraction;
+        if(!otherGobj) return;
+
+        if(otherGobj->hitstun <= 0.0f)
+        {
+            slog("touching entity");
+            otherGobj->hitstun = config.damage.x;
+        }
 
         break;
 

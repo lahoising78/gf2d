@@ -11,6 +11,7 @@ Sprite *sprite;\
 uint8_t canCollide;\
 uint8_t useGravity;\
 CollisionShape shape;\
+PhysicsEntityType physType; \
 PhysicsEntity *player;
 
 #define HAZARD_CONFIG_BEGIN(message) PhysicsEntity *phys = NULL; \
@@ -25,6 +26,7 @@ config.canCollide = phys->canCollide; \
 config.shape = phys->modelBox; \
 config.sprite = phys->entity->anim->rend->sprite; \
 config.useGravity = phys->useGravity; \
+config.physType = phys->type; \
 config.player = gf2d_physics_entity_get_by_name("punti");
 
 #define HAZARD_NEW(type) PhysicsEntity *type##_new() { \
@@ -40,6 +42,7 @@ self->canCollide = config.canCollide; \
 self->modelBox = config.shape; \
 self->entity->anim->rend->sprite = config.sprite; \
 self->useGravity = config.useGravity; \
+self->type = config.physType; \
 gobj = game_object_new(); \
 if(gobj) { \
     gobj->self = self->entity; \
