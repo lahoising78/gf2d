@@ -12,6 +12,8 @@ typedef struct
     float shotsFired;
     uint8_t _inuse;
 
+    char buf[GFCLINELEN];
+
     PhysicsEntity *selfPhys;
     Entity *self;
 } GameObject;

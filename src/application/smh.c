@@ -9,6 +9,8 @@
 #include "ground_spikes.h"
 #include "stick_trap.h"
 #include "toxic_bomb.h"
+#include "scene_door.h"
+#include "game_object.h"
 
 void load_next_level(Entity *self, Entity *other)
 {
@@ -17,6 +19,7 @@ void load_next_level(Entity *self, Entity *other)
 
 void smh_awake()
 {
+    GameObject *gobj = NULL;
     PhysicsEntity *s = NULL;
     char name[128];
     int i;
@@ -27,6 +30,7 @@ void smh_awake()
     ground_spikes_config("application/ground_spikes_config.json");
     stick_trap_config("application/stick_trap_config.json");
     toxic_bomb_config("application/toxic_bomb_config.json");
+    scene_door_config("application/scene_door_config.json");
 
     player_create( gf2d_physics_entity_get_by_name("punti") );
 
@@ -63,5 +67,13 @@ void smh_awake()
         snprintf(name, GFCLINELEN, "tox%d", i);
         s = gf2d_physics_entity_get_by_name(name);
         toxic_bomb_init(s);
+    }
+
+    s = gf2d_physics_entity_get_by_name("door");
+    scene_door_init( s );
+    gobj = (GameObject*)s->entity->abstraction;
+    if(gobj)
+    {
+        gfc_line_cpy( gobj->buf, "application/scenes/second_scene.json" );
     }
 }

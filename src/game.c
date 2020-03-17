@@ -18,6 +18,7 @@
 #include "gf2d_projectile.h"
 
 float frameTime = 0.0f;
+float worldTime = 0.0f;
 
 int main(int argc, char * argv[])
 {
@@ -110,6 +111,9 @@ int main(int argc, char * argv[])
         }
         
         frameTime = (float)gf2d_timer_get_ticks(&fTimer) / 10000.0f;
+        worldTime += frameTime;
+        /* just in case we reach overflow for some reason */
+        if(worldTime < 0.0f) worldTime = 0.0f;
     }
     slog("---==== END ====---");
     return 0;

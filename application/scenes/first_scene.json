@@ -58,6 +58,12 @@
             "drawable":                     "empty",
             "position":                     [820.0, 240.0],
             "name":                         "tox0"
+        },
+        {
+            "type":                         "DET_PHYS",
+            "drawable":                     "empty",
+            "position":                     [1280.0, 192.0],
+            "name":                         "door"
         }
     ]
 }
