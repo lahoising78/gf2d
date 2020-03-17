@@ -18,5 +18,8 @@
         "canCollide":                                           0,
         "useGravity":                                           0,
         "type":                                                 "PET_STATIC"
-    }
+    },
+
+    "cooldown":                                                 0.25,
+    "gravity":                                                  300.0
 }

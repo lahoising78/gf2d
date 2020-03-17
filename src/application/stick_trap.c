@@ -1,5 +1,6 @@
 #include "simple_logger.h"
 #include "game_object.h"
+#include "gf2d_scene.h"
 #include "stick_trap.h"
 
 typedef struct
@@ -12,9 +13,16 @@ typedef struct
 
     /* game object */
     float                       cooldown;
+
+    /* other */
+    PhysicsEntity               *player;
+    float                       gravity;
+    float                       yOffset;
 } StickTrapConfig;
 
 static StickTrapConfig config = {0};
+
+void stick_trap_touch(Entity *self, Entity *other);
 
 void stick_trap_config(const char *filepath)
 {
@@ -42,6 +50,13 @@ void stick_trap_config(const char *filepath)
         config.shape.dimensions.wh.y
     );
 
+    config.player = gf2d_physics_entity_get_by_name("punti");
+    sj_get_float_value( sj_object_get_value(json, "cooldown"), &config.cooldown );
+    sj_get_float_value( sj_object_get_value(json, "gravity"), &config.gravity );
+
+    if(config.player)
+        config.yOffset = config.player->modelBox.dimensions.wh.y - config.shape.dimensions.wh.y;
+
     sj_free(json);
 }
 
@@ -51,6 +66,7 @@ PhysicsEntity *stick_trap_new()
 
     self = gf2d_physics_entity_new(NULL);
     stick_trap_init(self);
+    gf2d_scene_add_to_drawables(self, DET_PHYS);
 
     return self;
 }
@@ -70,6 +86,32 @@ void stick_trap_init(PhysicsEntity *self)
     {
         gobj->selfPhys = self;
         gobj->self = self->entity;
+        gobj->coolDown = config.cooldown;
         self->entity->abstraction = gobj;
     }
+
+    self->entity->touch = stick_trap_touch;
+}
+
+extern float frameTime;
+void stick_trap_touch(Entity *self, Entity *other)
+{
+    GameObject *gobj = NULL;
+    if(!config.player) return;
+    if(!self || !other) return;
+    if(other != config.player->entity) return;
+
+    gobj = (GameObject*)self->abstraction;
+    if(!gobj) return;
+
+    if(gobj->coolDown <= 0.0f)
+    {
+        game_object_free(gobj);
+        return;
+    }
+    gobj->coolDown -= frameTime;
+
+    other->velocity.x = other->velocity.y = 0.0f;
+    other->position.x += (self->position.x - other->position.x) * frameTime * config.gravity;
+    other->position.y += (self->position.y - config.yOffset - other->position.y) * frameTime * config.gravity;
 }
