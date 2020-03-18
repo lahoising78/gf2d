@@ -1,7 +1,15 @@
 #include "simple_logger.h"
 #include "gfc_types.h"
 #include "gf2d_json.h"
+#include "gf2d_collision.h"
 #include "punti_jordan.h"
+
+#define ATTACK_CONFIG(var) CollisionShape var##Box; uint32_t var##Start;
+
+#define PJ_ATTACK_GET(var) PJ_ATTACK_SETUP(var) { \
+    if(hitbox) *hitbox = pj_config.var##Box; \
+    if(frame) *frame = pj_config.var##Start; \
+}
 
 typedef struct
 {
@@ -16,6 +24,7 @@ typedef struct
     
     uint32_t                slashDown[2];
     float                   slashDownSpeed;
+    ATTACK_CONFIG(slashDown)
     
     uint32_t                slashUp[2];
     float                   slashUpSpeed;
@@ -47,8 +56,11 @@ typedef struct
 static PuntiJordanConfig pj_config = {0};
 
 void punti_jordan_load_anim_values(uint32_t *dst, float *speed, SJson *obj);
+void punti_jordan_load_attk_values(CollisionShape *shape, uint32_t *start, SJson *obj);
 void punti_jordan_load_dash(SJson *obj);
 void punti_jordan_load_spin_sword( SJson *obj );
+
+#define PJ_LOAD_ATTACK(var, json) punti_jordan_load_attk_values( &pj_config.var##Box, &pj_config.var##Start, sj_object_get_value(json, #var) )
 
 void punti_jordan_load(const char *filename)
 {
@@ -71,6 +83,8 @@ void punti_jordan_load(const char *filename)
     punti_jordan_load_dash( sj_object_get_value(json, "dash") );
     punti_jordan_load_spin_sword( sj_object_get_value(json, "spinSword") );
 
+    PJ_LOAD_ATTACK(slashDown, json);
+
     sj_free(json);
 }
 
@@ -79,6 +93,17 @@ void punti_jordan_load_anim_values(uint32_t *dst, float *speed, SJson *obj)
     dst[0] = gf2d_json_uint32( sj_object_get_value(obj, "animation") );
     dst[1] = gf2d_json_uint32( sj_object_get_value(obj, "maxFrame") );
     sj_get_float_value( sj_object_get_value(obj, "playbackSpeed"), speed );
+}
+
+void punti_jordan_load_attk_values(CollisionShape *shape, uint32_t *start, SJson *obj)
+{
+    if(!obj) return;
+
+    if(shape)
+        *shape = gf2d_collision_shape_load( sj_object_get_value(obj, "hitbox") );
+
+    if(start)
+        *start = gf2d_json_uint32( sj_object_get_value(obj, "start") );
 }
 
 void punti_jordan_load_dash(SJson *obj)
@@ -94,6 +119,7 @@ void punti_jordan_load_spin_sword( SJson *obj )
     sj_get_float_value( sj_object_get_value(obj, "distance"), &pj_config.spinSwordDistance );
 }
 
+/* --====== GET ANIM ======-- */
 uint32_t *pj_anim_idle()
 {
     return pj_config.idle;
@@ -207,3 +233,5 @@ float pj_anim_down_attack_speed()
 {
     return pj_config.downAttackSpeed;
 }
+
+PJ_ATTACK_GET(slashDown)

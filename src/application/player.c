@@ -49,6 +49,7 @@ uint8_t player_special_up();
 uint8_t player_down_attack();
 
 void player_special_neutral_perform(Entity *self);
+void player_fix_hitbox(CollisionShape modelBox, CollisionShape *dst, uint8_t flip);
 
 float walkDir = 0.0f;
 uint8_t left, right;
@@ -61,6 +62,7 @@ uint8_t canCombo = 0;
 float dash = 0.0f;
 uint8_t capSpUp = 0;
 extern float speedMultiplier;
+PhysicsEntity *damageBox = NULL;
 
 void player_create(PhysicsEntity *self)
 {
@@ -69,6 +71,8 @@ void player_create(PhysicsEntity *self)
     self->entity->think = player_think;
     self->entity->update = player_update;
     phys = self;
+    damageBox = gf2d_physics_entity_new("pHit");
+    gf2d_scene_add_to_drawables(damageBox, DET_PHYS);
 }
 
 uint8_t player_play_anim(Animation *anim, uint32_t *params, float speed)
@@ -91,6 +95,8 @@ void player_think(Entity *self)
     uint32_t *anim = NULL;
     float animSpeed = 0.0f;
     uint32_t frame = 0;
+    uint32_t start = 0;
+    CollisionShape hitbox = {0};
     if(!self) return;
 
     if( gf2d_input_key_just_pressed(SDL_SCANCODE_DOWN) )
@@ -196,6 +202,13 @@ void player_think(Entity *self)
             animSpeed = pj_anim_slash_down_speed();
             frame = gf2d_animation_get_frame(self->anim);
 
+            pj_attk_slashDown(&hitbox, &start);
+            if(frame >= start)
+            {
+                damageBox->modelBox = hitbox;
+                player_fix_hitbox(phys->modelBox, &damageBox->modelBox, self->anim->rend->flip.x);
+            }
+
             if ( frame >= anim[1] - 1 )
             {
                 if(attacking <= 1)
@@ -212,6 +225,8 @@ void player_think(Entity *self)
                     canCombo = 0;
                 }
                 canCombo = 0;
+                memset(&damageBox->modelBox, 0, sizeof(CollisionShape));
+                
             }
             else if ( frame >= anim[1] - 5 )
             {
@@ -366,6 +381,8 @@ void player_update(Entity *self)
 
     if( gf2d_input_key_released(SDL_SCANCODE_R) )
         gf2d_scene_load_from_file("application/scenes/first_scene.json");
+    
+    vector2d_copy(damageBox->entity->position, self->position);
 }
 
 void player_walking()
@@ -425,6 +442,20 @@ void player_attacking()
     if(canCombo) canCombo = 0;
     
     walkDir = 0.0f;
+}
+
+void player_fix_hitbox(CollisionShape modelBox, CollisionShape *dst, uint8_t flip)
+{
+    if(!dst) return;
+
+    if(flip)
+    {
+        dst->position.x = modelBox.position.x - dst->dimensions.wh.x - 1;
+    }
+    else
+    {
+        dst->position.x = modelBox.position.x + modelBox.dimensions.wh.x + 1;
+    }
 }
 
 uint8_t player_dash()

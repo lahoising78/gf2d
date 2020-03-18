@@ -3,8 +3,8 @@
     "entity":                   "application/entities/punti_jordan_ent.json",
 
     "modelBox": {
-        "position":             [0.0, 0.0],
-        "dimensions":           [64.0, 64.0],
+        "position":             [15.0, 2.0],
+        "dimensions":           [34.0, 60.0],
         "shapeType":            "CST_BOX"
     },
 

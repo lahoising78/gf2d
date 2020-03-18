@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#define PJ_ATTACK_SETUP(var) void pj_attk_##var(CollisionShape *hitbox, uint32_t *frame)
+
 void punti_jordan_load(const char *filename);
 
 uint32_t *pj_anim_idle();
@@ -37,5 +39,7 @@ float pj_anim_recover_speed();
 
 uint32_t *pj_anim_down_attack();
 float pj_anim_down_attack_speed();
+
+PJ_ATTACK_SETUP(slashDown);
 
 #endif
