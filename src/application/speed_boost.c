@@ -88,6 +88,7 @@ void speed_boost_touch(Entity *self, Entity *other)
         if(config.player->entity != other) return;
 
         gobj->state = SPEED_STATE_ACTIVE;
+        vector2d_set(gobj->selfPhys->modelBox.dimensions.wh, 0.0f, 0.0f);
 
         break;
 
