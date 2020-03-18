@@ -1,3 +1,4 @@
 {
-    "phys": "application/entities/land_mine_phys.json"
+    "phys": "application/entities/land_mine_phys.json",
+    "damage":                                           1.0
 }

@@ -1,6 +1,7 @@
 #include "simple_logger.h"
 #include "game_object.h"
 #include "gf2d_scene.h"
+#include "combat.h"
 #include "land_mine.h"
 
 typedef struct
@@ -12,11 +13,14 @@ typedef struct
     uint8_t                     useGravity;
 
     PhysicsEntity               *player;
+
+    float damage;
 } LandMineConfig;
 
 static LandMineConfig config = {0};
 
-void land_mine_touch(Entity *self, Entity *other);
+void land_mine_touch(GameObject *self, GameObject *other);
+void land_mine_update(Entity *self);
 
 void land_mine_config(const char *filepath)
 {
@@ -39,6 +43,8 @@ void land_mine_config(const char *filepath)
     config.useGravity = phys->useGravity;
 
     config.player = gf2d_physics_entity_get_by_name("punti");
+    
+    sj_get_float_value( sj_object_get_value(json, "damage"), &config.damage );
 
     sj_free(json);
 }
@@ -64,23 +70,35 @@ void land_mine_init(PhysicsEntity *phys)
     phys->type = config.physType;
     phys->useGravity = config.useGravity;
 
-    phys->entity->touch = land_mine_touch;
-    phys->entity->abstraction = game_object_new();
-
     obj = game_object_new();
-    obj->self = phys->entity;
-    obj->selfPhys = phys;
-    phys->entity->abstraction = obj;
+    if(obj)
+    {
+        obj->self = phys->entity;
+        obj->selfPhys = phys;
+        obj->damage = land_mine_touch;
+        obj->hitbox = config.shape;
+        phys->entity->abstraction = obj;
+        phys->entity->update = land_mine_update;
+        slog("land mine gobj");
+    }
 }
 
-void land_mine_touch(Entity *self, Entity *other)
+void land_mine_update(Entity *self)
 {
-    GameObject *obj = NULL;
+    if(!self) return;
+
+    game_object_update((GameObject*)self->abstraction);
+}
+
+void land_mine_touch(GameObject *self, GameObject *other)
+{
+    slog("land mine touch");
     if(!self || !other) return;
     if(!config.player) return;
-    if(other != config.player->entity) return;
+    if(other != config.player->entity->abstraction) return;
 
-    obj = (GameObject*)self->abstraction;
-    gf2d_scene_remove_from_drawables(obj->selfPhys);
-    game_object_free( obj );
+    combat_do_damage(self, other, config.damage);
+
+    gf2d_scene_remove_from_drawables(self->selfPhys);
+    game_object_free( self );
 }

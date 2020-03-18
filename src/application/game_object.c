@@ -69,15 +69,15 @@ void game_object_update(GameObject *gobj)
     gobj->hitstun -= frameTime;
     if(gobj->hitstun < 0.0f) gobj->hitstun = 0.0f;
 
-    if(gobj->damage)
+    if(gobj->selfPhys && gobj->damage)
     {
         vector2d_add(gobj->hitbox.position, gobj->hitbox.position, gobj->selfPhys->entity->position);
         // slog("gobj update %.2f %.2f", gobj->hitbox.position.x, gobj->hitbox.position.y);
         while( game_object_collision(gobj, &other) )
         {
             gobj->damage(gobj, other);
-            slog("damage collision");
         }
+        if(!gobj->_inuse || !gobj->selfPhys) return;
         vector2d_sub(gobj->hitbox.position, gobj->hitbox.position, gobj->selfPhys->entity->position);
     }
 }
