@@ -92,12 +92,16 @@ void land_mine_update(Entity *self)
 
 void land_mine_touch(GameObject *self, GameObject *other)
 {
+    Vector2D dir = {0};
     slog("land mine touch");
     if(!self || !other) return;
     if(!config.player) return;
     if(other != config.player->entity->abstraction) return;
 
     combat_do_damage(self, other, config.damage);
+
+    vector2d_sub(dir, other->self->position, self->self->position);
+    combat_knockback(self, other, dir, 30.0f);
 
     gf2d_scene_remove_from_drawables(self->selfPhys);
     game_object_free( self );

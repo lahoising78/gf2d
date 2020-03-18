@@ -38,7 +38,7 @@
         {
             "type":                         "DET_PHYS",
             "drawable":                     "empty",
-            "position":                     [360.0, 192.0],
+            "position":                     [360.0, 240.0],
             "name":                         "mine0"
         },
         {
