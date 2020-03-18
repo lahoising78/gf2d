@@ -10,6 +10,7 @@ typedef struct
 static GameObjectManager manager = {0};
 
 void game_object_manager_close();
+uint8_t game_object_collision(GameObject *self, GameObject **o);
 
 void game_object_manager_init(uint32_t count)
 {
@@ -62,10 +63,19 @@ GameObject *game_object_new()
 extern float frameTime;
 void game_object_update(GameObject *gobj)
 {
+    GameObject *other = NULL;
     if(!gobj) return;
 
     gobj->hitstun -= frameTime;
     if(gobj->hitstun < 0.0f) gobj->hitstun = 0.0f;
+
+    if(gobj->damage)
+    {
+        while( game_object_collision(gobj, &other) )
+        {
+            gobj->damage(gobj, other);
+        }
+    }
 }
 
 void game_object_free(GameObject *obj)
@@ -75,4 +85,32 @@ void game_object_free(GameObject *obj)
 
     gf2d_physics_entity_free(phys);
     memset(obj, 0, sizeof(GameObject));
+}
+
+uint8_t game_object_collision(GameObject *self, GameObject **o)
+{
+    GameObject *other = NULL;
+    GameObject *end = &manager.list[ manager.count - 1 ];
+    Vector2D zero = {0};
+    if(!self || !o) return 0;
+    other = *o;
+
+    if(other == NULL) other = &manager.list[0];
+    else other++;
+
+    if( vector2d_equal(zero, self->hitbox.dimensions.wh) ) return 0;
+
+    for(; other <= end; other++)
+    {
+        if(!other->_inuse || !other->selfPhys) continue;
+        if(other == self) continue;
+
+        if( gf2d_collision_check(&self->hitbox, &other->selfPhys->modelBox, NULL) )
+        {
+            *o = other;
+            return 1;
+        }
+    }
+
+    return 0;
 }

@@ -4,7 +4,7 @@
 #include "gf2d_physics_entity.h"
 #include <inttypes.h>
 
-typedef struct
+typedef struct game_object_s
 {
     float health;
     float coolDown;
@@ -17,6 +17,9 @@ typedef struct
 
     PhysicsEntity *selfPhys;
     Entity *self;
+
+    void (*damage)(struct game_object_s *self, struct game_object_s *other);
+    CollisionShape hitbox;
 } GameObject;
 
 void game_object_manager_init(uint32_t count);
