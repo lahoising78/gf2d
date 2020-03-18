@@ -18,5 +18,8 @@
         "canCollide":                                           0,
         "useGravity":                                           0,
         "type":                                                 "PET_STATIC"
-    }
+    },
+
+    "multiplier":                                               2.0,
+    "ttf":                                                      1.0
 }

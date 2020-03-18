@@ -60,6 +60,7 @@ uint8_t attacking = 0;
 uint8_t canCombo = 0;
 float dash = 0.0f;
 uint8_t capSpUp = 0;
+extern float speedMultiplier;
 
 void player_create(PhysicsEntity *self)
 {
@@ -349,7 +350,7 @@ void player_update(Entity *self)
     if(!self) return;
 
     /* update walking */
-    self->velocity.x = walkDir * VELOCITY_CONST;
+    self->velocity.x = walkDir * VELOCITY_CONST * speedMultiplier;
     if( dash > 0.0f ) self->velocity.x *= pj_dash()[1];
 
     /* jump */
