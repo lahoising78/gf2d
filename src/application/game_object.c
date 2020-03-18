@@ -71,10 +71,14 @@ void game_object_update(GameObject *gobj)
 
     if(gobj->damage)
     {
+        vector2d_add(gobj->hitbox.position, gobj->hitbox.position, gobj->selfPhys->entity->position);
+        // slog("gobj update %.2f %.2f", gobj->hitbox.position.x, gobj->hitbox.position.y);
         while( game_object_collision(gobj, &other) )
         {
             gobj->damage(gobj, other);
+            slog("damage collision");
         }
+        vector2d_sub(gobj->hitbox.position, gobj->hitbox.position, gobj->selfPhys->entity->position);
     }
 }
 
@@ -105,11 +109,15 @@ uint8_t game_object_collision(GameObject *self, GameObject **o)
         if(!other->_inuse || !other->selfPhys) continue;
         if(other == self) continue;
 
+        vector2d_add(other->selfPhys->modelBox.position, other->selfPhys->modelBox.position, other->selfPhys->entity->position);
+        // slog("other %.2f %.2f", other->selfPhys->modelBox.position.x, other->selfPhys->modelBox.position.y);
         if( gf2d_collision_check(&self->hitbox, &other->selfPhys->modelBox, NULL) )
         {
+            vector2d_sub(other->selfPhys->modelBox.position, other->selfPhys->modelBox.position, other->selfPhys->entity->position);
             *o = other;
             return 1;
         }
+        vector2d_sub(other->selfPhys->modelBox.position, other->selfPhys->modelBox.position, other->selfPhys->entity->position);
     }
 
     return 0;
