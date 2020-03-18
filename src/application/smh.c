@@ -12,10 +12,27 @@
 #include "toxic_bomb.h"
 #include "scene_door.h"
 #include "drone.h"
+#include "speed_boost.h"
 
 void load_next_level(Entity *self, Entity *other)
 {
     gf2d_scene_load_from_file("application/scenes/second_scene.json");
+}
+
+void init_all(const char *obj, void (*init_func)(PhysicsEntity*), uint32_t num)
+{
+    PhysicsEntity *s = NULL;
+    int i;
+    char name[GFCLINELEN];
+    if(!obj || !init_func) return;
+
+    for(i = 0; i < num; i++)
+    {
+        snprintf(name, GFCLINELEN, "%s%d", obj, i);
+        slog("init %s", name);
+        s = gf2d_physics_entity_get_by_name(name);
+        init_func(s);   
+    }
 }
 
 void smh_awake()
@@ -33,6 +50,7 @@ void smh_awake()
     toxic_bomb_config("application/toxic_bomb_config.json");
     scene_door_config("application/scene_door_config.json");
     drone_config("application/drone_config.json");
+    speed_boost_config("application/speed_boost_config.json");
 
     player_create( gf2d_physics_entity_get_by_name("punti") );
 
@@ -85,4 +103,6 @@ void smh_awake()
         s = gf2d_physics_entity_get_by_name(name);
         drone_init(s);
     }
+
+    init_all("speed", speed_boost_init, 1);
 }

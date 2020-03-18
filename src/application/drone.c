@@ -28,6 +28,7 @@ void drone_config(const char *filepath)
 
     config.damage = gf2d_json_vector2d( sj_object_get_value(json, "dmg") );
     config.area = gf2d_collision_shape_load( sj_object_get_value(json, "dmgArea") );
+    sj_get_float_value( sj_object_get_value(json, "ttf"), &config.ttf );
 
     if(config.player)
     {
@@ -51,12 +52,14 @@ void drone_init(PhysicsEntity *self)
     if(gobj)
     {
         gobj->state = DRONE_STATE_PICKUP;
+        gobj->health = config.ttf;
     }
 
     self->entity->update = drone_update;
     self->entity->touch =  drone_touch;
 }
 
+extern float frameTime;
 void drone_touch(Entity *self, Entity *other)
 {
     GameObject *gobj = NULL;
@@ -104,4 +107,10 @@ void drone_update(Entity *self)
     if(gobj->state != DRONE_STATE_ACTIVE) return;
 
     vector2d_copy(self->position, config.player->entity->position);
+
+    gobj->health -= frameTime;
+    if(gobj->health <= 0.0f)
+    {
+        game_object_free(gobj);
+    }
 }

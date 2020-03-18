@@ -70,6 +70,12 @@
             "drawable":                     "empty",
             "position":                     [900.0, 192.0],
             "name":                         "drone0"
+        },
+        {
+            "type":                         "DET_PHYS",
+            "drawable":                     "empty",
+            "position":                     [1000.0, 192.0],
+            "name":                         "speed0"
         }
     ]
 }
