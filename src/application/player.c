@@ -64,6 +64,7 @@ uint8_t canCombo = 0;
 float dash = 0.0f;
 uint8_t capSpUp = 0;
 extern float speedMultiplier;
+PhysicsEntity *damageBox = NULL;
 
 void player_create(PhysicsEntity *self)
 {
@@ -77,13 +78,22 @@ void player_create(PhysicsEntity *self)
     gobj = game_object_new();
     if(gobj)
     {
-        gobj->damage = player_physical_attack;
-        gobj->selfPhys = self;
         gobj->self = self->entity;
+        gobj->selfPhys = self;
         self->entity->abstraction = gobj;
     }
-    // damageBox = gf2d_physics_entity_new("pHit");
-    // gf2d_scene_add_to_drawables(damageBox, DET_PHYS);
+
+    damageBox = gf2d_physics_entity_new("pHit");
+    gf2d_scene_add_to_drawables(damageBox, DET_PHYS);
+
+    gobj = game_object_new();
+    if(gobj)
+    {
+        gobj->damage = player_physical_attack;
+        gobj->selfPhys = damageBox;
+        gobj->self = damageBox->entity;
+        damageBox->entity->abstraction = gobj;
+    }
 }
 
 uint8_t player_play_anim(Animation *anim, uint32_t *params, float speed)
@@ -111,7 +121,7 @@ void player_think(Entity *self)
     GameObject *gobj = NULL;
     
     if(!self) return;
-    gobj = (GameObject*)self->abstraction;
+    gobj = (GameObject*)damageBox->entity->abstraction;
 
     if( gf2d_input_key_just_pressed(SDL_SCANCODE_DOWN) )
     {
@@ -220,7 +230,9 @@ void player_think(Entity *self)
             if(gobj && frame >= start)
             {
                 gobj->hitbox = hitbox;
+                damageBox->modelBox = hitbox;
                 player_fix_hitbox(phys->modelBox, &gobj->hitbox, self->anim->rend->flip.x);
+                player_fix_hitbox(phys->modelBox, &damageBox->modelBox, self->anim->rend->flip.x);
             }
 
             if ( frame >= anim[1] - 1 )
@@ -241,7 +253,10 @@ void player_think(Entity *self)
                 canCombo = 0;
 
                 if(gobj)
+                {
                     memset(&gobj->hitbox, 0, sizeof(CollisionShape));
+                    memset(&damageBox->modelBox, 0, sizeof(CollisionShape));
+                }
             }
             else if ( frame >= anim[1] - 5 )
             {
@@ -398,7 +413,7 @@ void player_update(Entity *self)
         gf2d_scene_load_from_file("application/scenes/first_scene.json");
     
     game_object_update((GameObject*)self->abstraction);
-    // vector2d_copy(damageBox->entity->position, self->position);
+    vector2d_copy(damageBox->entity->position, self->position);
 }
 
 void player_walking()
