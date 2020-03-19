@@ -302,10 +302,19 @@ void player_think(Entity *self)
             anim = pj_anim_slash_side();
             animSpeed = pj_anim_slash_side_speed();
             frame = gf2d_animation_get_frame(self->anim);
+
+            pj_attk_slashSide(&hitbox, &start);
+            if(frame >= start)
+            {
+                player_set_hitbox(gobj, hitbox);
+            }
+
             if ( frame == anim[1] - 1 )
             {
                 attacking = 0;
                 canCombo = 0;
+
+                player_clear_hitbox(gobj);
             }
         }
         /* in attack state but not playing any attacking animation, play the first anim */

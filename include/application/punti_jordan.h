@@ -42,5 +42,6 @@ float pj_anim_down_attack_speed();
 
 PJ_ATTACK_SETUP(slashDown);
 PJ_ATTACK_SETUP(slashUp);
+PJ_ATTACK_SETUP(slashSide);
 
 #endif
