@@ -91,9 +91,9 @@ void drone_damage(GameObject *self, GameObject *other)
     if(other->selfPhys == config.player) return;
 
     // slog("DRONE DAMAGE");
-    combat_do_damage(self, other, config.damage.y);
-    if(other->hitstun <= 0.0f) 
-        other->hitstun = config.damage.x;
+    combat_do_damage(self, other, config.damage.y, config.damage.x);
+    // if(other->hitstun <= 0.0f) 
+    //     other->hitstun = config.damage.x;
 }
 
 void drone_update(Entity *self)

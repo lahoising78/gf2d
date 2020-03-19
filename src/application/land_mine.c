@@ -100,7 +100,7 @@ void land_mine_touch(GameObject *self, GameObject *other)
     if(!config.player) return;
     if(other != config.player->entity->abstraction) return;
 
-    combat_do_damage(self, other, config.damage);
+    combat_do_damage(self, other, config.damage, 0.0f);
 
     vector2d_scale(dir, self->hitbox.dimensions.wh, 0.5f);
     vector2d_add(dir, self->self->position, dir);

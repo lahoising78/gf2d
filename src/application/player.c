@@ -6,6 +6,7 @@
 #include "gf2d_projectile.h"
 #include "game_object.h"
 #include "player.h"
+#include "combat.h"
 
 #define VELOCITY_CONST 3.0f
 
@@ -413,6 +414,7 @@ void player_update(Entity *self)
         gf2d_scene_load_from_file("application/scenes/first_scene.json");
     
     game_object_update((GameObject*)self->abstraction);
+    game_object_update((GameObject*)damageBox->entity->abstraction);
     vector2d_copy(damageBox->entity->position, self->position);
 }
 
@@ -479,7 +481,7 @@ void player_physical_attack(GameObject *self, GameObject *other)
 {
     if(!self || !other) return;
 
-    slog("player do damage");
+    combat_do_damage(self, other, 10.0f, 0.05f);
 }
 
 void player_fix_hitbox(CollisionShape modelBox, CollisionShape *dst, uint8_t flip)

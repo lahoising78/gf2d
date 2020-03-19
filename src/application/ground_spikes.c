@@ -117,6 +117,6 @@ void ground_spikes_touch(GameObject *self, GameObject *other)
     vector2d_add(dir, dir, self->self->position);
     vector2d_sub(dir, other->self->position, dir);
 
-    combat_do_damage(self, other, config.damage.x);
+    combat_do_damage(self, other, config.damage.x, 0.0f);
     combat_knockback(self, other, dir, config.damage.z);
 }

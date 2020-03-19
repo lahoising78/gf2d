@@ -81,7 +81,7 @@ void toxic_bomb_touch(Entity *self, Entity *other)
         {
             slog("toxic bomb damage");
             gobj->shotsFired = config.damage.y;
-            combat_do_damage(gobj, other->abstraction, config.damage.z * config.damage.y);
+            combat_do_damage(gobj, other->abstraction, config.damage.z * config.damage.y, 0.0f);
         }
         else
         {
