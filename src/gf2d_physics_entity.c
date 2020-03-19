@@ -238,19 +238,19 @@ void gf2d_physics_entity_update( struct physics_entity_s *ent )
         vector2d_scale( buf, ent->entity->velocity, frameTime * TIME_MULTIPLIER );                                      // vt
         vector2d_add( ent->entity->position, ent->entity->position, buf );
         
-        if( ent->canCollide )
+        while( (o = gf2d_physics_entity_check_collision(ent, o, &info)) != NULL )
         {
-            while( (o = gf2d_physics_entity_check_collision(ent, o, &info)) != NULL )
+            if(ent->canCollide && o->canCollide )
             {
-                if( o->canCollide )
-                {
-                    gf2d_physics_entity_handle_collision(ent, o, info);
-                }
-
-                if( ent->entity->touch )    ent->entity->touch( ent->entity, o->entity );
-                if( o->entity->touch )      o->entity->touch( o->entity, ent->entity );
+                gf2d_physics_entity_handle_collision(ent, o, info);
             }
 
+            if( ent->entity->touch )    ent->entity->touch( ent->entity, o->entity );
+            if( o->entity->touch )      o->entity->touch( o->entity, ent->entity );
+        }
+
+        if( ent->canCollide )
+        {
             gf2d_physics_entity_check_tilemap_collision(ent, &info);
         }
     }

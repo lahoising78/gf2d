@@ -29,7 +29,8 @@ float *pj_dash();
 
 uint32_t *pj_anim_sword_throw();
 float pj_anim_sword_throw_speed();
-void pj_spin_sword(Sprite **sprite, uint32_t **anim, float *animSpeed, float *fwd, float *distance);
+void pj_spin_sword(Sprite **sprite, uint32_t **anim, float *animSpeed, float *fwd, float *distance, CollisionShape *hitbox);
+float pj_spin_sword_damage();
 
 uint32_t *pj_anim_tornado();
 float pj_anim_tornado_speed();

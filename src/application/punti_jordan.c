@@ -44,6 +44,8 @@ typedef struct
     float                   spinSwordSpeed;
     float                   spinSwordFwd;
     float                   spinSwordDistance;
+    float                   spinSwordDamage;
+    CollisionShape          spinSwordHitbox;
 
     uint32_t                tornado[2];
     float                   tornadoSpeed;
@@ -121,6 +123,8 @@ void punti_jordan_load_spin_sword( SJson *obj )
     pj_config.spinSwordSprite = gf2d_json_sprite( sj_object_get_value(obj, "sprite") );
     sj_get_float_value( sj_object_get_value(obj, "fwd"), &pj_config.spinSwordFwd );
     sj_get_float_value( sj_object_get_value(obj, "distance"), &pj_config.spinSwordDistance );
+    sj_get_float_value( sj_object_get_value(obj, "damage"), &pj_config.spinSwordDamage );
+    pj_config.spinSwordHitbox = gf2d_collision_shape_load( sj_object_get_value(obj, "hitbox") );
 }
 
 /* --====== GET ANIM ======-- */
@@ -199,13 +203,19 @@ float pj_anim_sword_throw_speed()
     return pj_config.swordThrowSpeed;
 }
 
-void pj_spin_sword(Sprite **sprite, uint32_t **anim, float *animSpeed, float *fwd, float *distance)
+void pj_spin_sword(Sprite **sprite, uint32_t **anim, float *animSpeed, float *fwd, float *distance, CollisionShape *hitbox)
 {
     if(sprite) *sprite = pj_config.spinSwordSprite;
     if(anim) *anim = pj_config.spinSwordAnim;
     if(animSpeed) *animSpeed = pj_config.spinSwordSpeed;
     if(fwd) *fwd = pj_config.spinSwordFwd;
     if(distance) *distance = pj_config.spinSwordDistance;
+    if(hitbox) *hitbox = pj_config.spinSwordHitbox;
+}
+
+float pj_spin_sword_damage()
+{
+    return pj_config.spinSwordDamage;
 }
 
 uint32_t *pj_anim_tornado()

@@ -51,9 +51,12 @@ uint8_t player_special_up();
 uint8_t player_down_attack();
 
 void player_special_neutral_perform(Entity *self);
+void player_special_neutral_touch(Entity *self, Entity *other);
+
 void player_clear_hitbox(GameObject *gobj);
 void player_set_hitbox(GameObject *gobj, CollisionShape shape);
 void player_fix_hitbox(CollisionShape modelBox, CollisionShape *dst, uint8_t flip);
+
 void player_physical_attack(GameObject *self, GameObject *other);
 
 float walkDir = 0.0f;
@@ -554,9 +557,10 @@ void player_special_neutral_perform(Entity *self)
     uint32_t *anim;
     float animSpeed = 0.0f;
     float distance = 0.0f;
+    CollisionShape hitbox = {0};
     if(!self) return;
     
-    pj_spin_sword(&projSprite, &anim, &animSpeed, &fwd, &distance);
+    pj_spin_sword(&projSprite, &anim, &animSpeed, &fwd, &distance, &hitbox);
     
     proj = gf2d_projectile_create(
         self->position, 
@@ -569,8 +573,19 @@ void player_special_neutral_perform(Entity *self)
     proj->entity->anim->rend->sprite = projSprite;
     gf2d_animation_play(proj->entity->anim, anim[0], anim[1]);
     proj->entity->anim->playbackSpeed = animSpeed;
+    proj->modelBox = hitbox;
+    proj->entity->touch = player_special_neutral_touch;
     
     gf2d_scene_add_to_drawables(proj, DET_PHYS);
+}
+
+void player_special_neutral_touch(Entity *self, Entity *other)
+{
+    if(!self || !other) return;
+    if(other == phys->entity) return;
+
+    combat_do_damage(NULL, (GameObject*)other->abstraction, pj_spin_sword_damage(), 0.0f);
+    gf2d_projectile_free(self);
 }
 
 /* ======================SPECIAL DOWN============== */
