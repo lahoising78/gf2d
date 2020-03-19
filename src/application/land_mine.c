@@ -14,7 +14,8 @@ typedef struct
 
     PhysicsEntity               *player;
 
-    float damage;
+    float                       damage;
+    float                       knockback;
 } LandMineConfig;
 
 static LandMineConfig config = {0};
@@ -45,6 +46,7 @@ void land_mine_config(const char *filepath)
     config.player = gf2d_physics_entity_get_by_name("punti");
     
     sj_get_float_value( sj_object_get_value(json, "damage"), &config.damage );
+    sj_get_float_value( sj_object_get_value(json, "knockback"), &config.knockback );
 
     sj_free(json);
 }
@@ -100,8 +102,10 @@ void land_mine_touch(GameObject *self, GameObject *other)
 
     combat_do_damage(self, other, config.damage);
 
-    vector2d_sub(dir, other->self->position, self->self->position);
-    combat_knockback(self, other, dir, 30.0f);
+    vector2d_scale(dir, self->hitbox.dimensions.wh, 0.5f);
+    vector2d_add(dir, self->self->position, dir);
+    vector2d_sub(dir, other->self->position, dir);
+    combat_knockback(self, other, dir, config.knockback);
 
     gf2d_scene_remove_from_drawables(self->selfPhys);
     game_object_free( self );

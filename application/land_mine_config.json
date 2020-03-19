@@ -1,4 +1,5 @@
 {
     "phys": "application/entities/land_mine_phys.json",
-    "damage":                                           1.0
+    "damage":                                           1.0,
+    "knockback":                                        15.0
 }
