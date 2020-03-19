@@ -41,5 +41,6 @@ uint32_t *pj_anim_down_attack();
 float pj_anim_down_attack_speed();
 
 PJ_ATTACK_SETUP(slashDown);
+PJ_ATTACK_SETUP(slashUp);
 
 #endif

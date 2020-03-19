@@ -51,6 +51,8 @@ uint8_t player_special_up();
 uint8_t player_down_attack();
 
 void player_special_neutral_perform(Entity *self);
+void player_clear_hitbox(GameObject *gobj);
+void player_set_hitbox(GameObject *gobj, CollisionShape shape, uint32_t frame);
 void player_fix_hitbox(CollisionShape modelBox, CollisionShape *dst, uint8_t flip);
 void player_physical_attack(GameObject *self, GameObject *other);
 
@@ -228,12 +230,9 @@ void player_think(Entity *self)
             frame = gf2d_animation_get_frame(self->anim);
 
             pj_attk_slashDown(&hitbox, &start);
-            if(gobj && frame >= start)
+            if(frame >= start)
             {
-                gobj->hitbox = hitbox;
-                damageBox->modelBox = hitbox;
-                player_fix_hitbox(phys->modelBox, &gobj->hitbox, self->anim->rend->flip.x);
-                player_fix_hitbox(phys->modelBox, &damageBox->modelBox, self->anim->rend->flip.x);
+                player_set_hitbox(gobj, hitbox, start);
             }
 
             if ( frame >= anim[1] - 1 )
@@ -253,11 +252,7 @@ void player_think(Entity *self)
                 }
                 canCombo = 0;
 
-                if(gobj)
-                {
-                    memset(&gobj->hitbox, 0, sizeof(CollisionShape));
-                    memset(&damageBox->modelBox, 0, sizeof(CollisionShape));
-                }
+                player_clear_hitbox(gobj);
             }
             else if ( frame >= anim[1] - 5 )
             {
@@ -482,6 +477,28 @@ void player_physical_attack(GameObject *self, GameObject *other)
     if(!self || !other) return;
 
     combat_do_damage(self, other, 10.0f, 0.05f);
+}
+
+void player_clear_hitbox(GameObject *gobj)
+{
+    size_t colSize = sizeof(CollisionShape);
+    if(!gobj) return;
+    memset(&gobj->hitbox, 0, colSize);
+    memset(&damageBox->modelBox, 0, colSize);
+}
+
+void player_set_hitbox(GameObject *gobj, CollisionShape shape, uint32_t frame)
+{
+    if(!gobj) 
+    {
+        player_clear_hitbox(gobj);
+        return;
+    }
+
+    gobj->hitbox = shape;
+    damageBox->modelBox = shape;
+    player_fix_hitbox(phys->modelBox, &gobj->hitbox, phys->entity->anim->rend->flip.x);
+    player_fix_hitbox(phys->modelBox, &damageBox->modelBox, phys->entity->anim->rend->flip.x);
 }
 
 void player_fix_hitbox(CollisionShape modelBox, CollisionShape *dst, uint8_t flip)

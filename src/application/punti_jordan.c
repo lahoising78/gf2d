@@ -24,10 +24,11 @@ typedef struct
     
     uint32_t                slashDown[2];
     float                   slashDownSpeed;
-    ATTACK_CONFIG(slashDown)
+    ATTACK_CONFIG           (slashDown)
     
     uint32_t                slashUp[2];
     float                   slashUpSpeed;
+    ATTACK_CONFIG           (slashUp)
     
     uint32_t                slashSide[2];
     float                   slashSideSpeed;
@@ -84,6 +85,7 @@ void punti_jordan_load(const char *filename)
     punti_jordan_load_spin_sword( sj_object_get_value(json, "spinSword") );
 
     PJ_LOAD_ATTACK(slashDown, json);
+    PJ_LOAD_ATTACK(slashUp, json);
 
     sj_free(json);
 }
@@ -235,3 +237,4 @@ float pj_anim_down_attack_speed()
 }
 
 PJ_ATTACK_GET(slashDown)
+PJ_ATTACK_GET(slashUp)
