@@ -1,6 +1,7 @@
 #include "simple_logger.h"
 #include "game_object.h"
 #include "toxic_bomb.h"
+#include "combat.h"
 
 typedef struct
 {
@@ -13,6 +14,7 @@ typedef struct
 static ToxicBombConfig config = {0};
 
 void toxic_bomb_touch(Entity *self, Entity *other);
+void toxic_bomb_update(Entity *self);
 
 void toxic_bomb_config(const char *filepath)
 {
@@ -32,6 +34,7 @@ void toxic_bomb_init(PhysicsEntity *self)
     HAZARD_INIT_BEGIN(self)
 
     self->entity->touch = toxic_bomb_touch;
+    self->entity->update = toxic_bomb_update;
     self->entity->anim->rend->colorShift.w = config.alpha;
 
     if(gobj)
@@ -41,6 +44,18 @@ void toxic_bomb_init(PhysicsEntity *self)
 }
 
 extern float frameTime;
+void toxic_bomb_update(Entity *self)
+{
+    GameObject *gobj = self->abstraction;
+
+    if(!gobj) return;
+
+    if(gobj->target)
+    {
+        self->position = gobj->target->position;
+    }
+}
+
 void toxic_bomb_touch(Entity *self, Entity *other)
 {
     GameObject *gobj = NULL;
@@ -52,6 +67,8 @@ void toxic_bomb_touch(Entity *self, Entity *other)
     gobj = (GameObject*)self->abstraction;
     if(gobj)
     {
+        gobj->target = other;
+
         if(gobj->coolDown <= 0.0f)
         {
             game_object_free(gobj);
@@ -64,10 +81,11 @@ void toxic_bomb_touch(Entity *self, Entity *other)
         {
             slog("toxic bomb damage");
             gobj->shotsFired = config.damage.y;
+            combat_do_damage(gobj, other->abstraction, config.damage.z * config.damage.y);
         }
         else
         {
-            gobj->shotsFired -= frameTime;
+            gobj->shotsFired -= frameTime;              /* use shotsFired for damage rate */
         }
     }
 }

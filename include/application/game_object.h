@@ -20,6 +20,7 @@ typedef struct game_object_s
 
     void (*damage)(struct game_object_s *self, struct game_object_s *other);
     CollisionShape hitbox;
+    Entity *target;
 } GameObject;
 
 void game_object_manager_init(uint32_t count);
