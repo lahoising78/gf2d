@@ -1,6 +1,7 @@
 #include "simple_logger.h"
 #include "game_object.h"
 #include "ground_spikes.h"
+#include "combat.h"
 
 typedef struct
 {
@@ -10,7 +11,7 @@ typedef struct
     CollisionShape  shape;
 
     /* dmg */
-    float dmgCooldown;
+    Vector3D        damage;         /* damage, cooldown, knockback */
 
     PhysicsEntity *player;
 } GroundSpikesConfig;
@@ -18,13 +19,12 @@ typedef struct
 static GroundSpikesConfig config = {0};
 
 void ground_spikes_update(Entity *self);
-void ground_spikes_touch(Entity *self, Entity *other);
+void ground_spikes_touch(GameObject *self, GameObject *other);
 
 void ground_spikes_config(const char *filepath)
 {
     SJson *json = NULL;
     PhysicsEntity *phys = NULL;
-    SJson *obj = NULL;
 
     json = sj_load(filepath);
     if(!json)
@@ -46,13 +46,9 @@ void ground_spikes_config(const char *filepath)
     config.shape = phys->modelBox;
     slog("%u %u %u %.2f", config.sprite, config.canCollide, config.useGravity, config.shape.position.x);
     
-    obj = sj_object_get_value(json, "damage");
-    if(obj)
-    {
-        sj_get_float_value( sj_object_get_value(obj, "cooldown"), &config.dmgCooldown );
-    }
-
     config.player = gf2d_physics_entity_get_by_name("punti");
+
+    config.damage = gf2d_json_vector3d( sj_object_get_value(json, "damage") );
 
     sj_free(json);
 }
@@ -84,11 +80,12 @@ void ground_spikes_init(PhysicsEntity *self)
     {
         gobj->selfPhys = self;
         gobj->self = self->entity;
+        gobj->damage = ground_spikes_touch;
+        gobj->hitbox = config.shape;
         self->entity->abstraction = gobj;
     }
 
     self->entity->update = ground_spikes_update;
-    self->entity->touch = ground_spikes_touch;
 }
 
 extern float frameTime;
@@ -102,18 +99,24 @@ void ground_spikes_update(Entity *self)
 
     gobj->coolDown -= frameTime;
     if(gobj->coolDown < 0.0f) gobj->coolDown = 0.0f;
+
+    game_object_update(gobj);
 }
 
-void ground_spikes_touch(Entity *self, Entity *other)
+void ground_spikes_touch(GameObject *self, GameObject *other)
 {
-    GameObject *gobj = NULL;
-    if(!config.player) return;
+    Vector2D dir = {0};
     if(!self || !other) return;
-    if(other != config.player->entity) return;
+    if(!config.player) return;
+    if(other != config.player->entity->abstraction) return;
 
-    gobj = (GameObject*)self->abstraction;
-    if(!gobj || gobj->coolDown > 0.0f) return;
+    if(self->coolDown > 0.0f) return;
+    self->coolDown = config.damage.y;
 
-    slog("spike do dmg");
-    gobj->coolDown = config.dmgCooldown;
+    vector2d_scale(dir, self->hitbox.dimensions.wh, 0.5f);
+    vector2d_add(dir, dir, self->self->position);
+    vector2d_sub(dir, other->self->position, dir);
+
+    combat_do_damage(self, other, config.damage.x);
+    combat_knockback(self, other, dir, config.damage.z);
 }
