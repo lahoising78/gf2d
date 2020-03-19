@@ -1,6 +1,7 @@
 #include "simple_logger.h"
 #include "game_object.h"
 #include "drone.h"
+#include "combat.h"
 
 typedef struct
 {
@@ -20,6 +21,7 @@ typedef enum
 } DroneState;
 
 void drone_touch(Entity *self, Entity *other);
+void drone_damage(GameObject *self, GameObject *other);
 void drone_update(Entity *self);
 
 void drone_config(const char *filepath)
@@ -63,7 +65,6 @@ extern float frameTime;
 void drone_touch(Entity *self, Entity *other)
 {
     GameObject *gobj = NULL;
-    GameObject *otherGobj = NULL;
     HAZARD_TOUCH_CHECK(self, other)
     
     gobj = (GameObject*)self->abstraction;
@@ -74,26 +75,25 @@ void drone_touch(Entity *self, Entity *other)
     case DRONE_STATE_PICKUP:
         if(other != config.player->entity) return;
         gobj->state = DRONE_STATE_ACTIVE;
-        gobj->selfPhys->modelBox = config.area;
-        break;
-    
-    case DRONE_STATE_ACTIVE:
-        if(other == config.player->entity) return;
-
-        otherGobj = (GameObject*)other->abstraction;
-        if(!otherGobj) return;
-
-        if(otherGobj->hitstun <= 0.0f)
-        {
-            slog("touching entity");
-            otherGobj->hitstun = config.damage.x;
-        }
-
+        memset(&gobj->selfPhys->modelBox, 0, sizeof(CollisionShape));
+        gobj->hitbox = config.area;
+        gobj->damage = drone_damage;
         break;
 
     default:
         break;
     }
+}
+
+void drone_damage(GameObject *self, GameObject *other)
+{
+    if(!self || !other) return;
+    if(other->selfPhys == config.player) return;
+
+    // slog("DRONE DAMAGE");
+    combat_do_damage(self, other, config.damage.y);
+    if(other->hitstun <= 0.0f) 
+        other->hitstun = config.damage.x;
 }
 
 void drone_update(Entity *self)
@@ -107,6 +107,7 @@ void drone_update(Entity *self)
     if(gobj->state != DRONE_STATE_ACTIVE) return;
 
     vector2d_copy(self->position, config.player->entity->position);
+    game_object_update(gobj);
 
     gobj->health -= frameTime;
     if(gobj->health <= 0.0f)

@@ -96,6 +96,8 @@ void sentry_init(PhysicsEntity *phys)
     }
 
     obj->coolDown = config.burst.x;
+    obj->selfPhys = phys;
+    obj->self = phys->entity;
     phys->entity->abstraction = obj;
 
     phys->canCollide = config.canCollide;
