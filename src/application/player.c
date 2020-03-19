@@ -52,7 +52,7 @@ uint8_t player_down_attack();
 
 void player_special_neutral_perform(Entity *self);
 void player_clear_hitbox(GameObject *gobj);
-void player_set_hitbox(GameObject *gobj, CollisionShape shape, uint32_t frame);
+void player_set_hitbox(GameObject *gobj, CollisionShape shape);
 void player_fix_hitbox(CollisionShape modelBox, CollisionShape *dst, uint8_t flip);
 void player_physical_attack(GameObject *self, GameObject *other);
 
@@ -232,7 +232,7 @@ void player_think(Entity *self)
             pj_attk_slashDown(&hitbox, &start);
             if(frame >= start)
             {
-                player_set_hitbox(gobj, hitbox, start);
+                player_set_hitbox(gobj, hitbox);
             }
 
             if ( frame >= anim[1] - 1 )
@@ -265,6 +265,13 @@ void player_think(Entity *self)
             anim = pj_anim_slash_up();
             animSpeed = pj_anim_slash_up_speed();
             frame = gf2d_animation_get_frame(self->anim);
+
+            pj_attk_slashUp(&hitbox, &start);
+            if(frame >= start)
+            {
+                player_set_hitbox(gobj, hitbox);
+            }
+
             if (frame == anim[1] - 1)
             {
                 if( attacking <= 2 )
@@ -281,6 +288,8 @@ void player_think(Entity *self)
                 }
                 
                 canCombo = 0;
+
+                player_clear_hitbox(gobj);
             }
             else if ( frame >= anim[1] - 5 )
             {
@@ -487,7 +496,7 @@ void player_clear_hitbox(GameObject *gobj)
     memset(&damageBox->modelBox, 0, colSize);
 }
 
-void player_set_hitbox(GameObject *gobj, CollisionShape shape, uint32_t frame)
+void player_set_hitbox(GameObject *gobj, CollisionShape shape)
 {
     if(!gobj) 
     {

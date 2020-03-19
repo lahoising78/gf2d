@@ -32,7 +32,13 @@
     "slashUp": {
         "animation":                    5,
         "maxFrame":                     8,
-        "playbackSpeed":                0.8
+        "playbackSpeed":                0.8,
+        "start":                        3,
+        "hitbox": {
+            "position":                 [0.0, 16.0],
+            "dimensions":               [16.0, 32.0],
+            "shapeType":                "CST_BOX"
+        }
     },
 
     "slashSide": {
