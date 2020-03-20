@@ -1,0 +1,20 @@
+{
+    "sprite": {
+        "filename":                                 "images/burning_tire.png"
+    },
+    "modelBox": {
+        "position":                                 [24.0, 30.0],
+        "dimensions":                               [16.0, 30.0],
+        "shapeType":                                "CST_BOX"
+    },
+    "hitbox": {
+        "position":                                 [24.0, 30.0],
+        "dimensions":                               [16.0, 30.0],
+        "shapeType":                                "CST_BOX"
+    },
+    "maxHealth":                                    20.0,
+    "damage":                                       2.0,
+    "hitstun":                                      0.03,
+    "cooldown":                                     1.0,
+    "anticipation":                                 0.03
+}
