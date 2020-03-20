@@ -26,7 +26,8 @@ typedef enum
     PS_SPECIAL_NEUTRAL =        5,
     PS_SPECIAL_DOWN =           6,
     PS_SPECIAL_UP =             7,
-    PS_DOWN_ATTACK =            8
+    PS_DOWN_ATTACK =            8,
+    PS_BLOCK =                  9
 } PlayerState;
 
 typedef enum
@@ -49,6 +50,7 @@ uint8_t player_special_neutral();
 uint8_t player_special_down();
 uint8_t player_special_up();
 uint8_t player_down_attack();
+uint8_t player_blocking();
 
 void player_special_neutral_perform(Entity *self);
 void player_special_neutral_touch(Entity *self, Entity *other);
@@ -180,6 +182,10 @@ void player_think(Entity *self)
     else if ( player_special_neutral() )
     {
         currentState = PS_SPECIAL_NEUTRAL;
+    }
+    else if ( player_blocking() )
+    {
+        currentState = PS_BLOCK;
     }
     else if(walkDir != 0.0f)
     {
@@ -393,6 +399,15 @@ void player_think(Entity *self)
             gf2d_animation_pause(self->anim);
         }
         break;
+
+    case PS_BLOCK:
+        damageBox->entity->anim->rend->sprite = gf2d_sprite_load_image("images/block.png");
+        gobj = (GameObject*)self->abstraction;
+        if(gobj)
+        {
+            gobj->isProtected = 1;
+        }
+        break;
     
     default:
         if( self->anim->animation != ANIM_IDLE )
@@ -409,6 +424,7 @@ void player_think(Entity *self)
 void player_update(Entity *self)
 {
     Vector2D cam = {0};
+    GameObject *gobj = NULL;
     if(!self) return;
 
     /* update walking */
@@ -432,6 +448,15 @@ void player_update(Entity *self)
     game_object_update((GameObject*)self->abstraction);
     game_object_update((GameObject*)damageBox->entity->abstraction);
     vector2d_copy(damageBox->entity->position, self->position);
+    if(currentState != PS_BLOCK)
+    {
+        damageBox->entity->anim->rend->sprite = NULL;
+        gobj = (GameObject*)self->abstraction;
+        if(gobj)
+        {
+            gobj->isProtected = 0;
+        }
+    }
 }
 
 void player_walking()
@@ -618,4 +643,16 @@ uint8_t player_down_attack()
     btn = btn && down;
     btn = btn || currentState == PS_DOWN_ATTACK;
     return  btn && !phys->_onFloor;
+}
+
+/* ==================== BLOCK ==================== */
+uint8_t player_blocking()
+{
+    uint8_t btn = gf2d_input_key_just_pressed(SDL_SCANCODE_S) || currentState == PS_BLOCK;
+    if(gf2d_input_key_released(SDL_SCANCODE_S))
+    {
+        btn = 0;
+    }
+
+    return btn;
 }

@@ -4,7 +4,7 @@
 void combat_do_damage(GameObject *attacker, GameObject *target, float damage, float hitstun)
 {
     if(!target) return;
-    if(target->hitstun > 0.0f) return;
+    if(target->hitstun > 0.0f || target->isProtected) return;
 
     target->health -= damage;
     slog("new health %.2f", target->health);

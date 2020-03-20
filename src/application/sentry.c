@@ -3,6 +3,7 @@
 #include "gf2d_projectile.h"
 #include "gf2d_scene.h"
 #include "sentry.h"
+#include "combat.h"
 
 extern float frameTime;
 
@@ -179,6 +180,6 @@ void sentry_shot_touch(Entity *self, Entity *other)
 
     if(other != player->entity) return;
 
+    combat_do_damage(NULL, other->abstraction, 1.0f, 0.02f);
     gf2d_projectile_free(self);
-    
 }
