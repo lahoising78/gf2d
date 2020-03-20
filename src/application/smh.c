@@ -15,6 +15,7 @@
 #include "speed_boost.h"
 #include "burning_tire.h"
 #include "menacing_beer.h"
+#include "kamikaze.h"
 
 void load_next_level(Entity *self, Entity *other)
 {
@@ -55,6 +56,7 @@ void smh_awake()
     speed_boost_config("application/speed_boost_config.json");
     burning_tire_config("application/burning_tire_config.json");
     menacing_beer_config("application/menacing_beer_config.json");
+    kamikaze_config("application/kamikaze_config.json");
 
     player_create( gf2d_physics_entity_get_by_name("punti") );
 
@@ -111,4 +113,5 @@ void smh_awake()
     init_all("speed", speed_boost_init, 1);
     init_all("tire", burning_tire_init, 1);
     init_all("beer", menacing_beer_init, 1);
+    init_all("kaze", kamikaze_init, 1);
 }
