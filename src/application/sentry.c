@@ -34,6 +34,14 @@ typedef struct
 static SentryJson config = {0};
 static PhysicsEntity *player = NULL;
 
+typedef enum
+{
+    SENTRY_IDLE = 0,
+    SENTRY_SHOOT
+} SentryState;
+
+void sentry_think(Entity *self);
+
 void sentry_load_config(const char *filename)
 {
     SJson *json = NULL;
@@ -88,6 +96,7 @@ void sentry_init(PhysicsEntity *phys)
 
     phys->entity->update = sentry_update;
     phys->entity->touch = sentry_touch;
+    phys->entity->think = sentry_think;
     obj = game_object_new();
     if(!obj)
     {
@@ -99,6 +108,11 @@ void sentry_init(PhysicsEntity *phys)
     obj->coolDown = config.burst.x;
     obj->selfPhys = phys;
     obj->self = phys->entity;
+    obj->awareArea = gf2d_collision_shape(
+        vector2d(-236.0f, -236.0f),
+        vector2d(600.0f, 600.0f),
+        CST_BOX
+    );
     phys->entity->abstraction = obj;
 
     phys->canCollide = config.canCollide;
@@ -109,21 +123,49 @@ void sentry_init(PhysicsEntity *phys)
     player = gf2d_physics_entity_get_by_name("punti");
 }
 
+void sentry_think(Entity *self)
+{
+    GameObject *gobj = NULL;
+    if(!self) return;
+
+    gobj = (GameObject*)self->abstraction;
+    if(gobj)
+    {
+        if( game_object_player_in_area(gobj) )
+        {
+            gobj->state = SENTRY_SHOOT;
+        }
+        else
+        {
+            gobj->state = SENTRY_IDLE;
+        }
+    }
+}
+
 void sentry_update(Entity *self)
 {
     GameObject *obj = NULL;
     if(!self || !self->abstraction) return;
 
     obj = (GameObject*)self->abstraction;
+    if(!obj) return;
     self->anim->rend->flip.x = player->entity->position.x - self->position.x <= 0.0f;
     
-    if(obj->coolDown <= 0.0f)
+    switch (obj->state)
     {
-        sentry_shoot(self);
-    }
-    else
-    {
-        obj->coolDown -= frameTime;
+    case SENTRY_SHOOT:
+        if(obj->coolDown <= 0.0f)
+        {
+            sentry_shoot(self);
+        }
+        else
+        {
+            obj->coolDown -= frameTime;
+        }
+        break;
+    
+    default:
+        break;
     }
 
     game_object_update(obj);

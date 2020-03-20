@@ -17,28 +17,10 @@
             "name":                         "door"
         },
         {
-            "type":"DET_PHYS",
-            "drawable":"empty",
-            "position":[192.0, 0.0],
-            "name":"sentry0"
-        },
-        {
-            "type":"DET_PHYS",
-            "drawable":"empty",
-            "position":[192.0, 240.0],
-            "name":"mine0"
-        },
-        {
-            "type":"DET_PHYS",
-            "drawable":"empty",
-            "position":[270.0, 224.0],
-            "name":"spike0"
-        },
-        {
-            "type":"DET_PHYS",
-            "drawable":"empty",
-            "position":[400.0, 240.0],
-            "name":"tox0"
+            "type":                         "DET_PHYS",
+            "drawable":                     "empty",
+            "position":                     [400.0, 224.0],
+            "name":                         "sentry0"
         }
     ]
 }

@@ -22,6 +22,8 @@ typedef struct game_object_s
     CollisionShape hitbox;
     Entity *target;
     uint8_t isProtected;
+
+    CollisionShape awareArea;
 } GameObject;
 
 void game_object_manager_init(uint32_t count);
@@ -29,6 +31,7 @@ void game_object_manager_clean();
 
 GameObject *game_object_new();
 void game_object_update(GameObject *gobj);
+uint8_t game_object_player_in_area(GameObject *self);
 void game_object_free(GameObject *obj);
 
 #endif

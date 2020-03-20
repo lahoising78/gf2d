@@ -8,6 +8,7 @@ typedef struct
 } GameObjectManager;
 
 static GameObjectManager manager = {0};
+PhysicsEntity *playerGobj = NULL;
 
 void game_object_manager_close();
 uint8_t game_object_collision(GameObject *self, GameObject **o);
@@ -80,6 +81,25 @@ void game_object_update(GameObject *gobj)
         if(!gobj->_inuse || !gobj->selfPhys) return;
         vector2d_sub(gobj->hitbox.position, gobj->hitbox.position, gobj->selfPhys->entity->position);
     }
+}
+
+uint8_t game_object_player_in_area(GameObject *self)
+{
+    uint8_t res = 0;
+    if(!self || !self->self) return 0;
+    if(!playerGobj)
+    {
+        slog("there is no player gobj");
+        return 0;
+    }
+
+    vector2d_add(self->awareArea.position, self->awareArea.position, self->self->position);
+    vector2d_add(playerGobj->modelBox.position, playerGobj->modelBox.position, playerGobj->entity->position);
+    res = gf2d_collision_check(&self->awareArea, &playerGobj->modelBox, NULL);
+    vector2d_sub(self->awareArea.position, self->awareArea.position, self->self->position);
+    vector2d_sub(playerGobj->modelBox.position, playerGobj->modelBox.position, playerGobj->entity->position);
+
+    return res;
 }
 
 void game_object_free(GameObject *obj)

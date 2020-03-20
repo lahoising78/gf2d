@@ -74,6 +74,8 @@ uint8_t capSpUp = 0;
 extern float speedMultiplier;
 PhysicsEntity *damageBox = NULL;
 
+extern PhysicsEntity *playerGobj;
+
 void player_create(PhysicsEntity *self)
 {
     GameObject *gobj = NULL;
@@ -102,6 +104,8 @@ void player_create(PhysicsEntity *self)
         gobj->self = damageBox->entity;
         damageBox->entity->abstraction = gobj;
     }
+
+    playerGobj = self;
 }
 
 uint8_t player_play_anim(Animation *anim, uint32_t *params, float speed)
