@@ -16,6 +16,7 @@
 #include "burning_tire.h"
 #include "menacing_beer.h"
 #include "kamikaze.h"
+#include "annoying_block.h"
 
 void load_next_level(Entity *self, Entity *other)
 {
@@ -57,6 +58,7 @@ void smh_awake()
     burning_tire_config("application/burning_tire_config.json");
     menacing_beer_config("application/menacing_beer_config.json");
     kamikaze_config("application/kamikaze_config.json");
+    annoy_config("application/annoying_block_config.json");
 
     player_create( gf2d_physics_entity_get_by_name("punti") );
 
@@ -114,4 +116,5 @@ void smh_awake()
     init_all("tire", burning_tire_init, 1);
     init_all("beer", menacing_beer_init, 1);
     init_all("kaze", kamikaze_init, 1);
+    init_all("block", annoy_init, 1);
 }

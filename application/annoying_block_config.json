@@ -1,0 +1,20 @@
+{
+    "sprite": {
+        "filename":                                 "images/ice_m.png"
+    },
+    "modelBox": {
+        "position":                                 [16.0, 16.0],
+        "dimensions":                               [32.0, 48.0],
+        "shapeType":                                "CST_BOX"
+    },
+    "hitbox": {
+        "position":                                 [16.0, 16.0],
+        "dimensions":                               [32.0, 48.0],
+        "shapeType":                                "CST_BOX"
+    },
+    "maxHealth":                                    20.0,
+    "damage":                                       2.0,
+    "hitstun":                                      0.03,
+    "cooldown":                                     1.0,
+    "anticipation":                                 0.03
+}
