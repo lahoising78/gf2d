@@ -21,5 +21,7 @@
     "damage":                                       2.0,
     "hitstun":                                      0.03,
     "cooldown":                                     1.0,
-    "anticipation":                                 0.03
+    "anticipation":                                 0.03,
+
+    "velocity":                                     3.0
 }

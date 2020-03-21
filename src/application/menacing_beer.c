@@ -6,6 +6,8 @@
 typedef struct
 {
     ENEMY_COMMON
+
+    float velocity;
 } MenacingBeerConfig;
 
 static MenacingBeerConfig config = {0};
@@ -24,6 +26,8 @@ void menacing_beer_damage(GameObject *self, GameObject *other);
 void menacing_beer_config(const char *filepath)
 {
     ENEMY_CONFIG_BEGIN(config, filepath)
+
+    sj_get_float_value( sj_object_get_value(json, "velocity"), &config.velocity );
 
     sj_free(json);
 }
@@ -73,6 +77,12 @@ void menacing_beer_update(Entity *self)
 
     switch (gobj->state)
     {
+    case BEER_ATTACKING:
+
+        self->velocity.x = fabsf(config.player->entity->position.x - self->position.x) / (config.player->entity->position.x - self->position.x) * config.velocity;
+
+        break;
+
     case BEER_RESTING:
         gobj->coolDown -= frameTime;
         if(gobj->coolDown <= 0.0f)
@@ -85,8 +95,6 @@ void menacing_beer_update(Entity *self)
     default:
         break;
     }
-
-    slog("beer is in state %d", gobj->state);
 }
 
 void menacing_beer_damage(GameObject *self, GameObject *other)
