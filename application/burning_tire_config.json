@@ -8,8 +8,13 @@
         "shapeType":                                "CST_BOX"
     },
     "hitbox": {
-        "position":                                 [24.0, 30.0],
-        "dimensions":                               [16.0, 30.0],
+        "position":                                 [10.0, 20.0],
+        "dimensions":                               [44.0, 40.0],
+        "shapeType":                                "CST_BOX"
+    },
+    "awareArea": {
+        "position":                                 [-468.0, -468.0],
+        "dimensions":                               [1000.0, 1000.0],
         "shapeType":                                "CST_BOX"
     },
     "maxHealth":                                    20.0,

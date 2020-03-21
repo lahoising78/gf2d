@@ -1,3 +1,4 @@
+#include "simple_logger.h"
 #include "game_object.h"
 #include "kamikaze.h"
 

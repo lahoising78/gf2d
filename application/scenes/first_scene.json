@@ -19,8 +19,8 @@
         {
             "type":                         "DET_PHYS",
             "drawable":                     "empty",
-            "position":                     [400.0, 224.0],
-            "name":                         "sentry0"
+            "position":                     [400.0, 192.0],
+            "name":                         "tire0"
         }
     ]
 }

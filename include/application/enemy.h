@@ -8,6 +8,7 @@ void enemy##_init(PhysicsEntity *self);
  * @param sprite is the sprite of the enemy
  * @param modelBox is the collision shape that will be used for physics
  * @param hitbox will be the hitbox used to attack
+ * @param awareArea a certain area around the enemy to check for the player
  * @param damage how much damage to deal with their attacks
  * @param hitstun the hitstun to apply to the target when damage is dealt
  * @param maxHealth max possible health for the enemy
@@ -17,11 +18,13 @@ void enemy##_init(PhysicsEntity *self);
 #define ENEMY_COMMON Sprite *sprite; \
 CollisionShape modelBox; \
 CollisionShape hitbox; \
+CollisionShape awareArea; \
 float maxHealth; \
 float damage; \
 float hitstun; \
 float cooldown; \
-float anticipation;
+float anticipation; \
+PhysicsEntity *player;
 
 #define ENEMY_CONFIG_BEGIN(config, filepath)\
 SJson *json = NULL; \
@@ -31,11 +34,13 @@ if(!json) return; \
 config.sprite = gf2d_json_sprite( sj_object_get_value(json, "sprite") ); \
 config.modelBox = gf2d_collision_shape_load( sj_object_get_value(json, "modelBox") ); \
 config.hitbox = gf2d_collision_shape_load( sj_object_get_value(json, "hitbox") ); \
+config.awareArea = gf2d_collision_shape_load( sj_object_get_value(json, "awareArea") ); \
 sj_get_float_value( sj_object_get_value(json, "damage"), &config.damage ); \
 sj_get_float_value( sj_object_get_value(json, "hitstun"), &config.hitstun ); \
 sj_get_float_value( sj_object_get_value(json, "maxHealth"), &config.maxHealth ); \
 sj_get_float_value( sj_object_get_value(json, "cooldown"), &config.cooldown ); \
-sj_get_float_value( sj_object_get_value(json, "anticipation"), &config.anticipation ); 
+sj_get_float_value( sj_object_get_value(json, "anticipation"), &config.anticipation ); \
+config.player = gf2d_physics_entity_get_by_name("punti");
 
 #define ENEMY_INIT_BEGIN(config, phys) GameObject *gobj = NULL; \
 if(!phys) return; \
@@ -47,6 +52,11 @@ phys->type = PET_KINETIC; \
 gobj = game_object_new(); \
 if(gobj) { \
     gobj->health = config.maxHealth; \
+    gobj->awareArea = config.awareArea; \
+    gobj->self = phys->entity; \
+    gobj->selfPhys = phys; \
+    gobj->hitbox = config.hitbox; \
+    phys->entity->abstraction = gobj; \
 }
 
 #endif
