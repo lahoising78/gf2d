@@ -80,7 +80,7 @@ void burning_tire_update(Entity *self)
     switch (gobj->state)
     {
     case TIRE_ATTACKING:
-        self->velocity.x = config.player->entity->position.x - self->position.x;
+        self->velocity.x = (config.player->entity->position.x - self->position.x) / fabsf(config.player->entity->position.x - self->position.x);
         if(gobj->selfPhys->_onFloor)
         {
             self->velocity.y = -10.0f;
@@ -106,10 +106,12 @@ void burning_tire_damage(GameObject *self, GameObject *other)
 {
     if(!self || !other) return;
     if(other->selfPhys != config.player) return;
+    if(self->state == TIRE_REST) return;
 
     if( combat_do_damage(self, other, config.damage, config.hitstun) )
     {
         self->state = TIRE_REST;
         self->coolDown = config.cooldown;
+        vector2d_clear(self->self->velocity);
     }
 }

@@ -3,13 +3,13 @@
         "filename":                                 "images/burning_tire.png"
     },
     "modelBox": {
-        "position":                                 [24.0, 30.0],
-        "dimensions":                               [16.0, 30.0],
+        "position":                                 [22.0, 20.0],
+        "dimensions":                               [20.0, 40.0],
         "shapeType":                                "CST_BOX"
     },
     "hitbox": {
-        "position":                                 [10.0, 20.0],
-        "dimensions":                               [44.0, 40.0],
+        "position":                                 [22.0, 20.0],
+        "dimensions":                               [20.0, 40.0],
         "shapeType":                                "CST_BOX"
     },
     "awareArea": {
