@@ -8,13 +8,25 @@
         "shapeType":                                "CST_BOX"
     },
     "hitbox": {
-        "position":                                 [0.0, 0.0],
-        "dimensions":                               [32.0, 64.0],
+        "position":                                 [-84.0, -68.0],
+        "dimensions":                               [200.0, 200.0],
+        "shapeType":                                "CST_BOX"
+    },
+    "awareArea": {
+        "position":                                 [-468.0, -468.0],
+        "dimensions":                               [1000.0, 1000.0],
         "shapeType":                                "CST_BOX"
     },
     "maxHealth":                                    20.0,
     "damage":                                       2.0,
     "hitstun":                                      0.03,
-    "cooldown":                                     1.0,
-    "anticipation":                                 0.03
+    "cooldown":                                     0.1,
+    "anticipation":                                 0.1,
+
+    "velocity":                                     3.0,
+    "explosion": {
+        "position":                                 [-118.0, -118.0],
+        "dimensions":                               [300.0, 300.0],
+        "shapeType":                                "CST_BOX"
+    }
 }
