@@ -7,6 +7,7 @@ typedef struct
 {
     ENEMY_COMMON
 
+    float velocity;
     CollisionShape explosion;
 } KamikazeConfig;
 
@@ -29,6 +30,7 @@ void kamikaze_config(const char *filepath)
     ENEMY_CONFIG_BEGIN(config, filepath)
 
     config.explosion = gf2d_collision_shape_load( sj_object_get_value(json, "explosion") );
+    sj_get_float_value( sj_object_get_value(json, "velocity"), &config.velocity );
 
     sj_free(json);
 }
@@ -58,16 +60,7 @@ void kamikaze_think(Entity *self)
     {
         if(gobj->state != KAMIKAZE_EXPLODING)
         {
-        //     switch (gobj->state)
-        //     {
-        //     case KAMIKAZE_CHARGING:
-                
-        //         break;
-            
-        //     default:
-                gobj->state = KAMIKAZE_ATTACKING;
-        //         break;
-        //     }
+            gobj->state = KAMIKAZE_ATTACKING;
         }
     }
     else
@@ -78,6 +71,7 @@ void kamikaze_think(Entity *self)
 void kamikaze_update(Entity *self)
 {
     GameObject *gobj = NULL;
+    float v = 0.0f;
     if(!self) return;
     gobj = (GameObject*)self->abstraction;
     if(!gobj) return;
@@ -89,35 +83,37 @@ void kamikaze_update(Entity *self)
         gobj->coolDown = 0.0f;
         self->anim->rend->colorShift.w = 255;
     }
-    // else
-    // {
-        switch (gobj->state)
-        {
-        case KAMIKAZE_CHARGING:
-            gobj->coolDown -= frameTime;
-            self->anim->rend->colorShift.w = gobj->coolDown / config.anticipation * 255;
-            if(gobj->coolDown <= 0.0f) 
-            {
-                gobj->state = KAMIKAZE_EXPLODING;
-                gobj->coolDown = config.cooldown;
-                self->anim->rend->position = config.explosion.position;
-                vector2d_scale( self->anim->rend->scale, self->anim->rend->scale, config.explosion.dimensions.wh.x / (float)config.sprite->frame_w );
-                gobj->hitbox = config.explosion;
-            }
-            break;
+    switch (gobj->state)
+    {
+    case KAMIKAZE_ATTACKING:
+        v = config.player->entity->position.x - self->position.x;
+        self->velocity.x = fabsf( v ) / v * config.velocity;
+        break;
 
-        case KAMIKAZE_EXPLODING:
-            gobj->coolDown -= frameTime;
-            if(gobj->coolDown <= 0.0f)
-            {
-                game_object_free(gobj);
-            }
-            break;
-        
-        default:
-            break;
+    case KAMIKAZE_CHARGING:
+        gobj->coolDown -= frameTime;
+        self->anim->rend->colorShift.w = gobj->coolDown / config.anticipation * 255;
+        if(gobj->coolDown <= 0.0f) 
+        {
+            gobj->state = KAMIKAZE_EXPLODING;
+            gobj->coolDown = config.cooldown;
+            self->anim->rend->position = config.explosion.position;
+            vector2d_scale( self->anim->rend->scale, self->anim->rend->scale, config.explosion.dimensions.wh.x / (float)config.sprite->frame_w );
+            gobj->hitbox = config.explosion;
         }
-    // }
+        break;
+
+    case KAMIKAZE_EXPLODING:
+        gobj->coolDown -= frameTime;
+        if(gobj->coolDown <= 0.0f)
+        {
+            game_object_free(gobj);
+        }
+        break;
+    
+    default:
+        break;
+    }
 
     slog("kamikaze state %d %.2f", gobj->state, gobj->coolDown);
 }
