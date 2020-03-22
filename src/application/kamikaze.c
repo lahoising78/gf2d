@@ -77,6 +77,9 @@ void kamikaze_update(Entity *self)
     gobj = (GameObject*)self->abstraction;
     if(!gobj) return;
 
+    if(gobj->health <= 0.0f)
+        game_object_free(gobj);
+
     game_object_update(gobj);
 
     if(gobj->state != KAMIKAZE_CHARGING && gobj->state != KAMIKAZE_EXPLODING)
@@ -84,6 +87,9 @@ void kamikaze_update(Entity *self)
         gobj->coolDown = 0.0f;
         self->anim->rend->colorShift.w = 255;
     }
+
+
+
     switch (gobj->state)
     {
     case KAMIKAZE_ATTACKING:

@@ -73,6 +73,11 @@ void menacing_beer_update(Entity *self)
     gobj = (GameObject*)self->abstraction;
     if(!gobj) return;
 
+    if(gobj->health <= 0.0f)
+    {
+        game_object_free(gobj);
+    }
+
     game_object_update(gobj);
 
     switch (gobj->state)

@@ -13,5 +13,7 @@
             "dimensions":           [16.0, 16.0],
             "shapeType":            "CST_BOX"
         }
-    }
+    },
+
+    "maxHealth":                    20.0
 }

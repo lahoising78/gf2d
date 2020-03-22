@@ -29,6 +29,8 @@ typedef struct
     Vector2D projOffset;
     float projScale;
     CollisionShape projShape;
+
+    float maxHealth;
 } SentryJson;
 
 static SentryJson config = {0};
@@ -75,6 +77,7 @@ void sentry_load_config(const char *filename)
         config.projOffset = gf2d_json_vector2d( sj_object_get_value(obj, "offset") );
         config.projShape = gf2d_collision_shape_load( sj_object_get_value(obj, "hitbox") );
     }
+    sj_get_float_value( sj_object_get_value(json, "maxHealth"), &config.maxHealth );
 
     sj_free(json);
 }
@@ -113,6 +116,7 @@ void sentry_init(PhysicsEntity *phys)
         vector2d(600.0f, 600.0f),
         CST_BOX
     );
+    obj->health = config.maxHealth;
     phys->entity->abstraction = obj;
 
     phys->canCollide = config.canCollide;
@@ -150,6 +154,9 @@ void sentry_update(Entity *self)
     obj = (GameObject*)self->abstraction;
     if(!obj) return;
     self->anim->rend->flip.x = player->entity->position.x - self->position.x <= 0.0f;
+
+    if(obj->health <= 0.0f)
+        game_object_free(obj);
     
     switch (obj->state)
     {
