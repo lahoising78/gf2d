@@ -12,6 +12,11 @@
         "dimensions":                               [32.0, 48.0],
         "shapeType":                                "CST_BOX"
     },
+    "awareArea": {
+        "position":                                 [-484.0, -484.0],
+        "dimensions":                               [1000.0, 1000.0],
+        "shapeType":                                "CST_BOX"
+    },
     "maxHealth":                                    20.0,
     "damage":                                       2.0,
     "hitstun":                                      0.03,

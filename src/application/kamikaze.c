@@ -66,6 +66,7 @@ void kamikaze_think(Entity *self)
     else
     {
         gobj->state = KAMIKAZE_IDLE;
+        self->velocity.x = 0.0f;
     }
 }
 void kamikaze_update(Entity *self)

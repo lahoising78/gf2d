@@ -13,8 +13,8 @@
         "shapeType":                                "CST_BOX"
     },
     "awareArea": {
-        "position":                                 [-468.0, -468.0],
-        "dimensions":                               [1000.0, 1000.0],
+        "position":                                 [-368.0, -368.0],
+        "dimensions":                               [800.0, 800.0],
         "shapeType":                                "CST_BOX"
     },
     "maxHealth":                                    20.0,
