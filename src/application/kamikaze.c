@@ -116,7 +116,7 @@ void kamikaze_update(Entity *self)
         break;
     }
 
-    slog("kamikaze state %d %.2f", gobj->state, gobj->coolDown);
+    // slog("kamikaze state %d %.2f", gobj->state, gobj->coolDown);
 }
 void kamikaze_damage(GameObject *self, GameObject *other)
 {

@@ -4,22 +4,25 @@
     },
     "modelBox": {
         "position":                                 [16.0, 16.0],
-        "dimensions":                               [32.0, 48.0],
+        "dimensions":                               [32.0, 47.0],
         "shapeType":                                "CST_BOX"
     },
     "hitbox": {
-        "position":                                 [16.0, 16.0],
-        "dimensions":                               [32.0, 48.0],
+        "position":                                 [12.0, 12.0],
+        "dimensions":                               [40.0, 52.0],
         "shapeType":                                "CST_BOX"
     },
     "awareArea": {
-        "position":                                 [-484.0, -484.0],
-        "dimensions":                               [1000.0, 1000.0],
+        "position":                                 [-368.0, -368.0],
+        "dimensions":                               [800.0, 800.0],
         "shapeType":                                "CST_BOX"
     },
     "maxHealth":                                    20.0,
     "damage":                                       2.0,
     "hitstun":                                      0.03,
-    "cooldown":                                     1.0,
-    "anticipation":                                 0.03
+    "cooldown":                                     0.8,
+    "anticipation":                                 0.03,
+
+    "duration":                                     0.3,
+    "velocity":                                     3.0
 }

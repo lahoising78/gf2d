@@ -73,6 +73,7 @@ float dash = 0.0f;
 uint8_t capSpUp = 0;
 extern float speedMultiplier;
 PhysicsEntity *damageBox = NULL;
+extern float playerTimeout;
 
 extern PhysicsEntity *playerGobj;
 
@@ -131,6 +132,8 @@ void player_think(Entity *self)
     uint32_t start = 0;
     CollisionShape hitbox = {0};
     GameObject *gobj = NULL;
+
+    if(playerTimeout > 0.0f) return;
     
     if(!self) return;
     gobj = (GameObject*)damageBox->entity->abstraction;
@@ -430,6 +433,7 @@ void player_update(Entity *self)
     Vector2D cam = {0};
     GameObject *gobj = NULL;
     if(!self) return;
+    if(playerTimeout > 0.0f) return;
 
     /* update walking */
     self->velocity.x = walkDir * VELOCITY_CONST * speedMultiplier;
