@@ -1,10 +1,13 @@
 #include "simple_logger.h"
+#include "combat.h"
 #include "game_object.h"
 #include "kamikaze.h"
 
 typedef struct
 {
     ENEMY_COMMON
+
+    CollisionShape explosion;
 } KamikazeConfig;
 
 static KamikazeConfig config = {0};
@@ -24,6 +27,8 @@ void kamikaze_damage(GameObject *self, GameObject *other);
 void kamikaze_config(const char *filepath)
 {
     ENEMY_CONFIG_BEGIN(config, filepath)
+
+    config.explosion = gf2d_collision_shape_load( sj_object_get_value(json, "explosion") );
 
     sj_free(json);
 }
@@ -77,12 +82,12 @@ void kamikaze_update(Entity *self)
     gobj = (GameObject*)self->abstraction;
     if(!gobj) return;
 
-    if(gobj->state == KAMIKAZE_CHARGING) gobj->state = KAMIKAZE_ATTACKING;
     game_object_update(gobj);
 
     if(gobj->state != KAMIKAZE_CHARGING && gobj->state != KAMIKAZE_EXPLODING)
     {
         gobj->coolDown = 0.0f;
+        self->anim->rend->colorShift.w = 255;
     }
     // else
     // {
@@ -90,10 +95,14 @@ void kamikaze_update(Entity *self)
         {
         case KAMIKAZE_CHARGING:
             gobj->coolDown -= frameTime;
+            self->anim->rend->colorShift.w = gobj->coolDown / config.anticipation * 255;
             if(gobj->coolDown <= 0.0f) 
             {
                 gobj->state = KAMIKAZE_EXPLODING;
                 gobj->coolDown = config.cooldown;
+                self->anim->rend->position = config.explosion.position;
+                vector2d_scale( self->anim->rend->scale, self->anim->rend->scale, config.explosion.dimensions.wh.x / (float)config.sprite->frame_w );
+                gobj->hitbox = config.explosion;
             }
             break;
 
@@ -126,6 +135,10 @@ void kamikaze_damage(GameObject *self, GameObject *other)
             self->coolDown = config.anticipation;
             slog("SET THE COOLDOWN %.2f", self->coolDown);
         }
+        break;
+
+    case KAMIKAZE_EXPLODING:
+        combat_do_damage(self, other, config.damage, config.hitstun);
         break;
     
     default:
