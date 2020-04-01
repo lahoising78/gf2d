@@ -2,6 +2,7 @@
 #include "simple_logger.h"
 #include "gf2d_graphics.h"
 #include "gf2d_label.h"
+#include "gf2d_camera.h"
 
 typedef struct
 {
@@ -154,7 +155,9 @@ void gf2d_label_render( Label *label )
 {
     if(!label) return;
 
+    if(label->_display) vector2d_sub(label->_display->position, label->_display->position, gf2d_camera_get_displaced_position(label->_display->position));
     gf2d_render_ent_draw( label->_display );
+    if(label->_display) vector2d_add(label->_display->position, label->_display->position, gf2d_camera_get_displaced_position(label->_display->position));
 }
 
 void gf2d_label_free(Label *label)

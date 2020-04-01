@@ -91,6 +91,7 @@ int main(int argc, char * argv[])
             gf2d_scene_render();
             
             //UI elements last
+            // gf2d_ui_manager_render();
 
         gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
 

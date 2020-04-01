@@ -1,6 +1,7 @@
 #include "simple_logger.h"
 #include "gf2d_progress_bar.h"
 #include "gf2d_sprite_manipulation.h"
+#include "gf2d_camera.h"
 
 typedef struct
 {
@@ -102,10 +103,26 @@ ProgressBar *gf2d_progress_bar_new(Vector4D *backColor, Vector2D backSize, Vecto
 
 void gf2d_progress_bar_render(ProgressBar *pbar)
 {
+    Vector2D back = {0};
+    Vector2D fore = {0};
     if(!pbar) return;
 
+    if(pbar->_background) 
+    {
+        back = pbar->_background->position;
+        vector2d_sub(pbar->_background->position, pbar->_background->position, gf2d_camera_get_displaced_position(pbar->_background->position));
+        vector2d_add(pbar->_background->position, pbar->_background->position, back);
+    }
+    if(pbar->_foreground) 
+    {
+        fore = pbar->_foreground->position;
+        vector2d_sub(pbar->_foreground->position, pbar->_foreground->position, gf2d_camera_get_displaced_position(pbar->_foreground->position));
+        vector2d_add(pbar->_foreground->position, pbar->_foreground->position, fore);
+    }
     gf2d_render_ent_draw(pbar->_background);
     gf2d_render_ent_draw(pbar->_foreground);
+    if(pbar->_background) pbar->_background->position = back;
+    if(pbar->_foreground) pbar->_foreground->position = fore;
 }
 
 void gf2d_progress_bar_free(ProgressBar *pbar)

@@ -7,6 +7,7 @@
 typedef struct game_object_s
 {
     float health;
+    float maxHealth;
     float coolDown;
     int state;
     float shotsFired;

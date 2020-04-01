@@ -7,6 +7,7 @@
 #include "game_object.h"
 #include "player.h"
 #include "combat.h"
+#include <SDL2/SDL.h>
 
 #define VELOCITY_CONST 3.0f
 
@@ -74,12 +75,27 @@ uint8_t capSpUp = 0;
 extern float speedMultiplier;
 PhysicsEntity *damageBox = NULL;
 extern float playerTimeout;
+UIComponent *hp_ui = NULL;
 
 extern PhysicsEntity *playerGobj;
+
+ProgressBar *player_hp_ui()
+{
+    return hp_ui ? hp_ui->component.pbar : NULL;
+}
+
+PhysicsEntity *player_get_phys()
+{
+    return phys;
+}
+
 
 void player_create(PhysicsEntity *self)
 {
     GameObject *gobj = NULL;
+    Vector4D backColor = {0};
+    Vector4D foreColor = {0};
+    char htext[32];
     if(!self || !self->entity) return;
     
     self->entity->think = player_think;
@@ -92,6 +108,7 @@ void player_create(PhysicsEntity *self)
         gobj->self = self->entity;
         gobj->selfPhys = self;
         self->entity->abstraction = gobj;
+        gobj->health = gobj->maxHealth = 100.0f;
     }
 
     damageBox = gf2d_physics_entity_new("pHit");
@@ -104,9 +121,24 @@ void player_create(PhysicsEntity *self)
         gobj->selfPhys = damageBox;
         gobj->self = damageBox->entity;
         damageBox->entity->abstraction = gobj;
+        gobj->health = gobj->maxHealth = 100.0f;
+        // snprintf(htext, sizeof(htext), "%.0f/%.0f", gobj->health, gobj->maxHealth);
     }
 
     playerGobj = self;
+
+    backColor = vector4d(0.0f, 0.0f, 0.0f, 255.0f);
+    foreColor = vector4d(255.0f, 255.0f, 255.0f, 255.0f);
+    hp_ui = gf2d_ui_progress_bar_new(
+        &backColor,
+        vector2d(400.0f, 50.0f),
+        &foreColor,
+        vector2d(380.0f, 30.0f)
+    );
+    gf2d_progress_bar_set_position_and_offset(hp_ui->component.pbar, vector2d(10.0f, 10.0f), vector2d(10.0f, 10.0f));
+    gf2d_progress_bar_set_max_value( hp_ui->component.pbar, gobj->maxHealth);
+    gf2d_progress_bar_set_value( hp_ui->component.pbar, gobj->health );
+    gf2d_scene_add_to_drawables(hp_ui, DET_UI);
 }
 
 uint8_t player_play_anim(Animation *anim, uint32_t *params, float speed)
