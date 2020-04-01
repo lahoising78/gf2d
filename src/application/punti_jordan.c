@@ -55,6 +55,9 @@ typedef struct
     
     uint32_t                downAttack[2];
     float                   downAttackSpeed;
+
+    uint32_t                taunt[2];
+    float                   tauntSpeed;
 } PuntiJordanConfig;
 
 static PuntiJordanConfig pj_config = {0};
@@ -83,6 +86,7 @@ void punti_jordan_load(const char *filename)
     punti_jordan_load_anim_values(pj_config.tornado, &pj_config.tornadoSpeed, sj_object_get_value(json, "tornado"));
     punti_jordan_load_anim_values(pj_config.recover, &pj_config.recoverSpeed, sj_object_get_value(json, "recover"));
     punti_jordan_load_anim_values(pj_config.downAttack, &pj_config.downAttackSpeed, sj_object_get_value(json, "downAttack"));
+    punti_jordan_load_anim_values(pj_config.taunt, &pj_config.tauntSpeed, sj_object_get_value(json, "taunt"));
 
     punti_jordan_load_dash( sj_object_get_value(json, "dash") );
     punti_jordan_load_spin_sword( sj_object_get_value(json, "spinSword") );
@@ -246,6 +250,16 @@ uint32_t *pj_anim_down_attack()
 float pj_anim_down_attack_speed()
 {
     return pj_config.downAttackSpeed;
+}
+
+uint32_t *pj_anim_taunt()
+{
+    return pj_config.taunt;
+}
+
+float pj_anim_taunt_speed()
+{
+    return pj_config.tauntSpeed;
 }
 
 PJ_ATTACK_GET(slashDown)

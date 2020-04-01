@@ -28,7 +28,8 @@ typedef enum
     PS_SPECIAL_DOWN =           6,
     PS_SPECIAL_UP =             7,
     PS_DOWN_ATTACK =            8,
-    PS_BLOCK =                  9
+    PS_BLOCK =                  9,
+    PS_TAUNT =                  10
 } PlayerState;
 
 typedef enum
@@ -61,6 +62,7 @@ uint8_t player_special_down();
 uint8_t player_special_up();
 uint8_t player_down_attack();
 uint8_t player_blocking();
+uint8_t player_taunt();
 
 void player_special_neutral_perform(Entity *self);
 void player_special_neutral_touch(Entity *self, Entity *other);
@@ -228,6 +230,10 @@ void player_think(Entity *self)
     {
         attacking = 0;
         currentState = PS_JUMPING;
+    }
+    else if ( player_taunt() )
+    {
+        currentState = PS_TAUNT;
     }
     else if( attacking )
     {
@@ -465,6 +471,10 @@ void player_think(Entity *self)
         {
             gobj->isProtected = 1;
         }
+        break;
+
+    case PS_TAUNT:
+        player_play_anim(self->anim, pj_anim_taunt(), pj_anim_taunt_speed() );
         break;
     
     default:
@@ -730,6 +740,18 @@ uint8_t player_blocking()
         btn = 0;
     }
 
+    return btn;
+}
+
+/* ==================== TAUNT =================== */
+uint8_t player_taunt()
+{
+    uint8_t btn = gf2d_input_key_just_pressed(SDL_SCANCODE_T) || currentState == PS_TAUNT;
+    if(gf2d_input_key_released(SDL_SCANCODE_T))
+    {
+        btn = 0;
+    }
+    slog("taunt %u", btn);
     return btn;
 }
 

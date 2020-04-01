@@ -95,5 +95,11 @@
         "animation":                    10,
         "maxFrame":                     5,
         "playbackSpeed":                0.8
+    },
+
+    "taunt": {
+        "animation":                    11,
+        "maxFrame":                     7,
+        "playbackSpeed":                1.0
     }
 }
