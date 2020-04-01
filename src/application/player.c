@@ -729,10 +729,11 @@ void player_save()
         return;
     }
 
-    /* player object */
-    obj = gf2d_physics_entity_save(phys);
-    game_object_save(phys->entity->abstraction, obj);
-    sj_array_append(ent_list, obj);
+    // /* player object */
+    // obj = gf2d_physics_entity_save(phys);
+    // game_object_save(phys->entity->abstraction, obj);
+    // sj_array_append(ent_list, obj);
+    game_object_manager_save(ent_list);
 
     sj_object_insert(json, "entities", ent_list);
     sj_save(json, SAVE_FILE);

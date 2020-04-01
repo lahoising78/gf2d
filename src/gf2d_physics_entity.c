@@ -107,6 +107,21 @@ void gf2d_physics_entity_manager_update()
     }
 }
 
+void gf2d_physics_entity_manager_save(SJson *dst)
+{
+    PhysicsEntity *phys = NULL;
+    int i;
+    if(!dst) return;
+
+    for(i = 0; i < gf2d_physics_entity_manager.count; i++)
+    {
+        phys = &gf2d_physics_entity_manager.entity_list[i];
+        if(phys->name[0] == 0) continue;
+
+        gf2d_physics_entity_save(phys);
+    }
+}
+
 PhysicsEntity *gf2d_physics_entity_new(const char *name)
 {
     int i;

@@ -43,6 +43,25 @@ void game_object_manager_close()
     if(manager.list) free(manager.list);
 }
 
+void game_object_manager_save(SJson *dst)
+{
+    SJson *json = NULL;
+    GameObject *obj = NULL;
+    int i;
+    if(!dst);
+
+    for(i = 0; i < manager.count; i++)
+    {
+        obj = &manager.list[i];
+        if(!obj->selfPhys) continue;
+        if(obj->selfPhys->name[0] == 0) continue;
+
+        json = gf2d_physics_entity_save(obj->selfPhys);
+        game_object_save(obj, json);
+        sj_array_append(dst, json);
+    }
+}
+
 GameObject *game_object_new()
 {
     int i;

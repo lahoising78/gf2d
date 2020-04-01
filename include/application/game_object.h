@@ -29,6 +29,7 @@ typedef struct game_object_s
 
 void game_object_manager_init(uint32_t count);
 void game_object_manager_clean();
+void game_object_manager_save(SJson *dst);
 
 GameObject *game_object_new();
 void game_object_update(GameObject *gobj);

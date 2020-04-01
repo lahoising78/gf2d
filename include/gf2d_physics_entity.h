@@ -50,6 +50,8 @@ void gf2d_physics_entity_manager_initialize_entities();
  */
 void gf2d_physics_entity_manager_update();
 
+void gf2d_physics_entity_manager_save(SJson *dst);
+
 /** 
  * @brief get a physics entity that is not being used
  * @return a pointer to a physics entity
