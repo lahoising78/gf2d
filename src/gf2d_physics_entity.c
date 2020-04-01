@@ -67,17 +67,18 @@ void gf2d_physics_entity_manager_clean( uint32_t freeEntity )
 {
     int i;
     PhysicsEntity *ent = NULL;
-
-    if(freeEntity)
-    {
-        memset(gf2d_physics_entity_manager.entity_list, 0, gf2d_physics_entity_manager.count*sizeof(PhysicsEntity));
-        return;
-    }
+    slog("clean physics entity manager");
 
     for(i = 0; i < gf2d_physics_entity_manager.count; i++)
     {
         ent = &gf2d_physics_entity_manager.entity_list[i];
         gf2d_physics_entity_free(ent);
+    }
+    
+    if(freeEntity)
+    {
+        memset(gf2d_physics_entity_manager.entity_list, 0, gf2d_physics_entity_manager.count*sizeof(PhysicsEntity));
+        return;
     }
 
     gf2d_trie_free(&gf2d_physics_entity_manager.entity_trie);
@@ -210,7 +211,7 @@ void gf2d_physics_entity_free( PhysicsEntity *ent )
 
     if(!ent) return;
 
-    if( gfc_line_cmp(ent->name, "") != 0 )
+    if( ent->name[0] != 0 )
     {
         gf2d_trie_remove(&gf2d_physics_entity_manager.entity_trie, ent->name);
     }

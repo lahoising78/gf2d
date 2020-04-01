@@ -5,6 +5,16 @@
         {
             "type":                         "DET_TMAP",
             "drawable":                     "application/scenes/second_scene_tilemap.json"
+        },
+        {
+            "type":                         "DET_PHYS",
+            "drawable":                     "application/entities/punti_jordan_phys.json"
+        },
+        {
+            "type":                         "DET_PHYS",
+            "drawable":                     "empty",
+            "position":                     [964.0, 1214.0],
+            "name":                         "door"
         }
     ]
 }
