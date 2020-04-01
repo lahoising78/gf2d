@@ -13,7 +13,7 @@
         {
             "type":                         "DET_PHYS",
             "drawable":                     "empty",
-            "position":                     [1280.0, 192.0],
+            "position":                     [964.0, 1214.0],
             "name":                         "door"
         },
         {
@@ -21,6 +21,30 @@
             "drawable":                     "empty",
             "position":                     [400.0, 0.0],
             "name":                         "kaze0"
+        },
+        {
+            "type":                         "DET_PHYS",
+            "drawable":                     "empty",
+            "position":                     [400.0, 320.0],
+            "name":                         "block0"
+        },
+        {
+            "type":                         "DET_PHYS",
+            "drawable":                     "empty",
+            "position":                     [400.0, 448.0],
+            "name":                         "beer0"
+        },
+        {
+            "type":                         "DET_PHYS",
+            "drawable":                     "empty",
+            "position":                     [400.0, 704.0],
+            "name":                         "tire0"
+        },
+        {
+            "type":                         "DET_PHYS",
+            "drawable":                     "empty",
+            "position":                     [400.0, 1216.0],
+            "name":                         "sentry0"
         }
     ]
 }
