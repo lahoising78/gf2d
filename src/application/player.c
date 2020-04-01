@@ -744,6 +744,8 @@ void player_load()
     SJson *json = NULL;
     SJson *arr = NULL;
     SJson *obj = NULL;
+    GameObject *gobj = NULL;
+    PhysicsEntity *ent = NULL;
     int i;
     json = sj_load(SAVE_FILE);
     if(!json) return;
@@ -754,9 +756,27 @@ void player_load()
         for(i = 0; i < sj_array_get_count(arr); i++)
         {
             obj = sj_array_get_nth(arr, i);
-            if( strcmp("punti", sj_get_string_value( sj_object_get_value(obj, "name") )) == 0 )
+            if( strcmp(phys->name, sj_get_string_value( sj_object_get_value(obj, "name") )) == 0 )
             {
                 phys->entity->position = gf2d_json_vector2d( sj_object_get_value(obj, "position") );
+                if(phys->entity->abstraction)
+                {
+                    gobj = (GameObject*)phys->entity->abstraction;
+                    sj_get_float_value( sj_object_get_value(obj, "health"), &gobj->health );
+                    sj_get_float_value( sj_object_get_value(obj, "maxHealth"), &gobj->maxHealth );
+                    gf2d_progress_bar_set_value(hp_ui->component.pbar, gobj->health);
+                }
+            }
+            else
+            {
+                ent = gf2d_physics_entity_get_by_name( sj_get_string_value( sj_object_get_value(obj, "name") ) );
+                ent->entity->position = gf2d_json_vector2d( sj_object_get_value(obj, "position") );
+                if(ent->entity->abstraction)
+                {
+                    gobj = (GameObject*)ent->entity->abstraction;
+                    sj_get_float_value( sj_object_get_value(obj, "health"), &gobj->health );
+                    sj_get_float_value( sj_object_get_value(obj, "maxHealth"), &gobj->maxHealth );
+                }
             }
         }
     }
