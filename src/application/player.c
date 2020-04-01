@@ -40,6 +40,12 @@ typedef enum
     DIR_LEFT =                  0x08
 } WalkDirection;
 
+typedef struct
+{
+    float health;
+    float maxHealth;
+} PlayerPersistantData;
+
 void player_save();
 void player_load();
 
@@ -79,6 +85,7 @@ extern float speedMultiplier;
 PhysicsEntity *damageBox = NULL;
 extern float playerTimeout;
 UIComponent *hp_ui = NULL;
+PlayerPersistantData persistant_data = {0};
 
 extern PhysicsEntity *playerGobj;
 
@@ -111,7 +118,16 @@ void player_create(PhysicsEntity *self)
         gobj->self = self->entity;
         gobj->selfPhys = self;
         self->entity->abstraction = gobj;
-        gobj->health = gobj->maxHealth = 100.0f;
+        slog("PERSITS MAX HEALTH = %.0f", persistant_data.maxHealth);
+        if(persistant_data.maxHealth == 0)
+        {
+            persistant_data.health = persistant_data.maxHealth = gobj->health = gobj->maxHealth = 100.0f;
+        }
+        else
+        {
+            gobj->health = persistant_data.health;
+            gobj->maxHealth = persistant_data.maxHealth;
+        }
     }
 
     damageBox = gf2d_physics_entity_new("pHit");
@@ -139,8 +155,8 @@ void player_create(PhysicsEntity *self)
         vector2d(380.0f, 30.0f)
     );
     gf2d_progress_bar_set_position_and_offset(hp_ui->component.pbar, vector2d(10.0f, 10.0f), vector2d(10.0f, 10.0f));
-    gf2d_progress_bar_set_max_value( hp_ui->component.pbar, gobj->maxHealth);
-    gf2d_progress_bar_set_value( hp_ui->component.pbar, gobj->health );
+    gf2d_progress_bar_set_max_value( hp_ui->component.pbar, persistant_data.maxHealth);
+    gf2d_progress_bar_set_value( hp_ui->component.pbar, persistant_data.health );
     gf2d_scene_add_to_drawables(hp_ui, DET_UI);
 }
 
@@ -479,6 +495,13 @@ void player_update(Entity *self)
 
     if(!self) return;
     if(playerTimeout > 0.0f) return;
+
+    gobj = (GameObject*)self->abstraction;
+    if(gobj)
+    {
+        persistant_data.health = gobj->health;
+        persistant_data.maxHealth = gobj->maxHealth;
+    }
 
     /* update walking */
     self->velocity.x = walkDir * VELOCITY_CONST * speedMultiplier;
