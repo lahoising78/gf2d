@@ -1,10 +1,10 @@
 {
     "drawablesCount":                       128,
-    "awakeIndex":                           1,
+    "awakeIndex":                           0,
     "drawables": [
         {
             "type":                         "DET_TMAP",
-            "drawable":                     "application/scenes/second_scene_tilemap.json"
+            "drawable":                     "application/scenes/first_scene_tilemap.json"
         },
         {
             "type":                         "DET_PHYS",
@@ -15,6 +15,30 @@
             "drawable":                     "empty",
             "position":                     [964.0, 1214.0],
             "name":                         "door"
+        },
+        {
+            "type":                         "DET_PHYS",
+            "drawable":                     "empty",
+            "position":                     [400.0, 64.0],
+            "name":                         "spike0"
+        },
+        {
+            "type":                         "DET_PHYS",
+            "drawable":                     "empty",
+            "position":                     [400.0, 256.0],
+            "name":                         "mine0"
+        },
+        {
+            "type":                         "DET_PHYS",
+            "drawable":                     "empty",
+            "position":                     [400.0, 448.0],
+            "name":                         "trap0"
+        },
+        {
+            "type":                         "DET_PHYS",
+            "drawable":                     "empty",
+            "position":                     [400.0, 640.0],
+            "name":                         "tox0"
         }
     ]
 }
