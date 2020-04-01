@@ -40,6 +40,9 @@ typedef enum
     DIR_LEFT =                  0x08
 } WalkDirection;
 
+void player_save();
+void player_load();
+
 void player_update(Entity *self);
 void player_think(Entity *self);
 
@@ -464,6 +467,16 @@ void player_update(Entity *self)
 {
     Vector2D cam = {0};
     GameObject *gobj = NULL;
+
+    if(gf2d_input_key_just_pressed(SDL_SCANCODE_RETURN))
+    {
+        player_save(  );
+    }
+    else if ( gf2d_input_key_just_pressed(SDL_SCANCODE_O) )
+    {
+        player_load();
+    }
+
     if(!self) return;
     if(playerTimeout > 0.0f) return;
 
@@ -695,4 +708,58 @@ uint8_t player_blocking()
     }
 
     return btn;
+}
+
+#define SAVE_FILE "save_files/save_data.json"
+void player_save()
+{
+    SJson *json = NULL;
+    SJson *obj = NULL;
+    SJson *data = NULL;
+    SJson *ent_list = NULL;
+    slog("saving player info");
+
+    json = sj_object_new();
+    if(!json) return;
+
+    ent_list = sj_array_new();
+    if(!ent_list)
+    {
+        sj_free(json);
+        return;
+    }
+
+    /* player object */
+    obj = gf2d_physics_entity_save(phys);
+    game_object_save(phys->entity->abstraction, obj);
+    sj_array_append(ent_list, obj);
+
+    sj_object_insert(json, "entities", ent_list);
+    sj_save(json, SAVE_FILE);
+    sj_free(json);
+}
+
+void player_load()
+{
+    SJson *json = NULL;
+    SJson *arr = NULL;
+    SJson *obj = NULL;
+    int i;
+    json = sj_load(SAVE_FILE);
+    if(!json) return;
+
+    arr = sj_object_get_value(json, "entities");
+    if(arr)
+    {
+        for(i = 0; i < sj_array_get_count(arr); i++)
+        {
+            obj = sj_array_get_nth(arr, i);
+            if( strcmp("punti", sj_get_string_value( sj_object_get_value(obj, "name") )) == 0 )
+            {
+                phys->entity->position = gf2d_json_vector2d( sj_object_get_value(obj, "position") );
+            }
+        }
+    }
+
+    sj_free(json);
 }

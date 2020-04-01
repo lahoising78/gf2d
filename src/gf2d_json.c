@@ -41,6 +41,30 @@ Vector4D gf2d_json_vector4d(SJson *src)
     return ret;
 }
 
+void gf2d_json_vec2d_save(SJson *dst, Vector2D vec)
+{
+    if(!dst || !sj_is_array(dst)) return;
+
+    sj_array_append(dst, sj_new_float(vec.x));
+    sj_array_append(dst, sj_new_float(vec.y));
+}
+
+void gf2d_json_vec3d_save(SJson *dst, Vector3D vec)
+{
+    if(!dst || !sj_is_array(dst)) return;
+    
+    gf2d_json_vec2d_save(dst, vector2d(vec.x, vec.y));
+    sj_array_append(dst, sj_new_float(vec.z));
+}
+
+void gf2d_json_vec4d_save(SJson *dst, Vector4D vec)
+{
+    if(!dst || !sj_is_array(dst)) return;
+
+    gf2d_json_vec3d_save(dst, vector3d(vec.x, vec.y, vec.z));
+    sj_array_append(dst, sj_new_float(vec.w));
+}
+
 uint8_t gf2d_json_uint8( SJson *src )
 {
     int res = 0;

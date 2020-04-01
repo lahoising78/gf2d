@@ -9,6 +9,10 @@ Vector2D gf2d_json_vector2d(SJson *src);
 Vector3D gf2d_json_vector3d(SJson *src);
 Vector4D gf2d_json_vector4d(SJson *src);
 
+void gf2d_json_vec2d_save(SJson *dst, Vector2D vec);
+void gf2d_json_vec3d_save(SJson *dst, Vector3D vec);
+void gf2d_json_vec4d_save(SJson *dst, Vector4D vec);
+
 uint8_t gf2d_json_uint8( SJson *src );
 uint16_t gf2d_json_uint16( SJson *src );
 uint32_t gf2d_json_uint32( SJson *src );

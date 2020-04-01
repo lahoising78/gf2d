@@ -451,3 +451,34 @@ void gf2d_physics_entity_set_name(PhysicsEntity *ent, const char *name)
     gfc_line_cpy(ent->name, name);
     gf2d_trie_insert(&gf2d_physics_entity_manager.entity_trie, name, ent);
 }
+
+SJson *gf2d_physics_entity_save(PhysicsEntity *phys)
+{
+    SJson *obj = NULL;
+    SJson *data = NULL;
+    
+    if(!phys) return NULL;
+
+    obj = sj_object_new();
+    if(!obj) return NULL;
+
+    /* position */
+    data = sj_array_new();
+    if(data)
+    {
+        gf2d_json_vec2d_save(data, phys->entity->position);
+        sj_object_insert(obj, "position", data);
+    }
+
+    /* name */
+    if(phys->name)
+    {
+        data = sj_new_str(phys->name);
+        if(data)
+        {
+            sj_object_insert(obj, "name", data);
+        }
+    }
+
+    return obj;
+}

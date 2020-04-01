@@ -57,6 +57,7 @@ void gf2d_physics_entity_manager_update();
 PhysicsEntity *gf2d_physics_entity_new(const char *name);
 
 PhysicsEntity *gf2d_physics_entity_load(SJson *json);
+SJson *gf2d_physics_entity_save(PhysicsEntity *phys);
 void gf2d_physics_entity_load_to_entity(PhysicsEntity *phys, SJson *json);
 
 /** 

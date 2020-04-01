@@ -34,5 +34,6 @@ GameObject *game_object_new();
 void game_object_update(GameObject *gobj);
 uint8_t game_object_player_in_area(GameObject *self);
 void game_object_free(GameObject *obj);
+void game_object_save(GameObject *obj, SJson *dst);
 
 #endif

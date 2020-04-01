@@ -142,3 +142,11 @@ uint8_t game_object_collision(GameObject *self, GameObject **o)
 
     return 0;
 }
+
+void game_object_save(GameObject *obj, SJson *dst)
+{
+    if(!obj || !dst) return;
+
+    sj_object_insert(dst, "health", sj_new_float(obj->health));
+    sj_object_insert(dst, "maxHealth", sj_new_float(obj->maxHealth));
+}
