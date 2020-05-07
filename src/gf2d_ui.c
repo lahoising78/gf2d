@@ -68,6 +68,26 @@ UIComponent *gf2d_ui_new()
     return NULL;
 }
 
+UIComponentType gf2d_ui_type_from_string(const char *name)
+{
+    if( strcmp(name, "UIT_LABEL") == 0 ) return UIT_LABEL;
+    if( strcmp(name, "UIT_PBAR") ==  0 ) return UIT_PBAR;
+    return UIT_NONE;
+}
+
+UIComponent *gf2d_ui_load(SJson *json)
+{
+    UIComponent *ui = NULL;
+    if(!json) return NULL;
+
+    ui = gf2d_ui_new();
+    if(!ui) return NULL;
+
+    // ui->_uiType = gf2d_ui_type_from_string(  )
+
+    return ui;
+}
+
 void gf2d_ui_render( UIComponent *ui )
 {
     if(!ui) return;

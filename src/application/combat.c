@@ -5,7 +5,7 @@
 uint8_t combat_do_damage(GameObject *attacker, GameObject *target, float damage, float hitstun)
 {
     ProgressBar *p_hp_ui = NULL;
-    char p_hp_txt[32];
+    // char p_hp_txt[32];
     if(!target) return 0;
     if(target->hitstun > 0.0f || target->isProtected) return 0;
 

@@ -107,7 +107,7 @@ void player_create(PhysicsEntity *self)
     GameObject *gobj = NULL;
     Vector4D backColor = {0};
     Vector4D foreColor = {0};
-    char htext[32];
+    // char htext[32];
     if(!self || !self->entity) return;
     
     self->entity->think = player_think;
@@ -751,7 +751,7 @@ uint8_t player_taunt()
     {
         btn = 0;
     }
-    slog("taunt %u", btn);
+    // slog("taunt %u", btn);
     return btn;
 }
 
@@ -759,8 +759,8 @@ uint8_t player_taunt()
 void player_save()
 {
     SJson *json = NULL;
-    SJson *obj = NULL;
-    SJson *data = NULL;
+    // SJson *obj = NULL;
+    // SJson *data = NULL;
     SJson *ent_list = NULL;
     slog("saving player info");
 

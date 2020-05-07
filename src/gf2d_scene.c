@@ -123,6 +123,10 @@ void gf2d_scene_load_from_json(SJson *arr)
         case DET_TMAP:
             x = gf2d_scene_add_to_drawables( gf2d_tilemap_load( sj_object_get_value(obj, "drawable") ), type );
             break;
+
+        case DET_UI:
+            
+            break;
         
         default:
             break;
@@ -143,6 +147,7 @@ void gf2d_scene_load_from_file(const char *filename)
 
     drawablesCount = gf2d_json_uint32( sj_object_get_value(json, "drawablesCount") );
     awakeIndex = gf2d_json_uint32( sj_object_get_value(json, "awakeIndex") );
+    slog("scene awake %u", awakeIndex);
 
     gf2d_scene_load(drawablesCount, NULL);
 

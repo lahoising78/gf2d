@@ -8,6 +8,7 @@
 #include "sentry.h"
 #include "smh.h"
 #include "two.h"
+#include "ui_test.h"
 
 void gf2d_main()
 {
@@ -16,7 +17,9 @@ void gf2d_main()
     game_object_manager_init(1024);
     gf2d_scene_submit_awake(smh_awake);
     gf2d_scene_submit_awake(two_awake);
+    gf2d_scene_submit_awake(ui_test_awake);
     // punti_jordan_load("application/punti_jordan_anim_config.json");
     // sentry_load_config("application/sentry_config.json");
-    gf2d_scene_load_from_file("application/scenes/first_scene.json");
+    // gf2d_scene_load_from_file("application/scenes/first_scene.json");
+    gf2d_scene_load_from_file("application/scenes/ui_test.json");
 }

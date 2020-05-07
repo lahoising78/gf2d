@@ -153,11 +153,16 @@ void gf2d_label_set_display(Label *label)
 
 void gf2d_label_render( Label *label )
 {
+    Vector2D pos = {0};
     if(!label) return;
+    if(!label->_display) return;
 
-    if(label->_display) vector2d_sub(label->_display->position, label->_display->position, gf2d_camera_get_displaced_position(label->_display->position));
-    gf2d_render_ent_draw( label->_display );
-    if(label->_display) vector2d_add(label->_display->position, label->_display->position, gf2d_camera_get_displaced_position(label->_display->position));
+    pos = label->_display->position;
+    vector2d_sub(label->_display->position, label->_display->position, gf2d_camera_get_displaced_position(label->_display->position));
+    vector2d_add(label->_display->position, label->_display->position, pos);
+        gf2d_render_ent_draw( label->_display );
+    vector2d_add(label->_display->position, label->_display->position, gf2d_camera_get_displaced_position(label->_display->position));
+    label->_display->position = pos;
 }
 
 void gf2d_label_free(Label *label)
