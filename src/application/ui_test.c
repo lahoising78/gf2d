@@ -6,6 +6,7 @@ void ui_test_awake()
 {
     UIComponent *label = NULL;
     UIComponent *pbar = NULL;
+    UIComponent *btn = NULL;
 
     label = gf2d_ui_label_new("this is label", NULL, 32, vector2d(10.0f, 10.0f));
     gf2d_label_set_text_color(label->component.label, vector4d(100.0f, 100.0f, 100.0f, 255.0f));
@@ -16,4 +17,12 @@ void ui_test_awake()
     pbar = gf2d_ui_progress_bar_new( &bgColor, vector2d(200.0f, 30.0f), &frColor, vector2d(190.0f, 20.0f) );
     gf2d_progress_bar_set_position_and_offset(pbar->component.pbar, vector2d(10.0f, 200.0f), vector2d(5.0f, 5.0f));
     gf2d_scene_add_to_drawables(pbar, DET_UI);
+
+    btn = gf2d_ui_button_new(
+        gf2d_label_new("button", NULL, 32, vector2d(10.0f, 100.0f)),
+        NULL
+    );
+    gf2d_label_set_text_color(btn->component.btn->text, vector4d(10.0f, 10.0f, 10.0f, 255.0f));
+    gf2d_label_set_background_color(btn->component.btn->text, vector4d(200.0f, 0.0f, 0.0f, 255.0f));
+    gf2d_scene_add_to_drawables(btn, DET_UI);
 }

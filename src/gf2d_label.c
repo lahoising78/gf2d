@@ -3,6 +3,7 @@
 #include "gf2d_graphics.h"
 #include "gf2d_label.h"
 #include "gf2d_camera.h"
+#include "gf2d_sprite_manipulation.h"
 
 typedef struct
 {
@@ -86,6 +87,10 @@ Label *gf2d_label_new(const char *text, TTF_Font *font, uint32_t fontSize, Vecto
     }
     vector2d_copy(label->_display->position, position);
 
+    label->_bg = gf2d_render_ent_new(NULL);
+    label->_bg->position = position;
+    label->_bg->sprite = gf2d_sprite_manipulation_get_default_solid();
+    label->_bg->colorShift.w = 0.0f;
     gf2d_label_set_display(label);
 
     return label;
@@ -96,6 +101,7 @@ void gf2d_label_set_display(Label *label)
     Sprite *sprite = NULL;
     SDL_Surface *surface = NULL;
     SDL_Color color = {0};
+    size_t sz;
     if(!label) return;
 
     if( label->_display )
@@ -149,20 +155,31 @@ void gf2d_label_set_display(Label *label)
 
     label->_display->sprite = sprite;
     SDL_FreeSurface(surface);
+
+    sz = strlen(label->_text);
+    label->_bg->scale = vector2d((float)(sz * 16 + 32), 32);
+}
+
+void gf2d_label_render_piece( RenderEntity *rend )
+{
+    Vector2D pos = {0};
+    if(!rend) return;
+
+    pos = rend->position;
+    vector2d_sub(rend->position, rend->position, gf2d_camera_get_displaced_position(rend->position));
+    vector2d_add(rend->position, rend->position, pos);
+        gf2d_render_ent_draw( rend );
+    vector2d_add(rend->position, rend->position, gf2d_camera_get_displaced_position(rend->position));
+    rend->position = pos;
+
 }
 
 void gf2d_label_render( Label *label )
 {
-    Vector2D pos = {0};
     if(!label) return;
-    if(!label->_display) return;
 
-    pos = label->_display->position;
-    vector2d_sub(label->_display->position, label->_display->position, gf2d_camera_get_displaced_position(label->_display->position));
-    vector2d_add(label->_display->position, label->_display->position, pos);
-        gf2d_render_ent_draw( label->_display );
-    vector2d_add(label->_display->position, label->_display->position, gf2d_camera_get_displaced_position(label->_display->position));
-    label->_display->position = pos;
+    gf2d_label_render_piece(label->_bg);
+    gf2d_label_render_piece(label->_display);
 }
 
 void gf2d_label_free(Label *label)
@@ -177,4 +194,10 @@ void gf2d_label_set_text_color(Label *label, Vector4D newColor)
 {
     if(!label) return;
     vector4d_copy(label->_display->colorShift, newColor);
+}
+
+void gf2d_label_set_background_color(Label *label, Vector4D color)
+{
+    if(!label || !label->_bg) return;
+    label->_bg->colorShift = color;
 }

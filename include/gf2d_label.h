@@ -11,6 +11,7 @@ typedef struct
     char                    _text[GFCLINELEN];
     uint32_t                fontSize;
     RenderEntity            *_display;
+    RenderEntity            *_bg;
     TTF_Font                *font;
 
     uint8_t                 _inuse;
@@ -23,5 +24,6 @@ void gf2d_label_render( Label *label );
 void gf2d_label_free(Label *label);
 
 void gf2d_label_set_text_color(Label *label, Vector4D newColor);
+void gf2d_label_set_background_color(Label *label, Vector4D color);
 
 #endif

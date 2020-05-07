@@ -102,6 +102,10 @@ void gf2d_ui_render( UIComponent *ui )
         gf2d_progress_bar_render(ui->component.pbar);
         break;
     
+    case UIT_BUTTON:
+        gf2d_button_render(ui->component.btn);
+        break;
+    
     default:
         break;
     }
@@ -121,6 +125,11 @@ void gf2d_ui_free( UIComponent *ui )
     case UIT_PBAR:
         if(!ui->component.pbar) break;
         gf2d_progress_bar_free(ui->component.pbar);
+        break;
+
+    case UIT_BUTTON:
+        if(!ui->component.btn) break;
+        gf2d_button_free(ui->component.btn);
         break;
 
     default:
@@ -160,5 +169,20 @@ UIComponent *gf2d_ui_progress_bar_new(Vector4D *backColor, Vector2D backScale, V
     ui->_uiType = UIT_PBAR;
     ui->component.pbar = gf2d_progress_bar_new(backColor, backScale, foreColor, foreScale);
 
+    return ui;
+}
+
+UIComponent *gf2d_ui_button_new(Label *label, void (*onClick)(Button *btn))
+{
+    UIComponent *ui = NULL;
+
+    ui = gf2d_ui_new();
+    if(!ui)
+    {
+        return NULL;
+    }
+
+    ui->_uiType = UIT_BUTTON;
+    ui->component.btn = gf2d_button_new(label, onClick);
     return ui;
 }
