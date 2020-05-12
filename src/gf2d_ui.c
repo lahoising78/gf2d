@@ -91,7 +91,7 @@ UIComponent *gf2d_ui_load(SJson *json)
 
 void gf2d_ui_update( UIComponent *ui )
 {
-    if(!ui) return;
+    if(!ui || !ui->visible) return;
 
     switch (ui->_uiType)
     {

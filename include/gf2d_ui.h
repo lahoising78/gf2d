@@ -38,6 +38,7 @@ void gf2d_ui_manager_render();
 UIComponent *gf2d_ui_load(SJson *json);
 void gf2d_ui_update( UIComponent *ui );
 void gf2d_ui_render( UIComponent *ui );
+void gf2d_ui_free( UIComponent *ui );
 
 UIComponent *gf2d_ui_label_new(const char *text, TTF_Font *font, uint32_t fontSize, Vector2D position);
 UIComponent *gf2d_ui_progress_bar_new(Vector4D *backColor, Vector2D backScale, Vector4D *foreColor, Vector2D foreScale);
