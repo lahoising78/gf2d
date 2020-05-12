@@ -19,11 +19,11 @@
 
 float frameTime = 0.0f;
 float worldTime = 0.0f;
+int gameDone = 0;
 
 int main(int argc, char * argv[])
 {
     /*variable declarations*/
-    int done = 0;
     int i;
 
     Timer perSecond = gf2d_timer_new();
@@ -71,7 +71,7 @@ int main(int argc, char * argv[])
     gf2d_timer_start(&perSecond);
 
     /*main game loop*/
-    while(!done)
+    while(!gameDone)
     {
         gf2d_timer_start(&fTimer);
 
@@ -98,7 +98,7 @@ int main(int argc, char * argv[])
         if ( gf2d_input_is_key_pressed(SDL_SCANCODE_ESCAPE) )
         {
             gf2d_scene_close();
-            done = 1; // exit condition
+            gameDone = 1; // exit condition
         }
         if( gf2d_input_key_just_pressed(SDL_SCANCODE_TAB) )
         {

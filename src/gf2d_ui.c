@@ -61,6 +61,7 @@ UIComponent *gf2d_ui_new()
         if(ui->_inuse) continue;
         
         ui->_inuse = 1;
+        ui->visible = 1;
 
         return ui;
     }
@@ -105,7 +106,7 @@ void gf2d_ui_update( UIComponent *ui )
 
 void gf2d_ui_render( UIComponent *ui )
 {
-    if(!ui) return;
+    if(!ui || !ui->visible) return;
 
     switch (ui->_uiType)
     {

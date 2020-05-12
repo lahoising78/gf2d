@@ -22,6 +22,8 @@ typedef struct
         Button *btn;
     }                           component;
     UIComponentType             _uiType;
+
+    uint8_t                     visible;
     uint8_t                     _inuse;
 } UIComponent;
 
