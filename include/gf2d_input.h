@@ -9,7 +9,7 @@
  * @param maxKeys the max amount of keys to retrieve
  * @note maxKeys goes according to sdl scancode values
  */
-void gf2d_input_init(int maxKeys, uint32_t maxJoysticks);
+void gf2d_input_init( int maxKeys, uint32_t maxJoysticks, uint32_t maxMouseButtons );
 
 /** 
  * @brief update the state of inputs
@@ -62,5 +62,9 @@ uint8_t gf2d_input_joystick_button_pressed(uint32_t joystickId, int button);
 uint8_t gf2d_input_joystick_button_released(uint32_t joystickId, int button);
 
 uint8_t gf2d_input_joystick_get_hat(uint32_t joystickId, int hat, uint8_t hatDir);
+
+uint8_t gf2d_input_mouse_just_pressed(uint32_t button);
+uint8_t gf2d_input_mouse_released(uint32_t button);
+void gf2d_input_mouse_position(int *x, int *y);
 
 #endif

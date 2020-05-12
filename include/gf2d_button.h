@@ -9,6 +9,14 @@ typedef struct button_s
 
     void (*onClick)(struct button_s *btn);
 
+    struct button_s *left_btn;
+    struct button_s *right_btn;
+    struct button_s *up_btn;
+    struct button_s *down_btn;
+
+    uint8_t selected;
+    Vector4D selected_color_shift;
+
     uint8_t _inuse;
 } Button;
 

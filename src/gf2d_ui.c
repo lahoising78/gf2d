@@ -88,6 +88,21 @@ UIComponent *gf2d_ui_load(SJson *json)
     return ui;
 }
 
+void gf2d_ui_update( UIComponent *ui )
+{
+    if(!ui) return;
+
+    switch (ui->_uiType)
+    {
+    case UIT_BUTTON:
+        gf2d_button_update(ui->component.btn);
+        break;
+    
+    default:
+        break;
+    }
+}
+
 void gf2d_ui_render( UIComponent *ui )
 {
     if(!ui) return;

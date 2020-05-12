@@ -25,11 +25,16 @@ typedef struct
     uint8_t                     _inuse;
 } UIComponent;
 
+/** 
+ * @note TO UPDATE BUTTONS AND OTHER UI, YOU MUST CALL THEIR UPDATES MANUALLY FROM AN ENTITY UPDATE
+ */
+
 void gf2d_ui_manager_init( uint32_t count );
 
 void gf2d_ui_manager_render();
 
 UIComponent *gf2d_ui_load(SJson *json);
+void gf2d_ui_update( UIComponent *ui );
 void gf2d_ui_render( UIComponent *ui );
 
 UIComponent *gf2d_ui_label_new(const char *text, TTF_Font *font, uint32_t fontSize, Vector2D position);

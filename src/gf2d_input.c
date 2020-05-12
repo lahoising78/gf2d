@@ -18,6 +18,10 @@ typedef struct
     size_t              joystickButtonsSize;
     uint32_t            joystickMaxButtons;
 
+    SDL_Event           *mouseButtons;
+    size_t              mouseButtonsSize;
+    uint32_t            mouseMax;
+
 } InputManager;
 
 static InputManager gf2d_input_manager = {0};
@@ -31,6 +35,7 @@ void gf2d_input_close()
 
     free( gf2d_input_manager.currentKeys );
     free( gf2d_input_manager.joystickButtons );
+    if( gf2d_input_manager.mouseButtons ) free(gf2d_input_manager.mouseButtons);
     gf2d_input_manager_close_joysticks();
     if(gf2d_input_manager.joysticks) free( gf2d_input_manager.joysticks );
 }
@@ -47,7 +52,7 @@ void gf2d_input_manager_close_joysticks()
     }
 }
 
-void gf2d_input_init( int maxKeys, uint32_t maxJoysticks )
+void gf2d_input_init( int maxKeys, uint32_t maxJoysticks, uint32_t maxMouseButtons )
 {
     slog("initilizing input manager");
 
@@ -58,6 +63,13 @@ void gf2d_input_init( int maxKeys, uint32_t maxJoysticks )
     gf2d_input_manager.keysArraySize = maxKeys * sizeof(SDL_Event);
     gf2d_input_manager.currentKeys = (SDL_Event*)malloc( gf2d_input_manager.keysArraySize );
     atexit( gf2d_input_close );
+
+    if( maxMouseButtons > 0 )
+    {
+        gf2d_input_manager.mouseMax = maxMouseButtons;
+        gf2d_input_manager.mouseButtonsSize = maxMouseButtons * sizeof(SDL_Event);
+        gf2d_input_manager.mouseButtons = (SDL_Event*)malloc(gf2d_input_manager.mouseButtonsSize);
+    }
 
     gf2d_input_manager.joystickDeadZone = JOYSTICK_DEFAULT_DEAD_ZONE;
     gf2d_input_manager.joysticks = (SDL_Joystick**)malloc( sizeof(SDL_Joystick*) * maxJoysticks );
@@ -99,6 +111,7 @@ void gf2d_input_update()
 
     memset(gf2d_input_manager.currentKeys, 0, gf2d_input_manager.keysArraySize );
     memset(gf2d_input_manager.joystickButtons, 0, gf2d_input_manager.joystickButtonsSize );
+    memset(gf2d_input_manager.mouseButtons, 0, gf2d_input_manager.mouseButtonsSize);
 
     while( SDL_PollEvent(&e) )
     {
@@ -116,6 +129,11 @@ void gf2d_input_update()
         case SDL_JOYBUTTONUP:
             gf2d_input_manager.joystickButtons[ e.jbutton.which * gf2d_input_manager.joystickMaxButtons + e.jbutton.button ] = e;
             // slog("joystick %d had event on button %d", e.jbutton.which, e.jbutton.button);
+            break;
+
+        case SDL_MOUSEBUTTONDOWN:
+        case SDL_MOUSEBUTTONUP:
+            gf2d_input_manager.mouseButtons[ e.button.button - 1] = e;
             break;
 
         default:
@@ -171,4 +189,25 @@ uint8_t gf2d_input_joystick_get_hat(uint32_t joystickId, int hat, uint8_t hatDir
     if( hatDir == 255 ) return result;
     if( hatDir == SDL_HAT_CENTERED ) return result == SDL_HAT_CENTERED;
     return result & hatDir;
+}
+
+uint8_t gf2d_input_mouse_just_pressed(uint32_t button)
+{
+    SDL_MouseButtonEvent e = {0};
+    if( button > gf2d_input_manager.mouseMax ) return 0;
+    e = gf2d_input_manager.mouseButtons[button - 1].button;
+    return e.button == button && e.state == SDL_PRESSED;
+}
+
+uint8_t gf2d_input_mouse_released(uint32_t button)
+{
+    SDL_MouseButtonEvent e = {0};
+    if( button > gf2d_input_manager.mouseMax ) return 0;
+    e = gf2d_input_manager.mouseButtons[button - 1].button;
+    return e.button == button && e.state == SDL_RELEASED;
+}
+
+void gf2d_input_mouse_position(int *x, int *y)
+{
+    SDL_GetMouseState(x, y);
 }
