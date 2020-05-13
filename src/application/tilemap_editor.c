@@ -27,6 +27,7 @@ typedef struct
     
     TmapController tile_control;
     RenderEntity *tile_sprite;
+    RenderEntity *tile_preview;
 
     Entity *ui_event_updater;
 
@@ -55,6 +56,9 @@ void tile_editor_ui_update(Entity *self)
 {
     const float displacement = 12.0f;
     Vector2D delta = {0};
+    Vector2D view = {0};
+    int x, y;
+
     tmap_controller_update(&tilemap_editor_controller.width_control);
     tmap_controller_update(&tilemap_editor_controller.height_control);
     tmap_controller_update(&tilemap_editor_controller.tile_control);
@@ -81,6 +85,14 @@ void tile_editor_ui_update(Entity *self)
         vector2d_add(tilemap_editor_controller.panel->position, tilemap_editor_controller.panel->position, delta);
     if(tilemap_editor_controller.tile_sprite)
         vector2d_add(tilemap_editor_controller.tile_sprite->position, tilemap_editor_controller.tile_sprite->position, delta);
+
+    gf2d_input_mouse_position(&x, &y);
+    delta =  vector2d((float)x, (float)y);
+    view = gf2d_camera_get_position();
+    vector2d_add(delta, delta, view);
+    delta = gf2d_tilemap_world_to_map(tilemap_editor_controller.tilemap, delta);
+    delta = gf2d_tilemap_map_to_world(tilemap_editor_controller.tilemap, delta);
+    tilemap_editor_controller.tile_preview->position = delta;
 }
 
 void tmap_controller_free(TmapController *controller)
@@ -118,6 +130,12 @@ void tilemap_editor_close()
     if(tilemap_editor_controller.ui_event_updater)
     {
         gf2d_entity_free(tilemap_editor_controller.ui_event_updater);
+    }
+
+    if(tilemap_editor_controller.tile_preview)
+    {
+        gf2d_render_ent_free(tilemap_editor_controller.tile_preview);
+        free(tilemap_editor_controller.tile_preview);
     }
 
     memset(&tilemap_editor_controller, 0, sizeof(TilemapEditor));
@@ -226,6 +244,19 @@ void tilemap_editor_awake()
     );
     gf2d_scene_add_to_drawables(btn, DET_UI);
     tilemap_editor_controller.tile_control.more = btn;
+    #pragma endregion
+
+    #pragma region TILE PREVIEW
+    if( tilemap_editor_controller.tile_preview )
+    {
+        gf2d_render_ent_free(tilemap_editor_controller.tile_preview);
+        free(tilemap_editor_controller.tile_preview);
+        tilemap_editor_controller.tile_preview = NULL;
+    }
+    tilemap_editor_controller.tile_preview = gf2d_render_ent_new( tilemap_editor_controller.tilemap->spriteSheet );
+    tilemap_editor_controller.tile_preview->colorShift.w = 100.0f;
+    tilemap_editor_controller.tile_preview->position = vector2d(100.0f, 0.0f);
+    gf2d_scene_add_to_drawables(tilemap_editor_controller.tile_preview, DET_REND);
     #pragma endregion
 
     if(!tilemap_editor_controller.ui_event_updater)

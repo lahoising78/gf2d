@@ -18,6 +18,11 @@ Vector2D gf2d_camera_get_view()
     return gf2d_camera.view;
 }
 
+Vector2D gf2d_camera_get_position()
+{
+    return gf2d_camera.position;
+}
+
 Vector2D gf2d_camera_get_displaced_position(Vector2D position)
 {
     Vector2D finalPos = {0};

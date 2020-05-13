@@ -13,6 +13,7 @@ Vector2D gf2d_camera_get_view();
  * @return position relative to camera
  */
 Vector2D gf2d_camera_get_displaced_position(Vector2D position);
+Vector2D gf2d_camera_get_position();
 
 /** 
  * @brief move the camera for RenderEntities
