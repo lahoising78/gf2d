@@ -17,6 +17,7 @@
 #include "gf2d_font.h"
 #include "gf2d_ui.h"
 #include "gf2d_projectile.h"
+#include "gf2d_particles.h"
 
 float frameTime = 0.0f;
 float worldTime = 0.0f;
@@ -67,6 +68,7 @@ int main(int argc, char * argv[])
     gf2d_progress_bar_manager_init(32);
     gf2d_ui_manager_init(32 + 32);
     gfc_audio_init(32, 32, 4, 4, 1, 0);
+    gf2d_particle_manager_init(4096, 8);
     
     /*demo setup*/
     gf2d_main();

@@ -1,4 +1,6 @@
+#include <SDL2/SDL.h>
 #include "simple_logger.h"
+#include "gfc_audio.h"
 #include "gf2d_camera.h"
 #include "gf2d_input.h"
 #include "gf2d_scene.h"
@@ -7,8 +9,7 @@
 #include "game_object.h"
 #include "player.h"
 #include "combat.h"
-#include "gfc_audio.h"
-#include <SDL2/SDL.h>
+#include "gf2d_particles.h"
 
 #define VELOCITY_CONST 3.0f
 
@@ -93,6 +94,8 @@ PlayerPersistantData persistant_data = {0};
 Sound *swordSlash = NULL;
 Mix_Music *background_music = NULL;
 
+ParticleEmitter *emitter = NULL;
+
 extern PhysicsEntity *playerGobj;
 
 ProgressBar *player_hp_ui()
@@ -176,6 +179,14 @@ void player_create(PhysicsEntity *self)
     {
         slog("no music :c");
     }
+
+    emitter = gf2d_particle_emitter_new(128);
+    emitter->update = gf2d_particle_emitter_general_update;
+    emitter->emitting = 1;
+
+    emitter->particleSprite = gf2d_sprite_load_image("images/menacing_beer.png");
+    emitter->particleInitialVelocity = vector2d(10.0f, 0.0f);
+    emitter->particleTtf = 0.3f;
 }
 
 uint8_t player_play_anim(Animation *anim, uint32_t *params, float speed)
@@ -524,6 +535,8 @@ void player_update(Entity *self)
 
     if(!self) return;
     if(playerTimeout > 0.0f) return;
+
+    gf2d_particle_emitter_general_update(emitter);
 
     gobj = (GameObject*)self->abstraction;
     if(gobj)
