@@ -51,6 +51,7 @@ void tile_editor_height_less(Button *btn);
 void tile_editor_height_more(Button *btn);
 void tile_editor_tile_less(Button *btn);
 void tile_editor_tile_more(Button *btn);
+void tile_editor_place_tile(Vector2D position);
 
 void tile_editor_ui_update(Entity *self)
 {
@@ -90,9 +91,14 @@ void tile_editor_ui_update(Entity *self)
     delta =  vector2d((float)x, (float)y);
     view = gf2d_camera_get_position();
     vector2d_add(delta, delta, view);
-    delta = gf2d_tilemap_world_to_map(tilemap_editor_controller.tilemap, delta);
-    delta = gf2d_tilemap_map_to_world(tilemap_editor_controller.tilemap, delta);
+    view = gf2d_tilemap_world_to_map(tilemap_editor_controller.tilemap, delta);
+    delta = gf2d_tilemap_map_to_world(tilemap_editor_controller.tilemap, view);
     tilemap_editor_controller.tile_preview->position = delta;
+
+    if( gf2d_input_mouse_released(SDL_BUTTON_LEFT) && x < 1000)
+    {
+        tile_editor_place_tile(view);
+    }
 }
 
 void tmap_controller_free(TmapController *controller)
@@ -395,20 +401,38 @@ void tile_editor_tile_less(Button *btn)
 {
     RenderEntity *rend = NULL;
     if(!btn) return;
-    if(!tilemap_editor_controller.tile_sprite) return;
+    if(!tilemap_editor_controller.tile_sprite || !tilemap_editor_controller.tile_preview) return;
 
     rend = tilemap_editor_controller.tile_sprite;
     
     rend->frame--;
     if(rend->frame < 0) rend->frame = 0;
+
+    tilemap_editor_controller.tile_preview->frame = rend->frame;
 }
 
 void tile_editor_tile_more(Button *btn)
 {
     RenderEntity *rend = NULL;
     if(!btn) return;
-    if(!tilemap_editor_controller.tile_sprite) return;
+    if(!tilemap_editor_controller.tile_sprite || !tilemap_editor_controller.tile_preview) return;
 
     rend = tilemap_editor_controller.tile_sprite;
     rend->frame++;
+
+    tilemap_editor_controller.tile_preview->frame = rend->frame;
+}
+
+void tile_editor_place_tile(Vector2D position)
+{
+    Tilemap * tmap = tilemap_editor_controller.tilemap;
+    uint32_t frame = 0;
+    int x, y;
+    if(!tmap);
+
+    frame = tilemap_editor_controller.tile_preview->frame + 1;
+
+    x = (int)position.x;
+    y = (int)position.y;
+    tmap->tiles[ y * tmap->w + x ].id = frame;
 }
