@@ -281,7 +281,7 @@ const uint32_t gf2d_tilemap_get_count()
     return gf2d_tilemap_manager.count;
 }
 
-uint8_t gf2d_tilemap_save(Tilemap *tmap)
+uint8_t gf2d_tilemap_save(Tilemap *tmap, char *fileOutput)
 {
     SJson *json = NULL;
     SJson *val = NULL;
@@ -395,8 +395,8 @@ uint8_t gf2d_tilemap_save(Tilemap *tmap)
         sj_object_insert(json, "solid", obj);
     }
 
-    sj_save(json, "test.json");
-    slog("save file %s", "test.json");
+    sj_save(json, fileOutput);
+    slog("save file %s", fileOutput);
     sj_free(json);
     return 1;
 }

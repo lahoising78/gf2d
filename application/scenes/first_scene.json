@@ -4,8 +4,7 @@
     "drawables": [
         {
             "type":                         "DET_TMAP",
-            "drawable":                     "test.json",
-            "hola":                     "application/scenes/first_scene_tilemap.json"
+            "drawable":                     "application/scenes/first_scene_tilemap.json"
         },
         {
             "type":                         "DET_PHYS",
