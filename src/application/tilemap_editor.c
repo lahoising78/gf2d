@@ -306,7 +306,31 @@ void tile_editor_height_less(Button *btn)
 
 void tile_editor_height_more(Button *btn)
 {
+    Label *label = NULL;
+    const uint32_t buf_size = 16;
+    Tile *newTiles = NULL;
+    Tilemap *tmap = NULL;
+    uint32_t i, j;
     if(!btn) return;
+    tmap = tilemap_editor_controller.tilemap;
+
+    newTiles = (Tile*)gfc_allocate_array(sizeof(Tile), tmap->w * (tmap->h+1));
+    if(!newTiles) return;
+
+    j = tmap->h; 
+    tmap->h++;
+
+    for(i = 0; i < tmap->h; i++)
+    {
+        memcpy(newTiles + i * tmap->w, tmap->tiles + i * tmap->w, sizeof(Tile) * tmap->w);
+    }
+    
+    free(tmap->tiles);
+    tmap->tiles = newTiles;
+
+    label = tilemap_editor_controller.height_control.disp->component.label;
+    snprintf(label->_text, buf_size, "%u", tilemap_editor_controller.tilemap->h);
+    gf2d_label_set_display(label);
 }
 
 void tile_editor_tile_less(Button *btn)
