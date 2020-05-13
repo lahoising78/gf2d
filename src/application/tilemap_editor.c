@@ -232,7 +232,7 @@ void tile_editor_width_less(Button *btn)
     j = tmap->w; 
     tmap->w--;
 
-    for(i = 0; i < tmap->h-1; i++)
+    for(i = 0; i < tmap->h; i++)
     {
         memcpy(newTiles + i * tmap->w, tmap->tiles + i * j, sizeof(Tile) * tmap->w);
     }
@@ -250,10 +250,28 @@ void tile_editor_width_more(Button *btn)
 {
     Label *label = NULL;
     const uint32_t buf_size = 16;
+    Tile *newTiles = NULL;
+    Tilemap *tmap = NULL;
+    uint32_t i, j;
     if(!btn) return;
+    tmap = tilemap_editor_controller.tilemap;
+
+    newTiles = (Tile*)gfc_allocate_array(sizeof(Tile), (tmap->w+1) * tmap->h);
+    if(!newTiles) return;
+
+    j = tmap->w; 
+    tmap->w++;
+
+    for(i = 0; i < tmap->h; i++)
+    {
+        memcpy(newTiles + i * tmap->w, tmap->tiles + i * j, sizeof(Tile) * tmap->w);
+    }
+    
+    free(tmap->tiles);
+    tmap->tiles = newTiles;
 
     label = tilemap_editor_controller.width_control.disp->component.label;
-    snprintf(label->_text, buf_size, "%d", tilemap_editor_controller.tilemap->w + 1);
+    snprintf(label->_text, buf_size, "%d", tilemap_editor_controller.tilemap->w);
     gf2d_label_set_display(label);
 }
 
