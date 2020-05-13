@@ -10,6 +10,7 @@
 #include "two.h"
 #include "ui_test.h"
 #include "main_menu.h"
+#include "tilemap_editor.h"
 
 void gf2d_main()
 {
@@ -20,6 +21,7 @@ void gf2d_main()
     gf2d_scene_submit_awake(two_awake);
     gf2d_scene_submit_awake(ui_test_awake);
     gf2d_scene_submit_awake(main_menu_awake);
+    gf2d_scene_submit_awake(tilemap_editor_awake);
     // punti_jordan_load("application/punti_jordan_anim_config.json");
     // sentry_load_config("application/sentry_config.json");
     // gf2d_scene_load_from_file("application/scenes/first_scene.json");

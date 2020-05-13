@@ -4,6 +4,7 @@
 #include "gf2d_ui.h"
 #include "gf2d_scene.h"
 #include "gf2d_application.h"
+#include "tilemap_editor.h"
     
 Entity *ui_event_manager = NULL;
 
@@ -181,6 +182,8 @@ void open_tilemap_file(Button *self)
     if(!self) return;
 
     slog("%s", self->text->_text);
+    tilemap_editor_set_filename(self->text->_text);
+    gf2d_scene_load(256, tilemap_editor_awake);
 }
 
 void pre_editor_back(Button *self)

@@ -146,6 +146,7 @@ void gf2d_ui_free( UIComponent *ui )
     case UIT_BUTTON:
         if(!ui->component.btn) break;
         gf2d_button_free(ui->component.btn);
+        free(ui->component.btn);
         break;
 
     default:
