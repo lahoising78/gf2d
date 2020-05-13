@@ -4,6 +4,8 @@
 #include "gf2d_sprite_manipulation.h"
 #include "gf2d_scene.h"
 #include "gf2d_ui.h"
+#include "gf2d_camera.h"
+#include "gf2d_input.h"
 
 typedef struct
 {
@@ -51,9 +53,34 @@ void tile_editor_tile_more(Button *btn);
 
 void tile_editor_ui_update(Entity *self)
 {
+    const float displacement = 12.0f;
+    Vector2D delta = {0};
     tmap_controller_update(&tilemap_editor_controller.width_control);
     tmap_controller_update(&tilemap_editor_controller.height_control);
     tmap_controller_update(&tilemap_editor_controller.tile_control);
+
+    if( gf2d_input_is_key_pressed(SDL_SCANCODE_RIGHT) )
+    {
+        delta.x = displacement;
+    }
+    else if( gf2d_input_is_key_pressed(SDL_SCANCODE_LEFT) )
+    {
+        delta.x = -displacement;
+    }
+    if( gf2d_input_is_key_pressed(SDL_SCANCODE_UP) )
+    {
+        delta.y = -displacement;
+    }
+    if( gf2d_input_is_key_pressed(SDL_SCANCODE_DOWN) )
+    {
+        delta.y = displacement;
+    }
+        
+    gf2d_camera_move( delta );
+    if(tilemap_editor_controller.panel)
+        vector2d_add(tilemap_editor_controller.panel->position, tilemap_editor_controller.panel->position, delta);
+    if(tilemap_editor_controller.tile_sprite)
+        vector2d_add(tilemap_editor_controller.tile_sprite->position, tilemap_editor_controller.tile_sprite->position, delta);
 }
 
 void tmap_controller_free(TmapController *controller)
