@@ -60,4 +60,6 @@ uint8_t gf2d_collision_check( CollisionShape *a, CollisionShape *b, CollisionInf
  */
 void gf2d_collision_draw( CollisionShape *shape );
 
+void gf2d_collision_shape_type_to_string(char *dst, CollisionShapeType cst);
+
 #endif

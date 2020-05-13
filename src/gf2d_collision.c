@@ -114,3 +114,23 @@ void gf2d_collision_draw( CollisionShape *shape )
         break;
     }
 }
+
+void gf2d_collision_shape_type_to_string(char *dst, CollisionShapeType cst)
+{
+    if(!dst) return;
+
+    switch (cst)
+    {
+    case CST_BOX:
+        strcpy(dst, "CST_BOX");
+        break;
+
+    case CST_CIRCLE:
+        strcpy(dst, "CST_CIRCLE");
+        break;
+    
+    default:
+        strcpy(dst, "CST_NONE");
+        break;
+    }
+}

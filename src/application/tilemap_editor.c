@@ -29,6 +29,8 @@ typedef struct
     RenderEntity *tile_sprite;
     RenderEntity *tile_preview;
 
+    UIComponent *save_btn;
+
     Entity *ui_event_updater;
 
     uint8_t initialized;
@@ -51,6 +53,7 @@ void tile_editor_height_less(Button *btn);
 void tile_editor_height_more(Button *btn);
 void tile_editor_tile_less(Button *btn);
 void tile_editor_tile_more(Button *btn);
+void tile_editor_save_file(Button *btn);
 void tile_editor_place_tile(Vector2D position);
 
 void tile_editor_ui_update(Entity *self)
@@ -99,6 +102,8 @@ void tile_editor_ui_update(Entity *self)
     {
         tile_editor_place_tile(view);
     }
+
+    gf2d_ui_update(tilemap_editor_controller.save_btn);
 }
 
 void tmap_controller_free(TmapController *controller)
@@ -142,6 +147,11 @@ void tilemap_editor_close()
     {
         gf2d_render_ent_free(tilemap_editor_controller.tile_preview);
         free(tilemap_editor_controller.tile_preview);
+    }
+
+    if(tilemap_editor_controller.save_btn)
+    {
+        gf2d_ui_free(tilemap_editor_controller.save_btn);
     }
 
     memset(&tilemap_editor_controller, 0, sizeof(TilemapEditor));
@@ -265,6 +275,18 @@ void tilemap_editor_awake()
     gf2d_scene_add_to_drawables(tilemap_editor_controller.tile_preview, DET_REND);
     #pragma endregion
 
+    #pragma region SAVE BUTTON
+    tilemap_editor_controller.save_btn = gf2d_ui_button_new(
+        gf2d_label_new("Save", NULL, 32, vector2d(1100.0f, 670.0f)),
+        tile_editor_save_file
+    );
+    gf2d_label_set_background_color(tilemap_editor_controller.save_btn->component.btn->text, vector4d(255.0f, 255.0f, 255.0f, 255.0f));
+    gf2d_label_set_text_color(tilemap_editor_controller.save_btn->component.btn->text, vector4d(100.0f, 100.0f, 100.0f, 255.0f));
+    tilemap_editor_controller.save_btn->component.btn->text->_display->position.x += 15.0f;
+    tilemap_editor_controller.save_btn->component.btn->text->_display->position.y += 5.0f;
+    gf2d_scene_add_to_drawables(tilemap_editor_controller.save_btn, DET_UI);
+    #pragma endregion
+
     if(!tilemap_editor_controller.ui_event_updater)
     {
         tilemap_editor_controller.ui_event_updater = gf2d_entity_new(NULL);
@@ -345,14 +367,13 @@ void tile_editor_height_less(Button *btn)
     const uint32_t buf_size = 16;
     Tile *newTiles = NULL;
     Tilemap *tmap = NULL;
-    uint32_t i, j;
+    uint32_t i;
     if(!btn) return;
     tmap = tilemap_editor_controller.tilemap;
 
     newTiles = (Tile*)gfc_allocate_array(sizeof(Tile), tmap->w * (tmap->h-1));
     if(!newTiles) return;
 
-    j = tmap->h; 
     tmap->h--;
 
     for(i = 0; i < tmap->h; i++)
@@ -374,14 +395,13 @@ void tile_editor_height_more(Button *btn)
     const uint32_t buf_size = 16;
     Tile *newTiles = NULL;
     Tilemap *tmap = NULL;
-    uint32_t i, j;
+    uint32_t i;
     if(!btn) return;
     tmap = tilemap_editor_controller.tilemap;
 
     newTiles = (Tile*)gfc_allocate_array(sizeof(Tile), tmap->w * (tmap->h+1));
     if(!newTiles) return;
 
-    j = tmap->h; 
     tmap->h++;
 
     for(i = 0; i < tmap->h; i++)
@@ -435,4 +455,11 @@ void tile_editor_place_tile(Vector2D position)
     x = (int)position.x;
     y = (int)position.y;
     tmap->tiles[ y * tmap->w + x ].id = frame;
+}
+
+void tile_editor_save_file(Button *btn)
+{
+    if(!btn) return;
+
+    gf2d_tilemap_save(tilemap_editor_controller.tilemap);
 }

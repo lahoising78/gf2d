@@ -280,3 +280,123 @@ const uint32_t gf2d_tilemap_get_count()
 {
     return gf2d_tilemap_manager.count;
 }
+
+uint8_t gf2d_tilemap_save(Tilemap *tmap)
+{
+    SJson *json = NULL;
+    SJson *val = NULL;
+    SJson *obj = NULL;
+    SJson *col = NULL;
+    uint32_t i, j, k; 
+    uint32_t maxId = 0;
+    uint8_t found = 0;
+    Tile *tile = NULL;
+    char buf[128];
+    if(!tmap) return 0;
+
+    json = sj_object_new();
+    if(!json) return 0;
+
+    obj = sj_object_new();
+    if(obj)
+    {
+        val = sj_new_str(tmap->spriteSheet->filepath);
+        sj_object_insert(obj, "filename", val);
+
+        val = sj_new_int((int)tmap->spriteSheet->frame_w);
+        sj_object_insert(obj, "frameWidth", val);
+
+        val = sj_new_int((int)tmap->spriteSheet->frame_h);
+        sj_object_insert(obj, "frameHeight", val);
+
+        val = sj_new_int((int)tmap->spriteSheet->frames_per_line);
+        sj_object_insert(obj, "framesPerLine", val);
+
+        sj_object_insert(json, "sprite", obj);
+    }
+
+    obj = sj_new_int(tmap->w);
+    if(obj) sj_object_insert(json, "width", obj);
+
+    obj = sj_new_int(tmap->h);
+    if(obj) sj_object_insert(json, "height", obj);
+
+    obj = sj_array_new();
+    if(obj)
+    {
+        for(i = 0; i < tmap->h; i++)
+        {
+            for(j = 0; j < tmap->w; j++)
+            {
+                k = i * tmap->w + j;
+                if( tmap->tiles[k].id > maxId ) maxId = tmap->tiles[ k ].id;
+                val = sj_new_int((int)tmap->tiles[ k ].id);
+                sj_array_append(obj, val);
+            }
+        }
+
+        sj_object_insert(json, "map", obj);
+    }
+    
+    obj = sj_array_new();
+    if(obj)
+    {
+        for(k = 0; k <= maxId; k++)
+        {
+            found = 0;
+            for(i = 0; i < tmap->h; i++)
+            {
+                for(j = 0; j < tmap->w; j++)
+                {
+                    tile = &tmap->tiles[i * tmap->w + j];
+                    
+                    if( tile->id == k )
+                    {
+                        val = sj_object_new();
+
+                        col = sj_array_new();
+                        gf2d_json_vec2d_save(col, tile->body.position);
+                        sj_object_insert( val, "position", col );
+
+                        col = sj_array_new();
+                        gf2d_json_vec2d_save(col, tile->body.dimensions.wh);
+                        sj_object_insert( val, "dimensions", col );
+
+                        gf2d_collision_shape_type_to_string(buf, tile->body.shapeType);
+                        col = sj_new_str( buf );
+                        sj_object_insert( val, "shapeType", col );
+
+                        sj_array_append(obj, val);
+                        found = 1;
+                        break;
+                    }
+                }
+                if(found) break;
+            }
+            if(found) continue;
+
+            val = sj_object_new();
+
+            col = sj_array_new();
+            gf2d_json_vec2d_save(col, vector2d(0.0f, 0.0f));
+            sj_object_insert( val, "position", col );
+
+            col = sj_array_new();
+            gf2d_json_vec2d_save(col, vector2d(0.0f, 0.0f));
+            sj_object_insert( val, "dimensions", col );
+
+            gf2d_collision_shape_type_to_string(buf, CST_BOX);
+            col = sj_new_str( buf );
+            sj_object_insert( val, "shapeType", col );
+
+            sj_array_append(obj, val);
+        }
+
+        sj_object_insert(json, "solid", obj);
+    }
+
+    sj_save(json, "test.json");
+    slog("save file %s", "test.json");
+    sj_free(json);
+    return 1;
+}
