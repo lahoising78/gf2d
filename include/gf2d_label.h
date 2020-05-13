@@ -25,5 +25,6 @@ void gf2d_label_free(Label *label);
 
 void gf2d_label_set_text_color(Label *label, Vector4D newColor);
 void gf2d_label_set_background_color(Label *label, Vector4D color);
+void gf2d_label_set_display(Label *label);
 
 #endif

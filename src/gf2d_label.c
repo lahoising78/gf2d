@@ -153,6 +153,7 @@ void gf2d_label_set_display(Label *label)
     sprite->frames_per_line = 1;
     snprintf(sprite->filepath, GFCLINELEN, "%s", label->_text);
 
+    if( label->_display->sprite ) gf2d_sprite_free(label->_display->sprite);
     label->_display->sprite = sprite;
     SDL_FreeSurface(surface);
 
