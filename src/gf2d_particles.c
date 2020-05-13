@@ -133,6 +133,7 @@ void gf2d_particle_emitter_general_update(ParticleEmitter *emitter)
     uint32_t count = 0;
     Particle *p = NULL;
     uint8_t hacked = 0;
+    float angle = 0.0f;
     if(!emitter) return;
 
     if(!emitter->firstLiving) emitter->firstLiving = emitter->particles;
@@ -144,15 +145,21 @@ void gf2d_particle_emitter_general_update(ParticleEmitter *emitter)
 
     for(p = emitter->firstLiving; count < emitter->livingCount; p++, count++)
     {
+        if(p > emitter->particles + emitter->_particleCount) p = emitter->particles;
+
         if(!p->flying)
         {
             p->rend->sprite = emitter->particleSprite;
             p->ttf = emitter->particleTtf;
             p->update = emitter->particleUpdate;
             p->velocity = emitter->particleInitialVelocity;
+            vector2d_add(p->rend->position, emitter->position, emitter->particleOffset);
+            angle = gfc_crandom() * GFC_DEGTORAD * emitter->spread;
+            p->velocity = vector2d_rotate(emitter->particleInitialVelocity, angle);
             p->visible = 1;
             p->flying = 1;
             emitter->livingCount++;
+            p->rend->colorShift.w = 255.0f;
             gf2d_scene_add_to_drawables(p->rend, DET_REND);
             gf2d_timer_start(&p->timeLiving);
             break;
@@ -165,12 +172,31 @@ void gf2d_particle_emitter_general_update(ParticleEmitter *emitter)
         {
             emitter->livingCount--;
             emitter->firstLiving++;
+            if(emitter->firstLiving > emitter->particles + emitter->_particleCount)
+            {
+                emitter->firstLiving = emitter->particles;
+            }
         }
-
-        if(p > emitter->particles + emitter->_particleCount) p = emitter->particles;
     }
 
     if(hacked) emitter->livingCount--;
+
+    if( gf2d_timer_get_ticks(&emitter->nextEmission) / 1000.0f >= emitter->emissionRate )
+    {
+        p->rend->sprite = emitter->particleSprite;
+        p->ttf = emitter->particleTtf;
+        p->update = emitter->particleUpdate;
+        angle = gfc_crandom() * GFC_DEGTORAD * emitter->spread;
+        p->velocity = vector2d_rotate(emitter->particleInitialVelocity, angle);
+        p->visible = 1;
+        p->flying = 1;
+        vector2d_add(p->rend->position, emitter->position, emitter->particleOffset);
+        p->rend->colorShift.w = 255.0f;
+        emitter->livingCount++;
+        gf2d_scene_add_to_drawables(p->rend, DET_REND);
+        gf2d_timer_start(&p->timeLiving);
+        gf2d_timer_start(&emitter->nextEmission);
+    }
 }
 
 extern float frameTime;
@@ -187,5 +213,6 @@ void gf2d_particle_general_update(Particle *particle)
         particle->flying = 0;
         particle->visible = 0;
         gf2d_scene_remove_from_drawables(particle);
+        particle->rend->colorShift.w = 0.0f;
     }
 }

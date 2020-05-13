@@ -186,7 +186,9 @@ void player_create(PhysicsEntity *self)
 
     emitter->particleSprite = gf2d_sprite_load_image("images/menacing_beer.png");
     emitter->particleInitialVelocity = vector2d(10.0f, 0.0f);
-    emitter->particleTtf = 0.3f;
+    emitter->particleTtf = 1.0f;
+    emitter->spread = 30.0f;
+    emitter->emissionRate = 1.2f;
 }
 
 uint8_t player_play_anim(Animation *anim, uint32_t *params, float speed)
