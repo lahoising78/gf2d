@@ -3,6 +3,7 @@
 #include "gf2d_sprite.h"
 #include "simple_logger.h"
 #include "gf2d_main.h"
+#include "gfc_audio.h"
 
 #include "gf2d_timer.h"
 #include "gf2d_render_ent.h"
@@ -65,6 +66,7 @@ int main(int argc, char * argv[])
     gf2d_label_manager_init(32);
     gf2d_progress_bar_manager_init(32);
     gf2d_ui_manager_init(32 + 32);
+    gfc_audio_init(32, 32, 4, 4, 1, 0);
     
     /*demo setup*/
     gf2d_main();

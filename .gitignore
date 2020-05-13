@@ -65,3 +65,6 @@ app
 makefile.dep
 import_images.sh
 plan
+
+# just dont want copyright or whatever
+audio/

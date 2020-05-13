@@ -7,6 +7,7 @@
 #include "game_object.h"
 #include "player.h"
 #include "combat.h"
+#include "gfc_audio.h"
 #include <SDL2/SDL.h>
 
 #define VELOCITY_CONST 3.0f
@@ -89,6 +90,9 @@ extern float playerTimeout;
 UIComponent *hp_ui = NULL;
 PlayerPersistantData persistant_data = {0};
 
+Sound *swordSlash = NULL;
+Mix_Music *background_music = NULL;
+
 extern PhysicsEntity *playerGobj;
 
 ProgressBar *player_hp_ui()
@@ -160,6 +164,18 @@ void player_create(PhysicsEntity *self)
     gf2d_progress_bar_set_max_value( hp_ui->component.pbar, persistant_data.maxHealth);
     gf2d_progress_bar_set_value( hp_ui->component.pbar, persistant_data.health );
     gf2d_scene_add_to_drawables(hp_ui, DET_UI);
+
+    swordSlash = gfc_sound_load("audio/weapon-air-swish-sound-effect.mp3", 1.0f, 0);
+
+    background_music = Mix_LoadMUS("audio/epic_boss_fight.mp3");
+    if(background_music)
+    {
+        Mix_PlayMusic(background_music, -1);
+    }
+    else
+    {
+        slog("no music :c");
+    }
 }
 
 uint8_t player_play_anim(Animation *anim, uint32_t *params, float speed)
@@ -306,6 +322,7 @@ void player_think(Entity *self)
             if(frame >= start)
             {
                 player_set_hitbox(gobj, hitbox);
+                gfc_sound_play(swordSlash, 0, 1.0f, -1, -1);
             }
 
             if ( frame >= anim[1] - 1 )
@@ -343,6 +360,7 @@ void player_think(Entity *self)
             if(frame >= start)
             {
                 player_set_hitbox(gobj, hitbox);
+                gfc_sound_play(swordSlash, 0, 1.0f, -1, -1);
             }
 
             if (frame == anim[1] - 1)
@@ -380,6 +398,7 @@ void player_think(Entity *self)
             if(frame >= start)
             {
                 player_set_hitbox(gobj, hitbox);
+                gfc_sound_play(swordSlash, 0, 1.0f, -1, -1);
             }
 
             if ( frame == anim[1] - 1 )
